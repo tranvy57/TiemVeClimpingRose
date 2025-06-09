@@ -120,3 +120,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+body {
+  @apply font-semibold;
+}
+
+.menu-link {
+  @apply px-2 py-1 rounded-sm hover:text-red-400 transition-all duration-200;
+}
+
+.icon-button {
+  @apply flex items-center justify-center p-1 w-8 h-8 rounded hover:text-red-400 transition-colors duration-200;
+}
