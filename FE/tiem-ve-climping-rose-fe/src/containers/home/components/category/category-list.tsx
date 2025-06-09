@@ -6,14 +6,14 @@ const CategoryList = () => {
   return (
     <div>
       <div className="flex justify-between items-center">
-        <p className="text-3xl  underline decoration-red-500 underline-offset-8">
+        <p className="text-xl md:text-3xl underline decoration-red-500 underline-offset-8">
           Danh mục sản phẩm
         </p>
         <Link href="#" className="font-normal text-red-400 underline">
           Xem tất cả
         </Link>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 px-4 md:mt-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4 mt-4 md:mt-10">
         <CategoryItem
           title="Tranh Phật"
           description="Mang đến sự an yên, tĩnh lặng và giá trị tâm linh sâu sắc."

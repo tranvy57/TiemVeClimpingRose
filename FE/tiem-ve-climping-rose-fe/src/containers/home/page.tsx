@@ -1,4 +1,5 @@
 import CategoryList from "./components/category/category-list";
+import Footer from "./components/footer";
 import Header from "./components/header";
 import Hero from "./components/hero";
 
@@ -9,6 +10,7 @@ const Home = () => {
       <main className="pt-[90px] px-6 md:px-20 py-10 flex flex-col gap-10">
         <Hero />
         <CategoryList />
+        <Footer />
       </main>
     </div>
   );
