@@ -1,18 +1,13 @@
-import {
-  Facebook,
-  Github,
-  Linkedin,
-  Menu,
-  ShoppingCart,
-  UserRound,
-  X,
-} from "lucide-react";
+import { Globe, Menu, ShoppingCart, UserRound, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import LanguageSwitcher from "./language-switcher";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const t = useTranslations("home");
   return (
     <div className="fixed top-0 left-0 w-full bg-white z-50 px-4 py-3">
       <div className="container mx-auto flex justify-between items-center  ">
@@ -28,9 +23,7 @@ const Header = () => {
             className="rounded-full"
           />
 
-          <p className="font-bold text-lg text-gray-700">
-            Tiệm vẽ Climping Rose
-          </p>
+          <p className="font-bold text-lg text-gray-700">{t("title")}</p>
         </div>
 
         {/* Nút menu mobile */}
@@ -44,21 +37,22 @@ const Header = () => {
         {/* Menu desktop */}
         <div className="hidden md:flex gap-4 ">
           <Link className="menu-link" href="#">
-            Tranh
+            {t("menu.home")}
           </Link>
           <Link className="menu-link" href="#">
-            Trang chủ
+            {t("menu.products")}
           </Link>
           <Link className="menu-link" href="#">
-            Feedback
+            {t("menu.feedbacks")}
           </Link>
           <Link className="menu-link" href="#">
-            Blog
+            {t("menu.blog")}
           </Link>
 
           <div className="flex gap-4 text-gray-700">
             <ShoppingCart className="icon-button" />
             <UserRound className="icon-button" />
+            <LanguageSwitcher />
           </div>
         </div>
       </div>

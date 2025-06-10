@@ -1,9 +1,11 @@
 import CategoryList from "./components/category/category-list";
 import Footer from "./components/footer";
-import Header from "./components/header";
+import Header from "./components/header/header";
 import Hero from "./components/hero";
 
+
 const Home = () => {
+
   return (
     <div className="gap-4 flex flex-col">
       <Header />

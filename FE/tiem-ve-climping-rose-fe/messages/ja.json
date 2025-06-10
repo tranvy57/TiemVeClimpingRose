@@ -1,0 +1,13 @@
+{
+  "home": {
+    "title": "Climping Rose アートショップ",
+    "menu": {
+        "home": "ホーム",
+        "products": "作品",
+        "feedbacks": "レビュー",
+        "blog": "シェアのひとこと"
+    },
+    "categories": "作品カテゴリ ",
+    "seemore": "もっと見る"
+  }
+}

@@ -121,12 +121,9 @@
   }
 }
 
-body {
-  @apply font-semibold;
-}
 
 .menu-link {
-  @apply px-2 py-1 rounded-sm hover:text-red-400 transition-all duration-200;
+  @apply px-2 py-1 font-semibold rounded-sm hover:text-red-400 transition-all duration-200;
 }
 
 .icon-button {

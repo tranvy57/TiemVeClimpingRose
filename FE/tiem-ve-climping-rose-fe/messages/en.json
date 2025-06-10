@@ -1,5 +1,14 @@
 {
-  "HomePage": {
-    "title": "Hello world!"
+  "home": {
+    "title": "Climping Rose Art Shop",
+    "menu": {
+        "home": "Home",
+        "products": "Products",
+        "feedbacks": "Feedbacks",
+        "blog": "Blog" 
+    },
+    "categories": "Categories",
+    "seemore": "See more"
   }
+  
 }

@@ -1,5 +1,13 @@
 {
   "home": {
-    "title": "Chào mừng đến với Climping Rose"
+    "title": "Tiệm vẽ Climping Rose",
+    "menu": {
+        "home": "Trang chủ",
+        "products": "Sản phẩm",
+        "feedbacks": "Đánh giá",
+        "blog": "Góc chia sẻ" 
+    },
+    "categories": "Danh mục sản phẩm",
+    "seemore": "Xem thêm"
   }
 }

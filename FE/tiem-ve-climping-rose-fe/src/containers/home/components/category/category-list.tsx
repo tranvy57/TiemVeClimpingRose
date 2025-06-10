@@ -1,16 +1,18 @@
 import React from "react";
 import CategoryItem from "./category-item";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const CategoryList = () => {
+  const t = useTranslations("home");
   return (
     <div>
       <div className="flex justify-between items-center">
         <p className="text-xl md:text-3xl underline decoration-red-500 underline-offset-8">
-          Danh mục sản phẩm
+          {t("categories")}
         </p>
         <Link href="#" className="font-normal text-red-400 underline">
-          Xem tất cả
+          {t("seemore")}
         </Link>
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 md:gap-10 lg:gap-16 md:px-4 mt-4 md:mt-10">
