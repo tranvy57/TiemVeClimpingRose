@@ -13,7 +13,7 @@ const CategoryList = () => {
           Xem tất cả
         </Link>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 md:gap-10 lg:gap-16 md:px-4 mt-4 md:mt-10">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 md:gap-10 lg:gap-16 md:px-4 mt-4 md:mt-10">
         <CategoryItem
           title="Tranh Phật"
           description="Mang đến sự an yên, tĩnh lặng và giá trị tâm linh sâu sắc."

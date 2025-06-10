@@ -1,30 +1,16 @@
 "use client";
 
-import Image from "next/image";
-import { Button } from "../components/ui/button";
-import { useEffect, useState } from "react";
-import { getTours } from "../api/tours/get";
-import Home from "../containers/home/page";
+import Home from "@/containers/home/page";
+
+import { useTranslations } from "next-intl";
 
 export default function Page() {
-  const [name, setName] = useState("vyt");
-  const [tours, setTours] = useState([]);
+  const t = useTranslations("HomePage");
 
-  const fetch = async () => {
-    try {
-      const response = await getTours();
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetch();
-  }, []);
   return (
     <div className="max-w-7xl mx-auto px-4">
       <Home />
+      <h1>{t("title")}</h1>
     </div>
   );
 }
