@@ -7,6 +7,13 @@
         "feedbacks": "Đánh giá",
         "blog": "Góc chia sẻ" 
     },
+    "size":"Kích thước sản phẩm",
+    "options": {
+      "size2020":"Tranh 20x20",
+      "size3040":"Tranh 30x40",
+      "size4050":"Tranh 40x50",
+      "custom":"In theo yêu cầu"
+    },
     "categories": "Danh mục sản phẩm",
     "seemore": "Xem thêm"
   }

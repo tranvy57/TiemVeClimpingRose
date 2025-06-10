@@ -70,28 +70,28 @@ const Header = () => {
             className="menu-link"
             onClick={() => setMenuOpen(false)}
           >
-            Trang chủ
+            {t("menu.home")}
           </Link>
           <Link
             href="#"
             className="menu-link"
             onClick={() => setMenuOpen(false)}
           >
-            Tranh
+            {t("menu.products")}
           </Link>
           <Link
             href="#"
             className="menu-link"
             onClick={() => setMenuOpen(false)}
           >
-            Feedback
+            {t("menu.feedbacks")}
           </Link>
           <Link
             href="#"
             className="menu-link"
             onClick={() => setMenuOpen(false)}
           >
-            Blog
+            {t("menu.blog")}
           </Link>
           <div className="flex gap-4 pt-2 text-gray-700">
             <ShoppingCart className="icon-button" />

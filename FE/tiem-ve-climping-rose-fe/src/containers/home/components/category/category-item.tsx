@@ -31,7 +31,9 @@ const CategoryItem = ({
       </div>
 
       <div className="p-4">
-        <h3 className="md:text-lg text-red-500 transition-colors">{title}</h3>
+        <h3 className="md:text-md font-semibold text-red-500 transition-colors">
+          {title}
+        </h3>
         <p className="text-sm text-gray-600 mt-1 font-normal">{description}</p>
       </div>
     </Link>

@@ -7,6 +7,13 @@
         "feedbacks": "Feedbacks",
         "blog": "Blog" 
     },
+    "size": "Product Size",
+    "options": {
+    "size2020": "20x20 Print",
+    "size3040": "30x40 Print",
+    "size4050": "40x50 Print",
+    "custom": "Custom"
+    },
     "categories": "Categories",
     "seemore": "See more"
   }
