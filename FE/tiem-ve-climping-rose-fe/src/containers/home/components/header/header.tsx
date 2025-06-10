@@ -2,12 +2,18 @@ import { Globe, Menu, ShoppingCart, UserRound, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LanguageSwitcher from "./language-switcher";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const t = useTranslations("home");
+
+  useEffect(() => {
+    setMounted(true); // Khi lên client mới set true
+  }, []);
+
   return (
     <div className="fixed top-0 left-0 w-full bg-white z-50 px-4 py-3">
       <div className="container mx-auto flex justify-between items-center  ">
@@ -57,7 +63,7 @@ const Header = () => {
         </div>
       </div>
       {/* Menu mobile dropdown */}
-      {menuOpen && (
+      {mounted && menuOpen && (
         <div className="md:hidden flex flex-col items-end px-4 py-3 bg-white border-t space-y-2  font-medium">
           <Link
             href="#"

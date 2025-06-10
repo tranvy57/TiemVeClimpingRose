@@ -21,6 +21,7 @@ const languages = [
 export default function LanguageSwitcher() {
   const locale = useLocale();
   const [isPending, startTransition] = useTransition();
+  const currentLang = languages.find((l) => l.code === locale);
 
   const changeLanguage = (newLocale: string) => {
     if (newLocale === locale) return;
@@ -34,7 +35,18 @@ export default function LanguageSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Globe className="icon-button" />
+        <div className="flex">
+          {currentLang && (
+            <Image
+              src={`/flags/${currentLang.code}.svg`}
+              alt={currentLang.label}
+              width={20}
+              height={15}
+              className="rounded-sm opacity-60"
+            />
+          )}
+          <Globe className="icon-button" />
+        </div>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end">
