@@ -129,3 +129,12 @@
 .icon-button {
   @apply flex items-center justify-center p-1 w-8 h-8 rounded hover:text-red-400 transition-colors duration-200;
 }
+
+.scrollbar-hidden {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE & Edge */
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}

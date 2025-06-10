@@ -12,7 +12,7 @@ const OptionList = () => {
           {t("size")}
         </p>
       </div>
-      <div className="grid grid-cols-2 gap-x-10 sm:grid-cols-2 md:grid-cols-4 md:gap-10 lg:gap-20 mt-8">
+      <div className="flex gap-4 mt-4 overflow-x-auto scrollbar-hidden ">
         <OptionItem
           name={t("options.size2020")}
           image_url="https://scontent.fsgn5-3.fna.fbcdn.net/v/t39.30808-6/501015466_122187330950290227_3675582043956886798_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFtJfCNmZ139DLSfhDL2EWzvcUKA1S6mru9xQoDVLqau0m8rJdiROFAJOyBtQBFaMrFlrDb06vpPYn9b1ba551-&_nc_ohc=BheGRLEE6doQ7kNvwGA8dHW&_nc_oc=AdnqbF5ocW-FUfKKwYK-NJrXn9Fv2qtyKDT70M4eHUdzMYKbg1bxG4yOxlaaK4H-d94&_nc_zt=23&_nc_ht=scontent.fsgn5-3.fna&_nc_gid=Xe-O6q-L80OcMh4Iwd121Q&oh=00_AfP3OBmIfklBxXJNhXhTssO9H-fmyIQPxg4LQ6z1jzufng&oe=684E2BE1"

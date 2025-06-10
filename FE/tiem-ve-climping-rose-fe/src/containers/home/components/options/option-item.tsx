@@ -10,7 +10,10 @@ interface OptionItemProps {
 
 const OptionItem = ({ name, image_url, href }: OptionItemProps) => {
   return (
-    <Link href={href} className="group">
+    <Link
+      href={href}
+      className="group w-[100px] sm:w-[180px] flex-shrink-0 lg:mx-10 md:mx-3"
+    >
       <div className="relative aspect-square w-full">
         <Image
           src={image_url}
