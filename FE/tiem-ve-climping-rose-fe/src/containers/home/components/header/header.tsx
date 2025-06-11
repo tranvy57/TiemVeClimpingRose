@@ -4,6 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import LanguageSwitcher from "./language-switcher";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -29,16 +36,44 @@ const Header = () => {
             className="rounded-full"
           />
 
-          <p className="font-bold text-lg text-gray-700">{t("title")}</p>
+          <p className="font-bold text-md lg:text-lg text-gray-700">
+            {t("title")}
+          </p>
         </div>
 
         {/* Nút menu mobile */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden text-primary"
-        >
-          {menuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden text-primary"
+            >
+              <Menu size={24} />
+            </Button>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent align="end" className="md:hidden w-full mt-2">
+            <DropdownMenuItem asChild>
+              <Link href="#">{t("menu.home")}</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="#">{t("menu.products")}</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="#">{t("menu.feedbacks")}</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="#">{t("menu.blog")}</Link>
+            </DropdownMenuItem>
+
+            <div className="px-2 pt-2 flex gap-4 text-gray-700">
+              <ShoppingCart className="icon-button" />
+              <UserRound className="icon-button" />
+              <LanguageSwitcher />
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         {/* Menu desktop */}
         <div className="hidden md:flex gap-4 ">
@@ -63,42 +98,6 @@ const Header = () => {
         </div>
       </div>
       {/* Menu mobile dropdown */}
-      {mounted && menuOpen && (
-        <div className="md:hidden flex flex-col items-end px-4 py-3 bg-white border-t space-y-2  font-medium">
-          <Link
-            href="#"
-            className="menu-link"
-            onClick={() => setMenuOpen(false)}
-          >
-            {t("menu.home")}
-          </Link>
-          <Link
-            href="#"
-            className="menu-link"
-            onClick={() => setMenuOpen(false)}
-          >
-            {t("menu.products")}
-          </Link>
-          <Link
-            href="#"
-            className="menu-link"
-            onClick={() => setMenuOpen(false)}
-          >
-            {t("menu.feedbacks")}
-          </Link>
-          <Link
-            href="#"
-            className="menu-link"
-            onClick={() => setMenuOpen(false)}
-          >
-            {t("menu.blog")}
-          </Link>
-          <div className="flex gap-4 pt-2 text-gray-700">
-            <ShoppingCart className="icon-button" />
-            <UserRound className="icon-button" />
-          </div>
-        </div>
-      )}
     </div>
   );
 };

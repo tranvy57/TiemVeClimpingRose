@@ -8,7 +8,7 @@ const Home = () => {
   return (
     <div className="gap-4 flex flex-col">
       <Header />
-      <main className="pt-[90px] px-0 md:px-20 py-10 flex flex-col md:gap-12">
+      <main className="pt-[90px] px-0 md:px-20 py-10 flex flex-col md:gap-8">
         <Hero />
         <OptionList />
         <CategoryList />

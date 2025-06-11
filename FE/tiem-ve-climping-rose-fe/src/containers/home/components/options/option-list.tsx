@@ -8,7 +8,7 @@ const OptionList = () => {
   return (
     <div>
       <div className="flex justify-between items-center">
-        <p className="text-md md:text-xl font-bold underline decoration-red-500 underline-offset-8">
+        <p className="text-md md:text-xl font-bold underline decoration-red-500 underline-offset-8 py-4">
           {t("size")}
         </p>
       </div>
