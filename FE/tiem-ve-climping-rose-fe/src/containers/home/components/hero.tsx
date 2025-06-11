@@ -45,12 +45,12 @@ export default function ImageCarousel() {
       </Swiper>
 
       {/* Nút điều hướng */}
-      <div className="swiper-button-prev absolute top-1/2 left-4 z-10 -translate-y-1/2 bg-white/60 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md hover:bg-white/80 hover:scale-110 transition duration-300 cursor-pointer">
-        <ChevronLeft className="w-5 h-5 text-red-200" />
+      <div className="swiper-button-prev hidden sm:flex absolute inset-y-0 my-auto left-3 z-10 bg-white/60 w-9 h-9 md:w-10 md:h-10 items-center justify-center rounded-full shadow-lg hover:bg-white/80 hover:scale-110 transition duration-300 cursor-pointer">
+        <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 text-red-400" />
       </div>
 
-      <div className="swiper-button-next absolute top-1/2 right-4 z-10 -translate-y-1/2 bg-white/60 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md hover:bg-white/80 hover:scale-110 transition duration-300 cursor-pointer">
-        <ChevronRight className="w-5 h-5 text-red-200" />
+      <div className="swiper-button-next hidden sm:flex absolute inset-y-0 my-auto right-3 z-10 bg-white/60 w-9 h-9 md:w-10 md:h-10 items-center justify-center rounded-full shadow-lg hover:bg-white/80 hover:scale-110 transition duration-300 cursor-pointer">
+        <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-red-400" />
       </div>
     </div>
   );
