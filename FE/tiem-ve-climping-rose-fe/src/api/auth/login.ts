@@ -1,5 +1,5 @@
-import { BaseResponse } from "@/src/types";
-import { IUser } from "@/src/types/implements";
+import { BaseResponse } from "@/types";
+import { IUser } from "@/types/implements";
 import axios from "axios";
 
 export interface LoginRequest {
