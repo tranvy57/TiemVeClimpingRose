@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -138,4 +139,13 @@
 .scrollbar-hidden::-webkit-scrollbar {
   display: none; /* Chrome, Safari */
 }
+
+
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  display: none !important;
+  content: none !important;
+}
+
+
 

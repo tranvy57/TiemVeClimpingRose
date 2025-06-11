@@ -1,20 +1,57 @@
-import Image from "next/image";
+"use client";
 
-const Hero = () => {
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation } from "swiper/modules";
+import Image from "next/image";
+import "swiper/css";
+import "swiper/css/autoplay";
+import "swiper/css/navigation";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+const banners = [
+  { src: "/banners/banner1.png", alt: "Banner 1" },
+  { src: "/banners/banner2.png", alt: "Banner 2" },
+  { src: "/banners/banner3.png", alt: "Banner 3" },
+];
+
+export default function ImageCarousel() {
   return (
-    <div className="">
-      <Image
-        src={
-          "https://static.vecteezy.com/system/resources/thumbnails/004/299/834/small/shopping-online-on-phone-with-podium-paper-art-modern-pink-background-gifts-box-illustration-free-vector.jpg"
-        }
-        alt="logo"
-        layout="responsive"
-        width={1200} // tỉ lệ gốc (có thể là 16:9, 4:3,...)
-        height={600}
-        className="rounded-4xl"
-      />
+    <div className="w-full max-w-6xl mx-auto relative rounded-2xl overflow-hidden shadow-sm">
+      {/* Swiper Carousel */}
+      <Swiper
+        modules={[Autoplay, Navigation]}
+        autoplay={{ delay: 4000, disableOnInteraction: false }}
+        navigation={{
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        }}
+        loop
+        slidesPerView={1}
+        className="w-full"
+      >
+        {banners.map((banner, index) => (
+          <SwiperSlide key={index}>
+            <div className="relative w-full h-[100px] sm:h-[200px] md:h-[250px] ">
+              <Image
+                src={banner.src}
+                alt={banner.alt}
+                fill
+                className="object-cover"
+                sizes="100vw"
+              />
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+
+      {/* Nút điều hướng */}
+      <div className="swiper-button-prev absolute top-1/2 left-4 z-10 -translate-y-1/2 bg-white/60 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md hover:bg-white/80 hover:scale-110 transition duration-300 cursor-pointer">
+        <ChevronLeft className="w-5 h-5 text-red-200" />
+      </div>
+
+      <div className="swiper-button-next absolute top-1/2 right-4 z-10 -translate-y-1/2 bg-white/60 text-white w-10 h-10 flex items-center justify-center rounded-full shadow-md hover:bg-white/80 hover:scale-110 transition duration-300 cursor-pointer">
+        <ChevronRight className="w-5 h-5 text-red-200" />
+      </div>
     </div>
   );
-};
-
-export default Hero;
+}
