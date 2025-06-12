@@ -14,6 +14,7 @@ public interface PaintingMapper {
     Painting toPainting(PaintingDTO paintingDTO);
 
     @Mapping(source = "categories",target = "categories")
+    @Mapping(source = "size",target = "size")
     PaintingDTO toPaintingDTO(Painting painting);
     List<PaintingDTO> toPaintingDTOList(List<Painting> paintings);
 }

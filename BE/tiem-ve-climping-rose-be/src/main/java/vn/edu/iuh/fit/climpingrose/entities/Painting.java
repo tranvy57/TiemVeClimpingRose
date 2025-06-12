@@ -3,6 +3,7 @@ package vn.edu.iuh.fit.climpingrose.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import vn.edu.iuh.fit.climpingrose.enums.PaintingSize;
 
 import java.math.BigDecimal;
 import java.util.Set;
@@ -25,7 +26,10 @@ public class Painting extends BaseEntity{
     String name;
     String description;
     String imageUrl;
-    String size;
+
+    @Enumerated(EnumType.STRING)
+    PaintingSize size;
+
     BigDecimal price;
 
     @ManyToMany
