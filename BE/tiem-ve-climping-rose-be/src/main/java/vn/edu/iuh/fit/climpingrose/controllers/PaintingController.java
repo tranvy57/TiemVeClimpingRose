@@ -14,22 +14,22 @@ import vn.edu.iuh.fit.climpingrose.services.PaintingService;
 
 import java.util.List;
 
-//@RestController
-//@RequestMapping("/api/paintings")
-//@AllArgsConstructor
-//public class PaintingController {
-//
-//    private final PaintingService paintingService;
-//
-//    @GetMapping
-//    public ApiResponse<List<PaintingDTO>> getAllPaintings(
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "12") int size
-//    ) {
-//        List<PaintingDTO> result = paintingService.getAllPaintings(page, size);
-//        return ApiResponse.<List<PaintingDTO>>builder()
-//                .message("Lấy danh sách tranh thành công")
-//                .data(result)
-//                .build();
-//    }
-//}
+@RestController
+@RequestMapping("/api/paintings")
+@AllArgsConstructor
+public class PaintingController {
+
+    private final PaintingService paintingService;
+
+    @GetMapping
+    public ApiResponse<List<PaintingDTO>> getAllPaintings(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size
+    ) {
+        List<PaintingDTO> result = paintingService.getAllPaintings(page, size);
+        return ApiResponse.<List<PaintingDTO>>builder()
+                .message("Lấy danh sách tranh thành công")
+                .data(result)
+                .build();
+    }
+}
