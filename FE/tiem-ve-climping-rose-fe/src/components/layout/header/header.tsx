@@ -1,3 +1,5 @@
+"use client";
+
 import { Globe, Menu, ShoppingCart, UserRound, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";

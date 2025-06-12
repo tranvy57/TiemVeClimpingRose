@@ -1,11 +1,15 @@
-"use client";
-
-import Home from "@/containers/page";
+import CategoryList from "@/components/home/category/category-list";
+import CouponList from "@/components/home/coupons/coupon-list";
+import ImageCarousel from "@/components/home/hero";
+import OptionList from "@/components/home/options/option-list";
 
 export default function Page() {
   return (
-    <div className="max-w-7xl mx-auto px-4">
-      <Home />
+    <div>
+      <ImageCarousel />
+      <OptionList />
+      <CouponList />
+      <CategoryList />
     </div>
   );
 }
