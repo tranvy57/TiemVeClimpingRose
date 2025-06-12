@@ -1,4 +1,6 @@
 server:
+  server:
+    port: ${PORT:8080}
   servlet:
     multipart:
       max-file-size: 10MB
