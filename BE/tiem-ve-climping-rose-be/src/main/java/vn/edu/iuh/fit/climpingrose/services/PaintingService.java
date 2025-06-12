@@ -6,7 +6,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.climpingrose.dtos.dtos.PaintingDTO;
+import vn.edu.iuh.fit.climpingrose.dtos.responses.PageResponse;
 import vn.edu.iuh.fit.climpingrose.entities.Painting;
+import vn.edu.iuh.fit.climpingrose.exceptions.BadRequestException;
 import vn.edu.iuh.fit.climpingrose.mappers.PaintingMapper;
 import vn.edu.iuh.fit.climpingrose.repositories.PaintingRepository;
 
@@ -18,9 +20,19 @@ public class PaintingService {
     private final PaintingRepository paintingRepository;
     private final PaintingMapper paintingMapper;
 
-    public List<PaintingDTO> getAllPaintings(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Painting> paintingPage = paintingRepository.findAll(pageable);
-        return paintingMapper.toPaintingDTOList(paintingPage.getContent());
+    public PageResponse<PaintingDTO> getAllPaintings(int page, int size) {
+        if (page <= 0) {
+            throw new BadRequestException("Page number must be zero or greater");
+        }
+        if (size <= 0) {
+            throw new BadRequestException("Page size must be greater than zero");
+        }
+        int pageNumber = page - 1; // Convert to zero-based index
+
+        Pageable pageable = PageRequest.of(pageNumber, size);
+        Page<Painting> paintings = paintingRepository.findAll(pageable);
+
+        PageResponse<PaintingDTO> results = PageResponse.from(paintings.map(paintingMapper::toPaintingDTO));
+        return results;
     }
 }
