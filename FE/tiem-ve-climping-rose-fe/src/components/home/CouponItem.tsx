@@ -25,14 +25,14 @@ interface CouponItemProps {
   conditions: React.ReactNode;
 }
 
-const CouponItem = ({
+export function CouponItem({
   image_url,
   discount,
   code,
   minOrder,
   discountType,
   conditions,
-}: CouponItemProps) => {
+}: CouponItemProps) {
   const t = useTranslations("home");
 
   const getDescription = () => {
@@ -78,6 +78,4 @@ const CouponItem = ({
       </div>
     </div>
   );
-};
-
-export default CouponItem;
+}

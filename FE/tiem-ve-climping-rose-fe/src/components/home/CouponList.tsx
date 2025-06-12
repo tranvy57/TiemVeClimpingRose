@@ -1,7 +1,7 @@
 import React from "react";
-import CouponItem from "./coupon-item";
+import { CouponItem } from "./CouponItem";
 
-const CouponList = () => {
+export function CouponList() {
   return (
     <div className="flex gap-4 my-4 overflow-x-auto scrollbar-hidden ">
       <CouponItem
@@ -35,6 +35,4 @@ const CouponList = () => {
       />
     </div>
   );
-};
-
-export default CouponList;
+}

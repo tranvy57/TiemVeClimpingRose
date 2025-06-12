@@ -1,7 +1,7 @@
 import React from "react";
 
-const PaintingPage = () => {
+const PaintingsPage = () => {
   return <div>PaintingPage</div>;
 };
 
-export default PaintingPage;
+export default PaintingsPage;

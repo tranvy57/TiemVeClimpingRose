@@ -14,7 +14,7 @@ const banners = [
   { src: "/banners/banner3.png", alt: "Banner 3" },
 ];
 
-export default function ImageCarousel() {
+export function ImageCarousel() {
   return (
     <div className="w-full max-w-6xl mx-auto relative rounded-2xl overflow-hidden shadow-sm">
       {/* Swiper Carousel */}

@@ -1,9 +1,9 @@
 import React from "react";
-import OptionItem from "./option-item";
 import { Link } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { OptionItem } from "./OptionItem";
 
-const OptionList = () => {
+export function OptionList() {
   const t = useTranslations("home");
   return (
     <div>
@@ -36,6 +36,4 @@ const OptionList = () => {
       </div>
     </div>
   );
-};
-
-export default OptionList;
+}

@@ -8,7 +8,7 @@ interface OptionItemProps {
   href: string;
 }
 
-const OptionItem = ({ name, image_url, href }: OptionItemProps) => {
+export function OptionItem({ name, image_url, href }: OptionItemProps) {
   return (
     <Link
       href={href}
@@ -27,6 +27,4 @@ const OptionItem = ({ name, image_url, href }: OptionItemProps) => {
       </p>
     </Link>
   );
-};
-
-export default OptionItem;
+}

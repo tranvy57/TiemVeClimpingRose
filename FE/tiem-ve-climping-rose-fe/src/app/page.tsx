@@ -1,9 +1,11 @@
-import CategoryList from "@/components/home/category/category-list";
-import CouponList from "@/components/home/coupons/coupon-list";
-import ImageCarousel from "@/components/home/hero";
-import OptionList from "@/components/home/options/option-list";
+import {
+  CategoryList,
+  ImageCarousel,
+  OptionList,
+  CouponList,
+} from "@/components/home";
 
-export default function Page() {
+export default function HomePage() {
   return (
     <div>
       <ImageCarousel />

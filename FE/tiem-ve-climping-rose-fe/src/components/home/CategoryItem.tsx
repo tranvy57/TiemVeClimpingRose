@@ -10,12 +10,12 @@ interface CategoryItemProps {
   href: string;
 }
 
-const CategoryItem = ({
+export function CategoryItem({
   title,
   description,
   image_url,
   href,
-}: CategoryItemProps) => {
+}: CategoryItemProps) {
   return (
     <Link
       href={href}
@@ -38,6 +38,4 @@ const CategoryItem = ({
       </div>
     </Link>
   );
-};
-
-export default CategoryItem;
+}

@@ -1,9 +1,10 @@
 import React from "react";
-import CategoryItem from "./category-item";
+
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { CategoryItem } from "./CategoryItem";
 
-const CategoryList = () => {
+export function CategoryList() {
   const t = useTranslations("home");
   return (
     <div>
@@ -43,6 +44,4 @@ const CategoryList = () => {
       </div>
     </div>
   );
-};
-
-export default CategoryList;
+}
