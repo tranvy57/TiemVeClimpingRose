@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 public class PaintingDTO extends BaseResponse {
-    String id;
+    String paintingId;
     String name;
     String description;
     String imageUrl;

@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 public class Category extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
+    String categoryId;
     String name;
     String description;
     String imageUrl;

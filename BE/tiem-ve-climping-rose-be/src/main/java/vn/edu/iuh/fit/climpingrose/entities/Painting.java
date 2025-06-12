@@ -20,7 +20,7 @@ import java.util.UUID;
 public class Painting extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
+    String paintingId;
 
     String name;
     String description;

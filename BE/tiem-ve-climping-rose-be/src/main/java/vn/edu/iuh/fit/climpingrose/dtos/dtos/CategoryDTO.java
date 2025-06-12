@@ -5,7 +5,7 @@ import vn.edu.iuh.fit.climpingrose.dtos.responses.BaseResponse;
 
 @Data
 public class CategoryDTO extends BaseResponse {
-    String id;
+    String categoryId;
     String name;
     String description;
     String imageUrl;
