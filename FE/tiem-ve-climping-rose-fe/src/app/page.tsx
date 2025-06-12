@@ -1,6 +1,6 @@
 "use client";
 
-import Home from "@/containers/home/page";
+import Home from "@/containers/page";
 
 export default function Page() {
   return (
