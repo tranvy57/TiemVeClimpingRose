@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import vn.edu.iuh.fit.climpingrose.dtos.responses.MessageResponse;
-import vn.edu.iuh.fit.climpingrose.dtos.TestDto;
+import vn.edu.iuh.fit.climpingrose.dtos.responses.ApiResponse;
+import vn.edu.iuh.fit.climpingrose.dtos.dtos.TestDto;
 import vn.edu.iuh.fit.climpingrose.services.TestService;
 
 @RestController
@@ -16,8 +16,8 @@ public class TestController {
     private TestService testService;
 
     @GetMapping
-    public MessageResponse<TestDto> test() {
-        return MessageResponse.<TestDto>builder()
+    public ApiResponse<TestDto> test() {
+        return ApiResponse.<TestDto>builder()
                 .message("Thông báo Zy cute thành công")
                 .data(TestDto.builder()
                         .name("Zy")
@@ -27,8 +27,8 @@ public class TestController {
     }
 
     @GetMapping("/error")
-    public MessageResponse<TestDto> testError() {
-        return MessageResponse.<TestDto>builder()
+    public ApiResponse<TestDto> testError() {
+        return ApiResponse.<TestDto>builder()
                 .data(testService.getTestDto())
                 .build();
     }

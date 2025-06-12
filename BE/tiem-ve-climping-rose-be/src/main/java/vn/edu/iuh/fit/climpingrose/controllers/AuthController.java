@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import vn.edu.iuh.fit.climpingrose.dtos.responses.MessageResponse;
+import vn.edu.iuh.fit.climpingrose.dtos.responses.ApiResponse;
 import vn.edu.iuh.fit.climpingrose.dtos.requests.AuthenticationRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.requests.IntrospectRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.requests.LogoutRequest;
@@ -26,37 +26,37 @@ public class AuthController {
     private AuthenticationService authenticationService;
 
     @PostMapping("/login")
-    MessageResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         var result = authenticationService.authenticate(request);
-        return MessageResponse.<AuthenticationResponse>builder()
+        return ApiResponse.<AuthenticationResponse>builder()
                 .message("Đăng nhập thành công")
                 .data(result)
                 .build();
     }
 
     @PostMapping("/introspect")
-    MessageResponse<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request)
+    ApiResponse<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request)
             throws ParseException, JOSEException {
         var result = authenticationService.introspect(request);
-        return MessageResponse.<IntrospectResponse>builder()
+        return ApiResponse.<IntrospectResponse>builder()
                 .message("Kiểm tra token thành công")
                 .data(result)
                 .build();
     }
 
     @PostMapping("/logout")
-    MessageResponse<Void> logout(@RequestBody LogoutRequest request) throws ParseException, JOSEException {
+    ApiResponse<Void> logout(@RequestBody LogoutRequest request) throws ParseException, JOSEException {
         authenticationService.logout(request);
-        return MessageResponse.<Void>builder()
+        return ApiResponse.<Void>builder()
                 .message("Đăng xuất thành công")
                 .data(null)
                 .build();
     }
 
     @PostMapping("/refresh")
-    ResponseEntity<MessageResponse<AuthenticationResponse>> refresh(@RequestBody @Valid RefreshRequest request) throws ParseException, JOSEException {
+    ResponseEntity<ApiResponse<AuthenticationResponse>> refresh(@RequestBody @Valid RefreshRequest request) throws ParseException, JOSEException {
         var result = authenticationService.refreshToken(request);
-        return ResponseEntity.ok(MessageResponse.<AuthenticationResponse>builder()
+        return ResponseEntity.ok(ApiResponse.<AuthenticationResponse>builder()
                 .message("Làm mới token thành công")
                 .data(result)
                 .build());

@@ -1,4 +1,4 @@
-package vn.edu.iuh.fit.climpingrose.dtos;
+package vn.edu.iuh.fit.climpingrose.dtos.dtos;
 
 import lombok.Builder;
 import lombok.Data;

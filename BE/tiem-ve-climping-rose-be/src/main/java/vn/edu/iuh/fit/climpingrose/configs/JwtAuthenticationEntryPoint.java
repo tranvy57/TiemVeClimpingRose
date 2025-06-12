@@ -19,7 +19,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             throws IOException, ServletException {
         UnauthorizedException unauthorizedException = new UnauthorizedException("Không có quyền truy cập");
         ErrorMessageDto errorMessageDto =
-                new ErrorMessageDto(HttpServletResponse.SC_UNAUTHORIZED, unauthorizedException.getMessage(), false);
+                new ErrorMessageDto(HttpServletResponse.SC_UNAUTHORIZED, unauthorizedException.getMessage());
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
