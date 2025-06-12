@@ -5,11 +5,9 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
-import java.util.Set;
-import java.util.UUID;
 
 @Entity
-@Table(name = "paintings")
+@Table(name = "categories")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,21 +15,11 @@ import java.util.UUID;
 @ToString
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Painting extends BaseEntity{
+public class Category extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
-
     String name;
     String description;
     String imageUrl;
-    String size;
-    BigDecimal price;
-
-    @ManyToMany
-    @JoinTable(
-            name = "category_painting",
-            joinColumns = @JoinColumn(name = "painting_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"))
-    Set<Category> categories;
 }
