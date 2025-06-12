@@ -4,12 +4,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
+import vn.edu.iuh.fit.climpingrose.dtos.responses.BaseResponse;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Data
-public class PaintingDTO {
+public class PaintingDTO extends BaseResponse {
     String id;
     String name;
     String description;

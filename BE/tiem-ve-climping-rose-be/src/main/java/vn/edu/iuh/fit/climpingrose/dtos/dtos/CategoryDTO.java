@@ -1,9 +1,10 @@
 package vn.edu.iuh.fit.climpingrose.dtos.dtos;
 
 import lombok.Data;
+import vn.edu.iuh.fit.climpingrose.dtos.responses.BaseResponse;
 
 @Data
-public class CategoryDTO {
+public class CategoryDTO extends BaseResponse {
     String id;
     String name;
     String description;

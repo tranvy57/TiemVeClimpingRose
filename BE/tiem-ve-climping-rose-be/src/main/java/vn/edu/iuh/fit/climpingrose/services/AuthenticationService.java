@@ -21,6 +21,7 @@ import vn.edu.iuh.fit.climpingrose.dtos.responses.IntrospectResponse;
 import vn.edu.iuh.fit.climpingrose.entities.InvalidatedToken;
 import vn.edu.iuh.fit.climpingrose.entities.User;
 import vn.edu.iuh.fit.climpingrose.exceptions.UnauthorizedException;
+import vn.edu.iuh.fit.climpingrose.mappers.UserMapper;
 import vn.edu.iuh.fit.climpingrose.repositories.UserRepository;
 
 import java.text.ParseException;
@@ -51,6 +52,8 @@ public class AuthenticationService {
     @NonFinal
     @Value("${jwt.refreshable-duration}")
     protected long REFRESHABLE_DURATION;
+    @Autowired
+    private UserMapper userMapper;
 
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
@@ -83,7 +86,11 @@ public class AuthenticationService {
 
         var token = generateToken(user);
 
-        return AuthenticationResponse.builder().token(token).authenticated(true).build();
+        return AuthenticationResponse.builder()
+                .token(token)
+                .authenticated(true)
+                .user(userMapper.toUserResponse(user))
+                .build();
     }
 
     public void logout(LogoutRequest request) throws ParseException, JOSEException {

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class UserResponse {
+public class UserResponse extends BaseResponse{
     String userId;
     String email;
     String phone;
