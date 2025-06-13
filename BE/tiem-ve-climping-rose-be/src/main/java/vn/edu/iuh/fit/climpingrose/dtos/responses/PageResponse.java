@@ -15,7 +15,7 @@ import java.util.List;
 public class PageResponse<T> {
     private List<T> items;
     private int page;
-    private int limit;
+    private int size;
     private long totalItems;
     private int totalPages;
 
@@ -23,7 +23,7 @@ public class PageResponse<T> {
         return PageResponse.<T>builder()
                 .items(pageData.getContent())
                 .page(pageData.getNumber() + 1) // Spring bắt đầu từ 0
-                .limit(pageData.getSize())
+                .size(pageData.getSize())
                 .totalItems(pageData.getTotalElements())
                 .totalPages(pageData.getTotalPages())
                 .build();
