@@ -2,8 +2,18 @@
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import PinkSpinner from "@/components/ui/pink-spiner";
 import { getCategories } from "@/features/categories/categoryApi";
+import { getPaintings } from "@/features/paintings/paintingApi";
 import { ICategory, IPainting } from "@/types/implements/painting";
+import { getVisiblePages } from "@/utils/helper";
 import React, { useEffect, useState } from "react";
 
 const sizeOptions = ["20x30", "40x40", "40x50"];
@@ -19,18 +29,40 @@ const PaintingsPage = () => {
 
   const fetchCategories = async () => {
     try {
+      setLoading(true);
       const response = await getCategories();
       if (response.data) {
         setCategories(response.data);
       }
     } catch (error) {
       console.log("Error happend when fetch categories", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchPaintings = async () => {
+    try {
+      setLoading(true);
+      const response = await getPaintings(page, 9);
+      if (response.data) {
+        setPaintings(response.data.items);
+        setTotalPages(response.data.totalPages);
+      }
+    } catch (error) {
+      console.log("Error happend when fetch paitings", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    fetchPaintings();
+  }, [page]);
 
   const toggleSelection = (
     value: string,
@@ -90,6 +122,49 @@ const PaintingsPage = () => {
           </div>
         </div>
       </aside>
+
+      {totalPages > 1 && (
+        <div className="mt-8 flex justify-center">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  className={page === 1 ? "opacity-50 pointer-events-none" : ""}
+                />
+              </PaginationItem>
+
+              {getVisiblePages(page, totalPages).map((p, i) => (
+                <PaginationItem key={i}>
+                  {p === "..." ? (
+                    <span className="px-2 text-gray-500">...</span>
+                  ) : (
+                    <button
+                      onClick={() => setPage(p as number)}
+                      className={`px-3 py-1 border rounded ${
+                        page === p ? "bg-black text-white" : ""
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  )}
+                </PaginationItem>
+              ))}
+
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+                  className={
+                    page === totalPages ? "opacity-50 pointer-events-none" : ""
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
+
+      {loading && <PinkSpinner />}
     </div>
   );
 };
