@@ -20,7 +20,7 @@ const Header = () => {
   const t = useTranslations("home");
 
   useEffect(() => {
-    setMounted(true); // Khi lên client mới set true
+    setMounted(true);
   }, []);
 
   return (
