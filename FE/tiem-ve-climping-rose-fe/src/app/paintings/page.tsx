@@ -4,6 +4,14 @@ import { PaintingList } from "@/components/paintings/PaintingList";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
   Pagination,
   PaginationContent,
   PaginationItem,
@@ -16,6 +24,7 @@ import { getPaintings } from "@/features/paintings/paintingApi";
 import { ICategory, IPainting } from "@/types/implements/painting";
 import { getVisiblePages } from "@/utils/helper";
 import React, { useEffect, useState } from "react";
+import { Funnel } from "lucide-react";
 
 const sizeOptions = ["20x30", "40x40", "40x50"];
 const PaintingsPage = () => {
@@ -75,10 +84,10 @@ const PaintingsPage = () => {
   return (
     <div className=" relative flex flex-col md:flex-row gap-4 p-2">
       {/* Filters */}
-      <div className="md:w-48 h-fit sticky top-[100px]">
+      <div className="hidden md:flex flex-col gap-4 md:w-48 h-fit sticky top-[100px]">
         <Input type="text" placeholder="Search.." />
         <div>
-          <h2 className="text-lg font-semibold mb-2">Kích thước</h2>
+          <p className="text-lg font-semibold mb-2 text-red-500">Kích thước</p>
           <div className="space-y-2">
             {sizeOptions.map((size) => (
               <div key={size} className="flex items-center gap-2">
@@ -98,7 +107,7 @@ const PaintingsPage = () => {
         </div>
 
         <div>
-          <h2 className="text-lg font-semibold mb-2">Danh mục</h2>
+          <p className="text-lg font-semibold mb-2">Danh mục</p>
           <div className="space-y-2">
             {categories.map((cat) => (
               <div key={cat.categoryId} className="flex items-center gap-2">
@@ -122,8 +131,82 @@ const PaintingsPage = () => {
         </div>
       </div>
 
+      {/* Sheet Mobile */}
+
       <div className="flex-1 flex flex-col justify-start ">
-        <div className="bg-pink-400"></div>
+        <div className="flex  justify-between p-4 ">
+          <p>Từ từ mần thim</p>
+          <Sheet>
+            <SheetTrigger>
+              <Funnel className="md:hidden" />
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Filter</SheetTitle>
+                <div className="md:hidden flex-col gap-4 ">
+                  <Input type="text" placeholder="Search.." />
+                  <div>
+                    <h2 className="text-lg font-semibold mb-2 text-red-500">
+                      Kích thước
+                    </h2>
+                    <div className="space-y-2">
+                      {sizeOptions.map((size) => (
+                        <div key={size} className="flex items-center gap-2">
+                          <Checkbox
+                            id={`size-${size}`}
+                            checked={selectedSizes.includes(size)}
+                            onCheckedChange={() =>
+                              toggleSelection(
+                                size,
+                                selectedSizes,
+                                setSelectedSizes
+                              )
+                            }
+                          />
+                          <label htmlFor={`size-${size}`} className="text-sm">
+                            {size}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h2 className="text-lg font-semibold mb-2">Danh mục</h2>
+                    <div className="space-y-2">
+                      {categories.map((cat) => (
+                        <div
+                          key={cat.categoryId}
+                          className="flex items-center gap-2"
+                        >
+                          <Checkbox
+                            id={`cat-${cat.categoryId}`}
+                            checked={selectedCategories.includes(
+                              cat.categoryId
+                            )}
+                            onCheckedChange={() =>
+                              toggleSelection(
+                                cat.categoryId,
+                                selectedCategories,
+                                setSelectedCategories
+                              )
+                            }
+                          />
+                          <label
+                            htmlFor={`cat-${cat.categoryId}`}
+                            className="text-sm"
+                          >
+                            {cat.name}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </SheetHeader>
+            </SheetContent>
+          </Sheet>
+        </div>
 
         {/* paintings */}
         <PaintingList paintings={paintings} />
@@ -149,7 +232,7 @@ const PaintingsPage = () => {
                       <button
                         onClick={() => setPage(p as number)}
                         className={`px-3 py-1 border rounded ${
-                          page === p ? "bg-black text-white" : ""
+                          page === p ? "bg-red-300 text-white" : ""
                         }`}
                       >
                         {p}

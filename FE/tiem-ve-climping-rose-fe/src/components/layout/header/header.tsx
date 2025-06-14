@@ -24,7 +24,7 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 w-full bg-white z-50 py-3 ">
+    <div className="fixed top-0 left-0 w-full bg-white z-50 py-3 px-4">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo + Tiêu đề */}
         <div className="flex justify-between items-center gap-2 ">
@@ -59,10 +59,10 @@ const Header = () => {
 
           <DropdownMenuContent align="end" className="md:hidden w-full mt-2">
             <DropdownMenuItem asChild>
-              <Link href="#">{t("menu.home")}</Link>
+              <Link href="/">{t("menu.home")}</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="#">{t("menu.products")}</Link>
+              <Link href="/paintings">{t("menu.products")}</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link href="#">{t("menu.feedbacks")}</Link>

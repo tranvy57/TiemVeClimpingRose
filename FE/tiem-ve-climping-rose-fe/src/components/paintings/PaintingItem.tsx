@@ -1,5 +1,5 @@
 import { showSuccess } from "@/libs/toast";
-import { Check, ShoppingCart } from "lucide-react";
+import { BadgeJapaneseYen, Check, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -32,15 +32,24 @@ export function PaitingItem({
 
       <div className="p-2 flex items-center justify-between">
         <div>
-          <p className=" text-sm font-semibold text-red-400 transition-colors">
+          <p className=" text-sm font-semibold text-gray-800 transition-colors">
             {name}
           </p>
-          <p className="text- text-gray-600 font-light"> {price}¥</p>
+          <div className="text-xs text-red-500 font-semibold flex">
+            <BadgeJapaneseYen
+              className="size-4"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            />
+            {price}
+          </div>
         </div>
 
-        <div className="bg-red-100 rounded-full p-1 hover:p-2 transition-all duration-300">
+        <div className="bg-red-200 rounded-full p-1 hover:p-2 transition-all duration-300 shadow-sm ">
           <ShoppingCart
-            className="font-light text-red-400 size-4
+            className="font-light size-4 text-gray-800 
           "
             onClick={(e) => {
               e.preventDefault();
