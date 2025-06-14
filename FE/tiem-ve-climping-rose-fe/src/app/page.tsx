@@ -6,6 +6,7 @@ import {
 } from "@/components/home";
 
 export default function HomePage() {
+  console.log("BUILD TIME ENV CHECK:", process.env.NEXT_PUBLIC_API_URL);
   return (
     <div>
       <ImageCarousel />
