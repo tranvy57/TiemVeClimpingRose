@@ -30,22 +30,19 @@ const PaintingsPage = () => {
 
   const fetchCategories = async () => {
     try {
-      setLoading(true);
       const response = await getCategories();
       if (response.data) {
         setCategories(response.data);
       }
     } catch (error) {
       console.log("Error happend when fetch categories", error);
-    } finally {
-      setLoading(false);
     }
   };
 
   const fetchPaintings = async () => {
     try {
       setLoading(true);
-      const response = await getPaintings(page, 50);
+      const response = await getPaintings(page, 20);
       if (response.data) {
         setPaintings(response.data.items);
         setTotalPages(response.data.totalPages);

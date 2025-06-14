@@ -10,6 +10,7 @@ export function PaintingList({ paintings }: PatingsProps) {
       {paintings.map((p) => {
         return (
           <PaitingItem
+            key={p.paintingId}
             name={p.name}
             image_url={p.imageUrl}
             price={p.price}
