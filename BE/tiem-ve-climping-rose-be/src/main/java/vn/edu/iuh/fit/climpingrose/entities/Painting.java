@@ -25,6 +25,7 @@ public class Painting extends BaseEntity{
 
     String name;
     String description;
+    @Column(length = 500)
     String imageUrl;
 
     @Enumerated(EnumType.STRING)

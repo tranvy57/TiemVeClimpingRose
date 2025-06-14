@@ -1,5 +1,6 @@
 "use client";
 
+import { PaintingList } from "@/components/paintings/PaintingList";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,9 +20,9 @@ import React, { useEffect, useState } from "react";
 const sizeOptions = ["20x30", "40x40", "40x50"];
 const PaintingsPage = () => {
   const [paintings, setPaintings] = useState<IPainting[]>([]);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
@@ -44,7 +45,7 @@ const PaintingsPage = () => {
   const fetchPaintings = async () => {
     try {
       setLoading(true);
-      const response = await getPaintings(page, 9);
+      const response = await getPaintings(page, 50);
       if (response.data) {
         setPaintings(response.data.items);
         setTotalPages(response.data.totalPages);
@@ -75,8 +76,9 @@ const PaintingsPage = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-8 p-6">
-      <aside className="md:w-64 space-y-6">
+    <div className=" relative flex flex-col md:flex-row gap-4 p-2">
+      {/* Filters */}
+      <div className="md:w-48 h-fit sticky top-[100px]">
         <Input type="text" placeholder="Search.." />
         <div>
           <h2 className="text-lg font-semibold mb-2">Kích thước</h2>
@@ -121,49 +123,59 @@ const PaintingsPage = () => {
             ))}
           </div>
         </div>
-      </aside>
+      </div>
 
-      {totalPages > 1 && (
-        <div className="mt-8 flex justify-center">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className={page === 1 ? "opacity-50 pointer-events-none" : ""}
-                />
-              </PaginationItem>
+      <div className="flex-1 flex flex-col justify-start ">
+        <div className="bg-pink-400"></div>
 
-              {getVisiblePages(page, totalPages).map((p, i) => (
-                <PaginationItem key={i}>
-                  {p === "..." ? (
-                    <span className="px-2 text-gray-500">...</span>
-                  ) : (
-                    <button
-                      onClick={() => setPage(p as number)}
-                      className={`px-3 py-1 border rounded ${
-                        page === p ? "bg-black text-white" : ""
-                      }`}
-                    >
-                      {p}
-                    </button>
-                  )}
+        {/* paintings */}
+        <PaintingList paintings={paintings} />
+        {/* paging*/}
+        {totalPages > 1 && (
+          <div className="mt-4 flex justify-center">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    className={
+                      page === 1 ? "opacity-50 pointer-events-none" : ""
+                    }
+                  />
                 </PaginationItem>
-              ))}
 
-              <PaginationItem>
-                <PaginationNext
-                  onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-                  className={
-                    page === totalPages ? "opacity-50 pointer-events-none" : ""
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
-      )}
+                {getVisiblePages(page, totalPages).map((p, i) => (
+                  <PaginationItem key={i}>
+                    {p === "..." ? (
+                      <span className="px-2 text-gray-500">...</span>
+                    ) : (
+                      <button
+                        onClick={() => setPage(p as number)}
+                        className={`px-3 py-1 border rounded ${
+                          page === p ? "bg-black text-white" : ""
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    )}
+                  </PaginationItem>
+                ))}
 
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+                    className={
+                      page === totalPages
+                        ? "opacity-50 pointer-events-none"
+                        : ""
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
+      </div>
       {loading && <PinkSpinner />}
     </div>
   );
