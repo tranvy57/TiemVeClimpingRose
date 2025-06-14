@@ -82,9 +82,9 @@ const PaintingsPage = () => {
   };
 
   return (
-    <div className=" relative flex flex-col md:flex-row gap-4 p-2">
+    <div className=" relative flex flex-col md:flex-row gap-4">
       {/* Filters */}
-      <div className="hidden md:flex flex-col gap-4 md:w-48 h-fit sticky top-[100px]">
+      <div className="hidden md:flex flex-col gap-4 md:w-48  h-fit sticky md:top-[90px]">
         <Input type="text" placeholder="Search.." />
         <div>
           <p className="text-lg font-semibold mb-2 text-red-500">Kích thước</p>
@@ -107,7 +107,7 @@ const PaintingsPage = () => {
         </div>
 
         <div>
-          <p className="text-lg font-semibold mb-2">Danh mục</p>
+          <p className="text-lg font-semibold mb-2 text-red-500">Danh mục</p>
           <div className="space-y-2">
             {categories.map((cat) => (
               <div key={cat.categoryId} className="flex items-center gap-2">
@@ -130,11 +130,10 @@ const PaintingsPage = () => {
           </div>
         </div>
       </div>
-
       {/* Sheet Mobile */}
 
       <div className="flex-1 flex flex-col justify-start ">
-        <div className="flex  justify-between p-4 ">
+        <div className="flex justify-between pb-2 md:hidden">
           <p>Từ từ mần thim</p>
           <Sheet>
             <SheetTrigger>
@@ -143,10 +142,10 @@ const PaintingsPage = () => {
             <SheetContent>
               <SheetHeader>
                 <SheetTitle>Filter</SheetTitle>
-                <div className="md:hidden flex-col gap-4 ">
+                <div className="md:hidden flex-col">
                   <Input type="text" placeholder="Search.." />
                   <div>
-                    <h2 className="text-lg font-semibold mb-2 text-red-500">
+                    <h2 className=" font-semibold mb-2 text-red-500">
                       Kích thước
                     </h2>
                     <div className="space-y-2">
@@ -172,7 +171,9 @@ const PaintingsPage = () => {
                   </div>
 
                   <div>
-                    <h2 className="text-lg font-semibold mb-2">Danh mục</h2>
+                    <h2 className=" font-semibold mb-2 text-red-500">
+                      Danh mục
+                    </h2>
                     <div className="space-y-2">
                       {categories.map((cat) => (
                         <div

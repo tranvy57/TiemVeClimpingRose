@@ -19,7 +19,7 @@ export function PaitingItem({
   return (
     <Link
       href={href}
-      className="rounded-md border border-gray-200 overflow-hidden group "
+      className="rounded-md border border-gray-200 overflow-hidden group"
     >
       <div className="relative aspect-square w-full overflow-hidden ">
         <Image

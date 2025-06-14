@@ -24,7 +24,7 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 w-full bg-white z-50 py-3 px-4">
+    <div className="fixed top-0 left-0 w-full bg-white z-50 md:py-1 px-4">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo + Tiêu đề */}
         <div className="flex justify-between items-center gap-2 ">
