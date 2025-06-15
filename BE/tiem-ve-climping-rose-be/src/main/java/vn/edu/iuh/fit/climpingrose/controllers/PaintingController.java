@@ -25,9 +25,13 @@ public class PaintingController {
     @GetMapping
     public ApiResponse<PageResponse<PaintingDTO>> getAllPaintings(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "12") int size
+            @RequestParam(defaultValue = "12") int size,
+            @RequestParam(required = false) List<String> categoryIds,
+            @RequestParam(required = false) List<String> sizes,
+            @RequestParam(required = false) Boolean isActive,
+            @RequestParam(required = false) String keyword
     ) {
-        PageResponse<PaintingDTO> result = paintingService.getAllPaintings(page, size);
+        PageResponse<PaintingDTO> result = paintingService.getAllPaintings(page, size, categoryIds, sizes, isActive, keyword) ;
         return ApiResponse.<PageResponse<PaintingDTO>>builder()
                 .message("Lấy danh sách tranh thành công")
                 .data(result)
