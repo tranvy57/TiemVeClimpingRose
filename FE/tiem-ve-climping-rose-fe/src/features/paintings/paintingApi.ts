@@ -4,10 +4,17 @@ import { IPainting } from "@/types/implements/painting";
 import { PageResponse } from "@/types/page-response";
 import axios from "axios";
 
-export const getPaintings = async (page: number, size: number) => {
+export const getPaintings = async (
+  page: number,
+  size: number,
+  categoryIds: string[],
+  sizes: string[],
+  isActive: boolean,
+  keyword: string
+) => {
   try {
     const response = await api.get<ApiResponse<PageResponse<IPainting>>>(
-      `/paintings?page=${page}&size=${size}`
+      `/paintings?page=${page}&size=${size}&categoryIds=${categoryIds}&sizes=${sizes}&keyword=${keyword}`
     );
 
     return response.data;

@@ -24,9 +24,11 @@ import { getPaintings } from "@/features/paintings/paintingApi";
 import { ICategory, IPainting } from "@/types/implements/painting";
 import { getVisiblePages } from "@/utils/helper";
 import React, { useEffect, useState } from "react";
-import { Funnel } from "lucide-react";
+import { Funnel, Search } from "lucide-react";
+import { log } from "console";
+import { Button } from "@/components/ui/button";
 
-const sizeOptions = ["20x30", "40x40", "40x50"];
+const sizeOptions = ["20x20", "30x40", "40x50"];
 const PaintingsPage = () => {
   const [paintings, setPaintings] = useState<IPainting[]>([]);
   const [page, setPage] = useState<number>(1);
@@ -35,7 +37,9 @@ const PaintingsPage = () => {
 
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
+  const [inputValue, setInputValue] = useState<string>("");
+  const [keyword, setKeyword] = useState<string>("");
 
   const fetchCategories = async () => {
     try {
@@ -51,7 +55,14 @@ const PaintingsPage = () => {
   const fetchPaintings = async () => {
     try {
       setLoading(true);
-      const response = await getPaintings(page, 20);
+      const response = await getPaintings(
+        page,
+        20,
+        selectedCategoryIds,
+        selectedSizes,
+        true,
+        keyword
+      );
       if (response.data) {
         setPaintings(response.data.items);
         setTotalPages(response.data.totalPages);
@@ -69,7 +80,7 @@ const PaintingsPage = () => {
 
   useEffect(() => {
     fetchPaintings();
-  }, [page]);
+  }, [page, selectedSizes, selectedCategoryIds]);
 
   const toggleSelection = (
     value: string,
@@ -79,13 +90,29 @@ const PaintingsPage = () => {
     setList(
       list.includes(value) ? list.filter((v) => v !== value) : [...list, value]
     );
+    console.log("List: ", list);
+  };
+
+  const handleSearch = () => {
+    setKeyword(inputValue);
+    fetchPaintings();
   };
 
   return (
     <div className=" relative flex flex-col md:flex-row gap-4">
       {/* Filters */}
       <div className="hidden md:flex flex-col gap-4 md:w-48  h-fit sticky md:top-[90px]">
-        <Input type="text" placeholder="Search.." />
+        <div className="flex justify-between items-center gap-1">
+          <Input
+            type="text"
+            placeholder="Search.."
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+          <Button className="py-0" onClick={handleSearch}>
+            <Search />
+          </Button>
+        </div>
         <div>
           <p className="text-lg font-semibold mb-2 text-red-500">Kích thước</p>
           <div className="space-y-2">
@@ -93,9 +120,13 @@ const PaintingsPage = () => {
               <div key={size} className="flex items-center gap-2">
                 <Checkbox
                   id={`size-${size}`}
-                  checked={selectedSizes.includes(size)}
+                  checked={selectedSizes.includes("SIZE_" + size)}
                   onCheckedChange={() =>
-                    toggleSelection(size, selectedSizes, setSelectedSizes)
+                    toggleSelection(
+                      "SIZE_" + size,
+                      selectedSizes,
+                      setSelectedSizes
+                    )
                   }
                 />
                 <label htmlFor={`size-${size}`} className="text-sm">
@@ -113,12 +144,12 @@ const PaintingsPage = () => {
               <div key={cat.categoryId} className="flex items-center gap-2">
                 <Checkbox
                   id={`cat-${cat.categoryId}`}
-                  checked={selectedCategories.includes(cat.categoryId)}
+                  checked={selectedCategoryIds.includes(cat.categoryId)}
                   onCheckedChange={() =>
                     toggleSelection(
                       cat.categoryId,
-                      selectedCategories,
-                      setSelectedCategories
+                      selectedCategoryIds,
+                      setSelectedCategoryIds
                     )
                   }
                 />
@@ -143,7 +174,17 @@ const PaintingsPage = () => {
               <SheetHeader>
                 <SheetTitle>Filter</SheetTitle>
                 <div className="md:hidden flex-col">
-                  <Input type="text" placeholder="Search.." />
+                  <div className="flex justify-between items-center gap-1">
+                    <Input
+                      type="text"
+                      placeholder="Search.."
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                    />
+                    <Button className="py-0" onClick={handleSearch}>
+                      <Search />
+                    </Button>
+                  </div>
                   <div>
                     <h2 className=" font-semibold mb-2 text-red-500">
                       Kích thước
@@ -153,10 +194,10 @@ const PaintingsPage = () => {
                         <div key={size} className="flex items-center gap-2">
                           <Checkbox
                             id={`size-${size}`}
-                            checked={selectedSizes.includes(size)}
+                            checked={selectedSizes.includes("SIZE_" + size)}
                             onCheckedChange={() =>
                               toggleSelection(
-                                size,
+                                "SIZE_" + size,
                                 selectedSizes,
                                 setSelectedSizes
                               )
@@ -182,14 +223,14 @@ const PaintingsPage = () => {
                         >
                           <Checkbox
                             id={`cat-${cat.categoryId}`}
-                            checked={selectedCategories.includes(
+                            checked={selectedCategoryIds.includes(
                               cat.categoryId
                             )}
                             onCheckedChange={() =>
                               toggleSelection(
                                 cat.categoryId,
-                                selectedCategories,
-                                setSelectedCategories
+                                selectedCategoryIds,
+                                setSelectedCategoryIds
                               )
                             }
                           />
