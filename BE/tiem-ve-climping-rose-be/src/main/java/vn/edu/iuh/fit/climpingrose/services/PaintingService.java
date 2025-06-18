@@ -45,6 +45,12 @@ public class PaintingService {
         return PageResponse.from(paintings.map(paintingMapper::toPaintingDTO));
     }
 
+    public PaintingDTO getPaintingById(String paintingId) {
+        Painting painting = paintingRepository.findById(paintingId)
+                .orElseThrow(() -> new BadRequestException("Painting not found with id: " + paintingId));
+        return paintingMapper.toPaintingDTO(painting);
+    }
+
 
 
 
