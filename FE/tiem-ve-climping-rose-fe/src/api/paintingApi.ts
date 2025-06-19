@@ -10,11 +10,12 @@ export const getPaintings = async (
   categoryIds: string[],
   sizes: string[],
   isActive: boolean,
-  keyword: string
+  keyword: string,
+  sort: string
 ) => {
   try {
     const response = await api.get<ApiResponse<PageResponse<IPainting>>>(
-      `/paintings?page=${page}&size=${size}&categoryIds=${categoryIds}&sizes=${sizes}&keyword=${keyword}`
+      `/paintings?page=${page}&size=${size}&categoryIds=${categoryIds}&sizes=${sizes}&keyword=${keyword}&sort=${sort}`
     );
 
     return response.data;

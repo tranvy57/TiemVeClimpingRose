@@ -4,6 +4,13 @@ import { PaintingList } from "@/components/paintings/PaintingList";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Sheet,
   SheetContent,
   SheetDescription,
@@ -43,6 +50,7 @@ const PaintingsPage = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
+  const [sort, setSort] = useState<string>("created-desc");
 
   //func fetch categories
   const fetchCategories = async () => {
@@ -66,7 +74,8 @@ const PaintingsPage = () => {
         selectedCategoryIds,
         selectedSizes,
         true,
-        ""
+        "",
+        sort
       );
       if (response.data) {
         setPaintings(response.data.items);
@@ -86,6 +95,7 @@ const PaintingsPage = () => {
     const sizeList = searchParams.getAll("size");
     const pageParam = searchParams.get("page");
     const pageFromUrl = pageParam ? parseInt(pageParam) : 1;
+    const sortParam = searchParams.get("sort");
 
     const hasFilter = categoryList.length > 0 || sizeList.length > 0;
 
@@ -95,6 +105,10 @@ const PaintingsPage = () => {
 
     if (sizeList.length > 0) {
       setSelectedSizes(sizeList);
+    }
+
+    if (sortParam) {
+      setSort(sortParam);
     }
 
     setPage(pageFromUrl);
@@ -115,9 +129,10 @@ const PaintingsPage = () => {
     });
 
     if (page > 1) query.set("page", String(page));
+    if (sort && sort !== "created-desc") query.set("sort", sort);
 
     router.push(`/paintings?${query.toString()}`);
-  }, [selectedSizes, selectedCategoryIds, page]);
+  }, [selectedSizes, selectedCategoryIds, page, sort]);
 
   //fectch category
   useEffect(() => {
@@ -128,7 +143,7 @@ const PaintingsPage = () => {
   useEffect(() => {
     if (!initialized) return;
     fetchPaintings();
-  }, [page, selectedCategoryIds, selectedSizes, initialized]);
+  }, [page, selectedCategoryIds, selectedSizes, sort, initialized]);
 
   const toggleSelection = (
     value: string,
@@ -161,6 +176,20 @@ const PaintingsPage = () => {
             <Search />
           </Button>
         </div> */}
+        <div className="w-full">
+          <Select value={sort} onValueChange={setSort}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Sắp xếp" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="created-desc">Mới nhất</SelectItem>
+              <SelectItem value="created-asc">Cũ nhất</SelectItem>
+              <SelectItem value="price-asc">Giá tăng dần</SelectItem>
+              <SelectItem value="price-desc">Giá giảm dần</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
         <div>
           <p className="text-lg font-semibold mb-2 text-red-500">Kích thước</p>
           <div className="space-y-2">
@@ -211,9 +240,21 @@ const PaintingsPage = () => {
       </div>
       {/* Sheet Mobile */}
 
-      <div className="flex-1 flex flex-col justify-start ">
-        <div className="flex justify-between pb-2 md:hidden">
-          <p>Từ từ mần thim</p>
+      <div className="flex-1 flex flex-col justify-start gap">
+        <div className="flex justify-between pb-2 md:hidden gap-4">
+          <div className="flex-1">
+            <Select value={sort} onValueChange={setSort}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Sắp xếp" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="created-desc">Mới nhất</SelectItem>
+                <SelectItem value="created-asc">Cũ nhất</SelectItem>
+                <SelectItem value="price-asc">Giá tăng dần</SelectItem>
+                <SelectItem value="price-desc">Giá giảm dần</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <Sheet>
             <SheetTrigger>
               <Funnel className="md:hidden" />
@@ -233,6 +274,7 @@ const PaintingsPage = () => {
                       <Search />
                     </Button>
                   </div> */}
+
                   <div>
                     <h2 className=" font-semibold mb-2 text-red-500">
                       Kích thước
