@@ -26,9 +26,10 @@ public class PaintingController {
             @RequestParam(required = false) List<String> categoryIds,
             @RequestParam(required = false) List<String> sizes,
             @RequestParam(required = false) Boolean isActive,
-            @RequestParam(required = false) String keyword
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String sort
     ) {
-        PageResponse<PaintingDTO> result = paintingService.getAllPaintings(page, size, categoryIds, sizes, isActive, keyword) ;
+        PageResponse<PaintingDTO> result = paintingService.getAllPaintings(page, size, categoryIds, sizes, isActive, keyword, sort) ;
         return ApiResponse.<PageResponse<PaintingDTO>>builder()
                 .message("Lấy danh sách tranh thành công")
                 .data(result)

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.climpingrose.dtos.dtos.PaintingDTO;
@@ -22,7 +23,7 @@ public class PaintingService {
     private final PaintingRepository paintingRepository;
     private final PaintingMapper paintingMapper;
 
-    public PageResponse<PaintingDTO> getAllPaintings(int page, int size, List<String> categoryIds, List<String> sizes, Boolean isActive, String keyword) {
+    public PageResponse<PaintingDTO> getAllPaintings(int page, int size, List<String> categoryIds, List<String> sizes, Boolean isActive, String keyword, String sortBy) {
         if (page <= 0) {
             throw new BadRequestException("Page number must be zero or greater");
         }
@@ -31,8 +32,27 @@ public class PaintingService {
         }
         int pageNumber = page - 1; // Convert to zero-based index
 
+        Sort sortOrder = Sort.unsorted();
 
-        Pageable pageable = PageRequest.of(pageNumber, size);
+        if (sortBy != null && !sortBy.isEmpty()) {
+            switch (sortBy) {
+                case "price-asc":
+                    sortOrder = Sort.by(Sort.Direction.ASC, "price");
+                    break;
+                case "price-desc":
+                    sortOrder = Sort.by(Sort.Direction.DESC, "price");
+                    break;
+                case "created-asc":
+                    sortOrder = Sort.by(Sort.Direction.ASC, "createdAt");
+                    break;
+                case "created-desc":
+                default:
+                    sortOrder = Sort.by(Sort.Direction.DESC, "createdAt"); // mặc định
+                    break;
+            }
+        }
+
+        Pageable pageable = PageRequest.of(pageNumber, size, sortOrder);
 
         Specification<Painting> spec = Specification
                 .where(PaintingSpecifications.hasCategoryIn(categoryIds))
@@ -50,8 +70,6 @@ public class PaintingService {
                 .orElseThrow(() -> new BadRequestException("Painting not found with id: " + paintingId));
         return paintingMapper.toPaintingDTO(painting);
     }
-
-
 
 
 }
