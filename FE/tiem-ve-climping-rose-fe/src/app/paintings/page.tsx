@@ -84,6 +84,8 @@ const PaintingsPage = () => {
     // lấy tất cả category & size từ URL (cho phép nhiều)
     const categoryList = searchParams.getAll("category");
     const sizeList = searchParams.getAll("size");
+    const pageParam = searchParams.get("page");
+    const pageFromUrl = pageParam ? parseInt(pageParam) : 1;
 
     const hasFilter = categoryList.length > 0 || sizeList.length > 0;
 
@@ -94,6 +96,8 @@ const PaintingsPage = () => {
     if (sizeList.length > 0) {
       setSelectedSizes(sizeList);
     }
+
+    setPage(pageFromUrl);
 
     setInitialized(true);
   }, []);
@@ -110,14 +114,17 @@ const PaintingsPage = () => {
       query.append("size", size);
     });
 
-    router.push(`/paintings?${query.toString()}`);
-  }, [selectedSizes, selectedCategoryIds]);
+    if (page > 1) query.set("page", String(page));
 
-  //fectch cagoryId
+    router.push(`/paintings?${query.toString()}`);
+  }, [selectedSizes, selectedCategoryIds, page]);
+
+  //fectch category
   useEffect(() => {
     fetchCategories();
   }, []);
 
+  //fetch paitings
   useEffect(() => {
     if (!initialized) return;
     fetchPaintings();
