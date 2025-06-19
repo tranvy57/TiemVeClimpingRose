@@ -19,17 +19,22 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import PinkSpinner from "@/components/ui/pink-spiner";
-import { getCategories } from "@/features/categories/categoryApi";
-import { getPaintings } from "@/features/paintings/paintingApi";
+import { getCategories } from "@/api/categoryApi";
+import { getPaintings } from "@/api/paintingApi";
 import { ICategory, IPainting } from "@/types/implements/painting";
 import { getVisiblePages } from "@/utils/helper";
 import React, { useEffect, useState } from "react";
 import { Funnel, Search } from "lucide-react";
 import { log } from "console";
 import { Button } from "@/components/ui/button";
+import { useSearchParams, useRouter } from "next/navigation";
 
 const sizeOptions = ["20x20", "30x40", "40x50"];
 const PaintingsPage = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [initialized, setInitialized] = useState(false); // NEW: track khi state đã được gán từ URL
+
   const [paintings, setPaintings] = useState<IPainting[]>([]);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
@@ -38,9 +43,8 @@ const PaintingsPage = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState<string>("");
-  const [keyword, setKeyword] = useState<string>("");
 
+  //func fetch categories
   const fetchCategories = async () => {
     try {
       const response = await getCategories();
@@ -52,6 +56,7 @@ const PaintingsPage = () => {
     }
   };
 
+  //func fetch patings
   const fetchPaintings = async () => {
     try {
       setLoading(true);
@@ -61,7 +66,7 @@ const PaintingsPage = () => {
         selectedCategoryIds,
         selectedSizes,
         true,
-        keyword
+        ""
       );
       if (response.data) {
         setPaintings(response.data.items);
@@ -74,13 +79,49 @@ const PaintingsPage = () => {
     }
   };
 
+  //  filter từ URL
+  useEffect(() => {
+    // lấy tất cả category & size từ URL (cho phép nhiều)
+    const categoryList = searchParams.getAll("category");
+    const sizeList = searchParams.getAll("size");
+
+    const hasFilter = categoryList.length > 0 || sizeList.length > 0;
+
+    if (categoryList.length > 0) {
+      setSelectedCategoryIds(categoryList);
+    }
+
+    if (sizeList.length > 0) {
+      setSelectedSizes(sizeList);
+    }
+
+    setInitialized(true);
+  }, []);
+
+  //push param vào url để người dùng có thể gửi link kèm filter
+  useEffect(() => {
+    const query = new URLSearchParams();
+
+    selectedCategoryIds.forEach((id) => {
+      query.append("category", id);
+    });
+
+    selectedSizes.forEach((size) => {
+      query.append("size", size);
+    });
+
+    router.push(`/paintings?${query.toString()}`);
+  }, [selectedSizes, selectedCategoryIds]);
+
+  //fectch cagoryId
   useEffect(() => {
     fetchCategories();
   }, []);
 
   useEffect(() => {
+    if (!initialized) return;
     fetchPaintings();
-  }, [page, selectedSizes, selectedCategoryIds]);
+  }, [page, selectedCategoryIds, selectedSizes, initialized]);
 
   const toggleSelection = (
     value: string,
@@ -93,16 +134,16 @@ const PaintingsPage = () => {
     console.log("List: ", list);
   };
 
-  const handleSearch = () => {
-    setKeyword(inputValue);
-    fetchPaintings();
-  };
+  // const handleSearch = () => {
+  //   setKeyword(inputValue);
+  //   fetchPaintings();
+  // };
 
   return (
     <div className=" relative flex flex-col md:flex-row gap-4">
       {/* Filters */}
-      <div className="hidden md:flex flex-col gap-4 md:w-48  h-fit sticky md:top-[90px]">
-        <div className="flex justify-between items-center gap-1">
+      <div className="hidden md:flex flex-col gap-4 md:w-48  h-fit sticky md:top-[65px]">
+        {/* <div className="flex justify-between items-center gap-1">
           <Input
             type="text"
             placeholder="Search.."
@@ -112,7 +153,7 @@ const PaintingsPage = () => {
           <Button className="py-0" onClick={handleSearch}>
             <Search />
           </Button>
-        </div>
+        </div> */}
         <div>
           <p className="text-lg font-semibold mb-2 text-red-500">Kích thước</p>
           <div className="space-y-2">
@@ -174,7 +215,7 @@ const PaintingsPage = () => {
               <SheetHeader>
                 <SheetTitle>Filter</SheetTitle>
                 <div className="md:hidden flex-col">
-                  <div className="flex justify-between items-center gap-1">
+                  {/* <div className="flex justify-between items-center gap-1">
                     <Input
                       type="text"
                       placeholder="Search.."
@@ -184,7 +225,7 @@ const PaintingsPage = () => {
                     <Button className="py-0" onClick={handleSearch}>
                       <Search />
                     </Button>
-                  </div>
+                  </div> */}
                   <div>
                     <h2 className=" font-semibold mb-2 text-red-500">
                       Kích thước

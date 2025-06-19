@@ -17,24 +17,25 @@ export function CategoryItem({
   href,
 }: CategoryItemProps) {
   return (
-    <Link
-      href={href}
-      className="rounded-md border border-gray-200 overflow-hidden group"
-    >
-      <div className="relative aspect-square w-full">
-        <Image
-          src={image_url}
-          alt={title}
-          fill
-          className="object-cover rounded-sm transition-transform duration-300 group-hover:scale-105"
-        />
-      </div>
+    <Link href={href} className="">
+      <div className="border border-gray-200 rounded-md h-full">
+        <div className="relative aspect-square w-full  overflow-hidden group">
+          <Image
+            src={image_url}
+            alt={title}
+            fill
+            className="object-cover rounded-sm transition-transform duration-300 group-hover:scale-105"
+          />
+        </div>
 
-      <div className="p-4">
-        <h3 className="md:text-md font-semibold text-red-500 transition-colors">
-          {title}
-        </h3>
-        <p className="text-sm text-gray-600 mt-1 font-normal">{description}</p>
+        <div className="p-4">
+          <h3 className="md:text-md font-semibold text-red-500 transition-colors">
+            {title}
+          </h3>
+          <p className="text-sm text-gray-600 mt-1 font-normal">
+            {description}
+          </p>
+        </div>
       </div>
     </Link>
   );
