@@ -23,3 +23,14 @@ export const getPaintings = async (
     throw error;
   }
 };
+
+export const getPaitingById = async (pantingId: string) => {
+  try {
+    const response = await api.get<ApiResponse<IPainting>>(
+      `/paintings/${pantingId}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
