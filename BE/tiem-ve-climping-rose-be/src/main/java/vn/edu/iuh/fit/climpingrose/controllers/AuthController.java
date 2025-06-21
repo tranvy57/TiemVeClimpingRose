@@ -20,7 +20,7 @@ import vn.edu.iuh.fit.climpingrose.services.AuthenticationService;
 import java.text.ParseException;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
     @Autowired
     private AuthenticationService authenticationService;

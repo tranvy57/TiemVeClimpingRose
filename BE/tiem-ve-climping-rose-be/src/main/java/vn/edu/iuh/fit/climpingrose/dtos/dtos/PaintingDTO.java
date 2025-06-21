@@ -17,5 +17,6 @@ public class PaintingDTO extends BaseResponse {
     String imageUrl;
     String size;
     BigDecimal price;
+    Integer quantity;
     List<CategoryDTO> categories;
 }

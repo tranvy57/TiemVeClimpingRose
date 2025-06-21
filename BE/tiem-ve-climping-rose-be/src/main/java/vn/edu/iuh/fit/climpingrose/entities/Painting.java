@@ -25,7 +25,6 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Painting extends BaseEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     String paintingId;
 
     String name;
@@ -37,6 +36,8 @@ public class Painting extends BaseEntity{
     PaintingSize size;
 
     BigDecimal price;
+
+    Integer quantity;
 
     @ManyToMany
     @JoinTable(
