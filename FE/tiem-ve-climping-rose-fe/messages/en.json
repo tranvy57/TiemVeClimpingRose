@@ -5,7 +5,9 @@
       "home": "Home",
       "products": "Products",
       "feedbacks": "Feedbacks",
-      "blog": "Blog"
+      "blog": "Blog",
+      "cart": "Shopping Cart",
+      "account": "Shopping Cart"
     },
     "size": "Product Size",
     "options": {

@@ -7,6 +7,14 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import LanguageSwitcher from "./language-switcher";
 import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -46,38 +54,32 @@ const Header = () => {
         </div>
 
         {/* Nút menu mobile */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden text-primary"
-            >
-              <Menu size={24} />
-            </Button>
-          </DropdownMenuTrigger>
-
-          <DropdownMenuContent align="end" className="md:hidden w-full mt-2">
-            <DropdownMenuItem asChild>
-              <Link href="/">{t("menu.home")}</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/paintings">{t("menu.products")}</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="#">{t("menu.feedbacks")}</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="#">{t("menu.blog")}</Link>
-            </DropdownMenuItem>
-
-            <div className="px-2 pt-2 flex gap-4 text-gray-700">
-              <ShoppingCart className="icon-button" />
-              <UserRound className="icon-button" />
-              <LanguageSwitcher />
-            </div>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Sheet>
+          <SheetTrigger className="md:hidden text-primary">
+            <Menu />
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <Link className="menu-link" href="/">
+                {t("menu.home")}
+              </Link>
+              <Link className="menu-link" href="/paintings">
+                {t("menu.products")}
+              </Link>
+              <Link className="menu-link" href="#">
+                {t("menu.feedbacks")}
+              </Link>
+              <Link className="menu-link" href="#">
+                {t("menu.blog")}
+              </Link>
+              <div className="flex gap-4 text-gray-700">
+                <ShoppingCart className="icon-button" />
+                <UserRound className="icon-button" />
+                <LanguageSwitcher />
+              </div>
+            </SheetHeader>
+          </SheetContent>
+        </Sheet>
 
         {/* Menu desktop */}
         <div className="hidden md:flex gap-4 ">

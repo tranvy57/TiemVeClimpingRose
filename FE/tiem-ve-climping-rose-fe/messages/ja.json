@@ -5,7 +5,9 @@
       "home": "ホーム",
       "products": "作品",
       "feedbacks": "レビュー",
-      "blog": "シェアのひとこと"
+      "blog": "シェアのひとこと",
+      "cart": "カート",
+      "account": "アカウント"
     },
     "size": "サイズを選ぶ",
     "options": {
