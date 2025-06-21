@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { MoveLeft } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function LoginForm({
   className,
@@ -9,7 +11,7 @@ export default function LoginForm({
 }: React.ComponentProps<"form">) {
   return (
     <div className="flex justify-center items-center">
-      <div className="min-w-[200px] max-w-[500px] bg-white flex flex-col justify-center items-center md:border md:p-8 rounded-2xl md:shadow-2xl">
+      <div className="min-w-[200px] max-w-[500px] bg-white flex flex-col justify-center items-center md:border md:px-8 md:py-6 rounded-2xl md:shadow-2xl">
         <Image
           src="https://scontent.fsgn5-15.fna.fbcdn.net/v/t39.30808-6/438239357_1197871551199970_4062135167905877969_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHV9tnhydUXMgoL0xxeViRV2krt3c9t7ynaSu3dz23vKaqNObRhuzj73yqrZZTnv0s_kwTY8ENRweAXrGqIbGbs&_nc_ohc=O7Y-6lk3RYYQ7kNvwGkK1p4&_nc_oc=Adm88EWN0VVvokBgkLJZ8vo7BIIID6aCMw4-CEjfnkxYuAwSTdHCMonp_hgDLX6TIZk&_nc_zt=23&_nc_ht=scontent.fsgn5-15.fna&_nc_gid=wF4bewnfI2rCsaN2nrI_HQ&oh=00_AfN94rNKm24a1S07QcJHtJhiKkDLFgZGyJIwgAWWSb_hYw&oe=685C8B6D"
           width={100}
@@ -97,9 +99,19 @@ export default function LoginForm({
           </div>
           <div className="text-center text-sm mt-4">
             Don&apos;t have an account?{" "}
-            <a href="#" className="underline underline-offset-4">
+            <Link href="#" className="underline underline-offset-4">
               Sign up
-            </a>
+            </Link>
+          </div>
+
+          <div className="w-full py-2 flex text-gray-500 mt-4">
+            <MoveLeft size={20} />
+            <Link
+              href="/"
+              className="underline underline-offset-4 text-sm float-left ml-1"
+            >
+              back to homepage
+            </Link>
           </div>
         </form>
       </div>

@@ -21,6 +21,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@radix-ui/react-dropdown-menu";
+import UserIcon from "./user-icon";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -74,7 +76,7 @@ const Header = () => {
               </Link>
               <div className="flex gap-4 text-gray-700">
                 <ShoppingCart className="icon-button" />
-                <UserRound className="icon-button" />
+                <UserIcon />
                 <LanguageSwitcher />
               </div>
             </SheetHeader>
@@ -98,7 +100,7 @@ const Header = () => {
 
           <div className="flex gap-4 text-gray-700">
             <ShoppingCart className="icon-button" />
-            <UserRound className="icon-button" />
+            <UserIcon />
             <LanguageSwitcher />
           </div>
         </div>
