@@ -14,7 +14,7 @@ export function OptionItem({ name, image_url }: OptionItemProps) {
       tabIndex={0}
       role="button"
     >
-      <div className="relative aspect-square w-full">
+      <div className="relative aspect-square w-full min-w-[100px]">
         <Image
           src={image_url}
           fill

@@ -38,7 +38,7 @@ export function OptionList() {
       <div className="flex md:justify-between items-center mt-4 overflow-x-auto scrollbar-hidden gap-4">
         <div
           onClick={() => handleClick("SIZE_20x30")}
-          className="cursor-pointer w-[100px] md:w-[180px]"
+          className="cursor-pointer md:w-[180px]"
         >
           <OptionItem
             name={t("options.size2020")}
@@ -48,7 +48,7 @@ export function OptionList() {
 
         <div
           onClick={() => handleClick("SIZE_30x40")}
-          className="cursor-pointer w-[100px] md:w-[180px]"
+          className="cursor-pointer md:w-[180px]"
         >
           <OptionItem
             name={t("options.size3040")}
@@ -58,7 +58,7 @@ export function OptionList() {
 
         <div
           onClick={() => handleClick("SIZE_40x50")}
-          className="cursor-pointer w-[100px] md:w-[180px]"
+          className="cursor-pointer md:w-[180px]"
         >
           <OptionItem
             name={t("options.size4050")}

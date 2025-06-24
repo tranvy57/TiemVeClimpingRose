@@ -21,7 +21,7 @@ export function PaitingItem({
       href={href}
       className="rounded-md border border-gray-200 overflow-hidden group"
     >
-      <div className="relative aspect-square w-full overflow-hidden ">
+      <div className="relative aspect-square w-full min-w-[100px] overflow-hidden ">
         <Image
           src={image_url}
           alt={name}
