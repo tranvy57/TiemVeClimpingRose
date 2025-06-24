@@ -19,7 +19,7 @@ export function CategoryItem({
   return (
     <Link href={href} className="">
       <div className="border border-gray-200 rounded-md h-full">
-        <div className="relative aspect-square w-full  overflow-hidden group">
+        <div className="relative aspect-square w-full  overflow-hidden group min-w-[100px]">
           <Image
             src={image_url}
             alt={title}

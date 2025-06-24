@@ -12,9 +12,9 @@ export function OptionItem({ name, image_url, href }: OptionItemProps) {
   return (
     <Link
       href={href}
-      className="group w-[100px] sm:w-[180px] flex-shrink-0 lg:mx-10 md:mx-3"
+      className="group w-[100px] sm:w-[180px] flex-shrink-0 lg:mx-10 md:mx-3 "
     >
-      <div className="relative aspect-square w-full">
+      <div className="relative aspect-square w-full min-w-[50px]">
         <Image
           src={image_url}
           fill
