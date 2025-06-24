@@ -5,16 +5,16 @@ import React from "react";
 interface OptionItemProps {
   name: string;
   image_url: string;
-  href: string;
 }
 
-export function OptionItem({ name, image_url, href }: OptionItemProps) {
+export function OptionItem({ name, image_url }: OptionItemProps) {
   return (
-    <Link
-      href={href}
-      className="group w-[100px] sm:w-[180px] flex-shrink-0 lg:mx-10 md:mx-3 "
+    <div
+      className="group w-[100px] md:w-[180px] flex-shrink-0 lg:mx-10 md:mx-3"
+      tabIndex={0}
+      role="button"
     >
-      <div className="relative aspect-square w-full min-w-[50px]">
+      <div className="relative aspect-square w-full">
         <Image
           src={image_url}
           fill
@@ -25,6 +25,6 @@ export function OptionItem({ name, image_url, href }: OptionItemProps) {
       <p className="font-bold text-red-500 text-center text-sm md:text-md p-4">
         {name}
       </p>
-    </Link>
+    </div>
   );
 }
