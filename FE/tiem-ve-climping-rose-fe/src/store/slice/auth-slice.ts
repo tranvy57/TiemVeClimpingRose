@@ -2,7 +2,6 @@ import { login } from "@/api/authApi";
 import { IUser } from "@/types/implements";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
-import reducer from "./counter-slice";
 
 interface AuthState {
   user: IUser | null;
