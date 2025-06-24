@@ -23,11 +23,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import UserIcon from "./user-icon";
+import { useAppSelector } from "@/hooks/store-hook";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const t = useTranslations("home");
+
+  const { authenticated, user } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     setMounted(true);

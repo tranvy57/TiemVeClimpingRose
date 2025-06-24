@@ -7,6 +7,7 @@ import Header from "@/components/layout/header/header";
 import Footer from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/sonner";
 import { getLocale, getMessages } from "next-intl/server";
+import AppInit from "@/components/AppInit";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers locale={locale} messages={messages} timeZone={timeZone}>
+          <AppInit />
           {children}
         </Providers>
       </body>

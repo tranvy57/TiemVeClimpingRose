@@ -20,6 +20,15 @@ spring:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
 
+  data:
+    redis:
+      host: ${USER_SERVICE_REDIS_HOST}
+      port: ${USER_SERVICE_REDIS_PORT}
+      password: ${USER_SERVICE_REDIS_PASSWORD}
+      ssl:
+        enabled: true
+      timeout: ${USER_SERVICE_REDIS_TIMEOUT}
+
 cloudinary:
   cloud_name: ${CLOUDINARY_CLOUD_NAME}
   api_key: ${CLOUDINARY_API_KEY}

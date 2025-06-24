@@ -6,7 +6,7 @@ export interface IUser extends BaseEntity {
   phone: string;
   username: string;
   fullName: string;
-  avatarUrl?: string;
+  avatar?: string;
   birthday: Date;
   gender: boolean;
   role: "ADMIN" | "USER";

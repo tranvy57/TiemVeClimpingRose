@@ -3,6 +3,7 @@ package vn.edu.iuh.fit.climpingrose.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.validator.constraints.Length;
 import vn.edu.iuh.fit.climpingrose.enums.Role;
 import vn.edu.iuh.fit.climpingrose.enums.UserStatus;
 
@@ -27,6 +28,8 @@ public class User {
     String username;
     String password;
     String displayName;
+
+    @Length(max = 500)
     String avatar;
     LocalDate dob;
 

@@ -1,4 +1,4 @@
-import { login } from "@/api/authApi";
+import { checkToken, login } from "@/api/authApi";
 import { IUser } from "@/types/implements";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
@@ -19,6 +19,7 @@ const initialState: AuthState = {
   error: null,
 };
 
+//Login
 export const doLogin = createAsyncThunk<
   { user: IUser; accessToken: string; authenticated: boolean }, // kiểu trả về khi fulfilled
   { username: string; password: string }, // kiểu tham số truyền vào
@@ -32,6 +33,7 @@ export const doLogin = createAsyncThunk<
     const { token, user } = response.data;
 
     localStorage.setItem("accessToken", token);
+    localStorage.setItem("user", JSON.stringify(user));
     // Cookies.set("accessToken", token);
 
     return {
@@ -41,6 +43,34 @@ export const doLogin = createAsyncThunk<
     };
   } catch (error) {
     return rejectWithValue("Login failed. Please check your credentials.");
+  }
+});
+
+//Check token
+export const doCheckToken = createAsyncThunk<
+  { valid: boolean }, // kiểu dữ liệu khi fulfilled
+  void, // không cần tham số
+  { rejectValue: string } // kiểu dữ liệu khi bị reject
+>("auth/checkToken", async (_, { rejectWithValue }) => {
+  const token = localStorage.getItem("accessToken");
+  if (!token) return rejectWithValue("No token");
+
+  try {
+    const res = await checkToken({ token });
+    const valid = res.data?.valid;
+
+    if (!valid) {
+      localStorage.removeItem("accessToken");
+      return rejectWithValue("Token invalid");
+    }
+
+    return {
+      valid: valid,
+    };
+  } catch {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("user");
+    return rejectWithValue("Token invalid");
   }
 });
 
@@ -76,6 +106,18 @@ const authSlice = createSlice({
       .addCase(doLogin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Unknown error";
+      })
+      .addCase(doCheckToken.fulfilled, (state, action) => {
+        state.authenticated = action.payload.valid;
+        const savedUser = localStorage.getItem("user");
+        if (savedUser) {
+          state.user = JSON.parse(savedUser);
+        }
+      })
+      .addCase(doCheckToken.rejected, (state) => {
+        state.accessToken = null;
+        state.user = null;
+        state.authenticated = false;
       });
   },
 });

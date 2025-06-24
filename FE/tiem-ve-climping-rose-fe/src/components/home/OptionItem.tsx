@@ -10,7 +10,7 @@ interface OptionItemProps {
 export function OptionItem({ name, image_url }: OptionItemProps) {
   return (
     <div
-      className="group w-[100px] md:w-[180px] flex-shrink-0 lg:mx-10 md:mx-3"
+      className="group w-[120px] md:w-[180px] flex-shrink-0 lg:mx-10 md:mx-3"
       tabIndex={0}
       role="button"
     >
