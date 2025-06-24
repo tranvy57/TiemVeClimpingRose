@@ -13,14 +13,20 @@ export default function Providers({
   children,
   locale,
   messages,
+  timeZone,
 }: Readonly<{
   children: React.ReactNode;
   locale: string;
   messages: any;
+  timeZone: string;
 }>) {
   return (
     <Provider store={store}>
-      <NextIntlClientProvider locale={locale} messages={messages}>
+      <NextIntlClientProvider
+        locale={locale}
+        messages={messages}
+        timeZone={timeZone}
+      >
         <Toaster
           position="top-right"
           toastOptions={{

@@ -1,11 +1,53 @@
+"use client";
+import { login } from "@/api/authApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAppDispatch, useAppSelector } from "@/hooks/store-hook";
+import { showError, showSuccess } from "@/libs/toast";
+import { doLogin } from "@/store/slice/auth-slice";
 import { MoveLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function LoginForm() {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const [form, setForm] = useState({ username: "", password: "" });
+  const { loading, error } = useAppSelector((state) => state.auth);
+  const { authenticated } = useAppSelector((state) => state.auth);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      router.push("/");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (authenticated) {
+      showSuccess("Login successful!");
+      router.push("/");
+    }
+  }, [authenticated]);
+
+  useEffect(() => {
+    if (error) {
+      showError(error);
+    }
+  }, [error]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault(); // tránh reload trang
+    dispatch(doLogin(form));
+  };
+
   return (
     <div className="flex justify-center items-center">
       <div className="min-w-[200px] max-w-[500px] bg-white flex flex-col justify-center items-center md:border md:px-8 md:py-6 rounded-2xl md:shadow-2xl">
@@ -30,9 +72,12 @@ export default function LoginForm() {
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
+                name="username"
+                placeholder="Enter your username"
                 type="text"
-                placeholder="m@example.com"
                 required
+                value={form.username}
+                onChange={handleChange}
               />
             </div>
 
@@ -46,12 +91,27 @@ export default function LoginForm() {
                   Forgot your password?
                 </a>
               </div>
-              <Input id="password" type="password" required />
+              <Input
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                type="password"
+                required
+                value={form.password}
+                onChange={handleChange}
+              />
             </div>
 
-            <Button type="submit" className="w-full">
-              Login
+            <Button
+              type="submit"
+              className="w-full"
+              onClick={handleLogin}
+              disabled={loading}
+            >
+              {loading && <p className="text-sm">Loading...</p>}
+              {!loading && <p className="text-sm">Login</p>}
             </Button>
+            {/* {error && showError(error)} */}
 
             <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
               <span className="bg-background text-muted-foreground relative z-10 px-2">
