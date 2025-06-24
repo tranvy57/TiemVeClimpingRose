@@ -1,6 +1,9 @@
 import { checkToken, login } from "@/api/authApi";
+import { clearAuth, getToken, saveAuth } from "@/libs/local-storage";
 import { IUser } from "@/types/implements";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { clear } from "console";
+import { get } from "http";
 import Cookies from "js-cookie";
 
 interface AuthState {
@@ -32,8 +35,7 @@ export const doLogin = createAsyncThunk<
     }
     const { token, user } = response.data;
 
-    localStorage.setItem("accessToken", token);
-    localStorage.setItem("user", JSON.stringify(user));
+    saveAuth(token, user);
     // Cookies.set("accessToken", token);
 
     return {
@@ -52,7 +54,7 @@ export const doCheckToken = createAsyncThunk<
   void, // không cần tham số
   { rejectValue: string } // kiểu dữ liệu khi bị reject
 >("auth/checkToken", async (_, { rejectWithValue }) => {
-  const token = localStorage.getItem("accessToken");
+  const token = getToken(); // lấy token từ localStorage
   if (!token) return rejectWithValue("No token");
 
   try {
@@ -60,7 +62,7 @@ export const doCheckToken = createAsyncThunk<
     const valid = res.data?.valid;
 
     if (!valid) {
-      localStorage.removeItem("accessToken");
+      clearAuth();
       return rejectWithValue("Token invalid");
     }
 
@@ -68,8 +70,7 @@ export const doCheckToken = createAsyncThunk<
       valid: valid,
     };
   } catch {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("user");
+    clearAuth();
     return rejectWithValue("Token invalid");
   }
 });
@@ -88,7 +89,7 @@ const authSlice = createSlice({
       state.accessToken = null;
       state.authenticated = false;
       //   Cookies.remove("accessToken");
-      localStorage.removeItem("accessToken");
+      clearAuth();
     },
   },
   extraReducers: (builder) => {
