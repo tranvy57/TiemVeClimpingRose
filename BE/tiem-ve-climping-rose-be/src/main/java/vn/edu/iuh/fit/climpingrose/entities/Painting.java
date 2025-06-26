@@ -39,12 +39,12 @@ public class Painting extends BaseEntity{
 
     Integer quantity;
 
-    @ManyToMany
-    @JoinTable(
-            name = "category_painting",
-            joinColumns = @JoinColumn(name = "painting_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"))
-    Set<Category> categories;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "category_painting",
+//            joinColumns = @JoinColumn(name = "painting_id"),
+//            inverseJoinColumns = @JoinColumn(name = "category_id"))
+//    Set<Category> categories;
 
     @OneToMany(mappedBy = "painting", fetch = FetchType.LAZY)
     private List<CategoryPainting> categoryPaintings;
