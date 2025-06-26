@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CategoryPainting{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

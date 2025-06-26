@@ -3,9 +3,9 @@ package vn.edu.iuh.fit.climpingrose.mappers;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.data.domain.Page;
 import vn.edu.iuh.fit.climpingrose.dtos.dtos.CategoryDTO;
-import vn.edu.iuh.fit.climpingrose.dtos.dtos.PaintingDTO;
+import vn.edu.iuh.fit.climpingrose.dtos.dtos.PaintingResponse;
+import vn.edu.iuh.fit.climpingrose.dtos.requests.PaintingCreationRequest;
 import vn.edu.iuh.fit.climpingrose.entities.Category;
 import vn.edu.iuh.fit.climpingrose.entities.CategoryPainting;
 import vn.edu.iuh.fit.climpingrose.entities.Painting;
@@ -15,10 +15,10 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface PaintingMapper {
-    Painting toPainting(PaintingDTO paintingDTO);
+    Painting toPainting(PaintingResponse paintingResponse);
 
     @Mapping(target = "categories", expression = "java(toCategoryDTOs(painting.getCategoryPaintings()))")
-    PaintingDTO toPaintingDTO(Painting painting);
+    PaintingResponse toPaintingResponse(Painting painting);
 
     default List<CategoryDTO> toCategoryDTOs(List<CategoryPainting> categoryPaintings) {
         if (categoryPaintings == null) return Collections.emptyList();
@@ -28,8 +28,15 @@ public interface PaintingMapper {
                     CategoryDTO dto = new CategoryDTO();
                     dto.setCategoryId(c.getCategoryId());
                     dto.setName(c.getName());
+                    dto.setDescription(c.getDescription());
+                    dto.setImageUrl(c.getImageUrl());
+
                     return dto;
                 }).toList();
     }
-    List<PaintingDTO> toPaintingDTOList(List<Painting> paintings);
+
+    @Mapping(target = "paintingId", ignore = true)
+    @Mapping(target = "categoryPaintings", ignore = true)
+    Painting toEntity(PaintingCreationRequest request);
+
 }

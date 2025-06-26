@@ -25,7 +25,9 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final String[] PUBLIC_ENDPOINTS = {"/auth/login", "/auth/introspect", "/auth/logout", "/auth/refresh", "/users"
+    private final String[] PUBLIC_ENDPOINTS = {
+            "/api/auth/login", "/api/auth/introspect", "/api/auth/logout", "/api/auth/refresh", "/api/users"
+            , "/api/paintings", "/api/paintings/search", "/api/categories", "/api/categories/search", "/api/paintings/{id}",
     };
 
     private final String[] ADMIN_ENDPOINTS = {"/users"
@@ -43,7 +45,7 @@ public class SecurityConfig {
                         request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                                 .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
                                 .requestMatchers(HttpMethod.GET, ADMIN_ENDPOINTS).hasRole("ADMIN")
-                                .anyRequest().permitAll());
+                                .anyRequest().authenticated());
 
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
                         .decoder(customJwtDecoder)

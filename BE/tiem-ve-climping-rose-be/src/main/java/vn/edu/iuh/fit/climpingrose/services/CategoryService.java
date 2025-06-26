@@ -21,4 +21,9 @@ public class CategoryService {
                 .map(categoryMapper::toCategoryDTO)
                 .collect(Collectors.toList());
     }
+
+    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
+        var category = categoryMapper.toCatgory(categoryDTO);
+        return categoryMapper.toCategoryDTO(categoryRepository.save(category));
+    }
 }
