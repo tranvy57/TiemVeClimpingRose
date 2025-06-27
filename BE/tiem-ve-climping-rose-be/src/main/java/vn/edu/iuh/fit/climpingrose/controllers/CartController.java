@@ -1,0 +1,35 @@
+package vn.edu.iuh.fit.climpingrose.controllers;
+
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import vn.edu.iuh.fit.climpingrose.dtos.requests.CartItemRequest;
+import vn.edu.iuh.fit.climpingrose.dtos.responses.CartItemResponse;
+import vn.edu.iuh.fit.climpingrose.dtos.responses.ApiResponse;
+import vn.edu.iuh.fit.climpingrose.services.CartService;
+
+import java.util.List;
+
+@RestController
+@AllArgsConstructor
+@RequestMapping("/cart")
+public class CartController {
+    private final CartService cartService;
+
+    @GetMapping
+    public ApiResponse<List<CartItemResponse>> getMyCartItems() {
+        return ApiResponse.<List<CartItemResponse>>builder()
+                .data(cartService.getMyCart())
+                .message("lấy giỏ hàng thành công")
+                .statusCode(200)
+                .build();
+    }
+
+    @PostMapping
+    public ApiResponse<CartItemResponse> createCartItem(@RequestBody CartItemRequest cartItemResponse) {
+        return ApiResponse.<CartItemResponse>builder()
+                .data(cartService.addCartItem(cartItemResponse))
+                .message("Thêm vào giỏ hàng thành công")
+                .statusCode(200)
+                .build();
+    }
+}

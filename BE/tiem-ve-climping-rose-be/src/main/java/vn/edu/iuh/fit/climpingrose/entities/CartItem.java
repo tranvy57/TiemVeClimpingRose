@@ -21,7 +21,7 @@ public class CartItem {
     @JoinColumn(name = "painting_id")
     Painting painting;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 

@@ -14,12 +14,13 @@ import vn.edu.iuh.fit.climpingrose.entities.Category;
 import vn.edu.iuh.fit.climpingrose.entities.CategoryPainting;
 import vn.edu.iuh.fit.climpingrose.entities.Painting;
 import vn.edu.iuh.fit.climpingrose.exceptions.BadRequestException;
-import vn.edu.iuh.fit.climpingrose.mappers.CategoryPaintingRepository;
+import vn.edu.iuh.fit.climpingrose.repositories.CategoryPaintingRepository;
 import vn.edu.iuh.fit.climpingrose.mappers.PaintingMapper;
 import vn.edu.iuh.fit.climpingrose.repositories.CategoryRepository;
 import vn.edu.iuh.fit.climpingrose.repositories.PaintingRepository;
 import vn.edu.iuh.fit.climpingrose.repositories.specifications.PaintingSpecifications;
 
+import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -108,25 +109,30 @@ public class PaintingService {
 
         // Gắn mã category
         for (Category category : categories) {
-            sb.append(normalize(category.getName())).append("-");
+            sb.append(category.getCategoryCode()).append("-");
         }
 
-        // Gắn tên tranh
-        sb.append(normalize(paintingName)).append("-");
+        // Gắn tên tranh đã normalize (lowercase trong normalize)
+        sb.append(normalize(paintingName));
 
-        // Gắn ngày tạo: lấy ngày hiện tại
-        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        sb.append(now);
-
-
-
-        return sb.toString().toLowerCase();
+        return sb.toString();
     }
+
 
     private static String normalize(String input) {
         if (input == null) return "unknown";
-        return input.replaceAll("[^a-zA-Z0-9]", "-").replaceAll("-+", "-").toLowerCase();
+
+        // Bỏ dấu tiếng Việt
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        normalized = normalized.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+
+        // Thay thế ký tự đặc biệt bằng dấu gạch ngang
+        normalized = normalized.replaceAll("[^a-zA-Z0-9]", "-");
+        normalized = normalized.replaceAll("-+", "-");
+
+        return normalized.toLowerCase();
     }
+
 
 
 }
