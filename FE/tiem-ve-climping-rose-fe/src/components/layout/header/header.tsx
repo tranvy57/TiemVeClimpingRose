@@ -24,6 +24,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import UserIcon from "./user-icon";
 import { useAppSelector } from "@/hooks/store-hook";
+import { showLoginWarning } from "@/libs/toast";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -31,6 +33,15 @@ const Header = () => {
   const t = useTranslations("home");
 
   const { authenticated, user } = useAppSelector((state) => state.auth);
+  const router = useRouter();
+
+  const handleClick = () => {
+    if (!authenticated) {
+      showLoginWarning("/login");
+    } else {
+      router.push("/cart");
+    }
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -78,7 +89,9 @@ const Header = () => {
                 {t("menu.blog")}
               </Link>
               <div className="flex gap-4 text-gray-700">
-                <ShoppingCart className="icon-button" />
+                <Link href="/cart">
+                  <ShoppingCart className="icon-button" />
+                </Link>
                 <UserIcon />
                 <LanguageSwitcher />
               </div>
@@ -102,9 +115,13 @@ const Header = () => {
           </Link>
 
           <div className="flex gap-4 text-gray-700">
-            <ShoppingCart className="icon-button" />
-            <UserIcon />
-            <LanguageSwitcher />
+            <div className="flex gap-4 text-gray-700">
+              <button onClick={handleClick}>
+                <ShoppingCart className="icon-button" />
+              </button>
+              <UserIcon />
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       </div>

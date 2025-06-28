@@ -21,7 +21,7 @@ export default async function PaintingDetailContent({
 
   return (
     <div className="flex flex-col md:flex-row">
-      <div className="relative w-1/2 aspect-square mt-4">
+      <div className="relative w-full md:w-1/2 aspect-square mt-4">
         <Image
           src={painting.imageUrl}
           alt={painting.name}
@@ -31,8 +31,10 @@ export default async function PaintingDetailContent({
       </div>
 
       <div className="py-4 md:px-8">
-        <h1 className="text-4xl font-bold text-red-500">{painting.name}</h1>
-        <p className="mt-4 text-gray-700">{painting.paintingId}</p>
+        <h1 className="text-2xl lg:text-4xl font-bold text-red-500">
+          {painting.name}
+        </h1>
+        <p className="mt-1 md:mt-4 text-gray-700">{painting.paintingId}</p>
 
         <div className="flex items-center">
           <BadgeJapaneseYen className="text-red-500" />
