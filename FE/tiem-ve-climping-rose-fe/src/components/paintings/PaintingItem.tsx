@@ -1,5 +1,6 @@
 import { caddCartItem } from "@/api/cartApi";
-import { showSuccess } from "@/libs/toast";
+import { useAppSelector } from "@/hooks/store-hook";
+import { showLoginWarning, showSuccess } from "@/libs/toast";
 import { BadgeJapaneseYen, Check, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,7 +20,13 @@ export function PaitingItem({
   price,
   href,
 }: PaitingItemProps) {
+  const { authenticated } = useAppSelector((state) => state.auth);
+  // Handle adding item to cart
   const handleAddCartItem = async (id: string, quantity: number) => {
+    if (!authenticated) {
+      showLoginWarning();
+      return;
+    }
     try {
       // Call API to add item to cart
       const response = await caddCartItem({ paintingId: id, quantity });

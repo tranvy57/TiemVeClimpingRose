@@ -14,7 +14,7 @@ export const showError = (message: string) =>
     className: "bg-red-100 text-red-700 text-xs max-w-[220px]",
   });
 
-export const showLoginWarning = (router: any) => {
+export const showLoginWarning = () => {
   toast("Bạn cần đăng nhập để tiếp tục", {
     icon: <LogIn className="text-yellow-500 w-4 h-4" />,
     position: "top-center", // Nằm giữa trên
@@ -23,7 +23,7 @@ export const showLoginWarning = (router: any) => {
     dismissible: true, // Cho phép người dùng tắt
     action: {
       label: "Đăng nhập",
-      onClick: () => router.push("/login"),
+      onClick: () => (window.location.href = "/login"),
     },
     cancel: {
       label: <X className="w-4 h-4" />,

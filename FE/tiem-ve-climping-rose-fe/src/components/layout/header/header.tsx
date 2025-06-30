@@ -37,7 +37,7 @@ const Header = () => {
 
   const handleClick = () => {
     if (!authenticated) {
-      showLoginWarning("/login");
+      showLoginWarning();
     } else {
       router.push("/cart");
     }

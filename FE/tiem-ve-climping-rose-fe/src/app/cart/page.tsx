@@ -43,7 +43,7 @@ const Cart = () => {
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
-      showLoginWarning("/login");
+      showLoginWarning();
       return;
     }
     fetchCartItems();
