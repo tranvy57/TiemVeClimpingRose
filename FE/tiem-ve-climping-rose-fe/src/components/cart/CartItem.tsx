@@ -67,7 +67,7 @@ const CartItem = ({
   };
 
   return (
-    <div className="relative w-full overflow-hidden group border-b py-2">
+    <div className="relative w-full overflow-hidden group border-b p-2">
       {/* Nội dung chính */}
       <div className="flex w-full 0">
         {/* Checkbox  */}
@@ -91,14 +91,19 @@ const CartItem = ({
         {/* Thông tin sản phẩm */}
         <div className="flex-1 px-3 flex flex-col justify-between text-sm">
           <div>
-            <p
-              className="font-medium text-gray-800 line-clamp-2 cursor-pointer hover:underline"
-              onClick={() => {
-                window.location.href = `/paintings/${painting.paintingId}`;
-              }}
-            >
-              {painting.name}
-            </p>
+            <div className="flex items-center justify-between">
+              <p
+                className="font-medium text-gray-800 line-clamp-2 cursor-pointer hover:underline"
+                onClick={() => {
+                  window.location.href = `/paintings/${painting.paintingId}`;
+                }}
+              >
+                {painting.name}
+              </p>
+              <Button onClick={handleDelete} className="bg-transparent">
+                <Trash2 className="w-5 h-5 text-gray-500" />
+              </Button>
+            </div>
             {painting.size && (
               <p className="text-gray-500 text-xs mt-1">
                 Kích thước: {painting.size}
@@ -114,7 +119,7 @@ const CartItem = ({
               </p>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
                 size="icon"
@@ -143,11 +148,6 @@ const CartItem = ({
               </Button>
             </div>
           </div>
-        </div>
-        <div className=" flex items-start justify-center">
-          <Button onClick={handleDelete} className="bg-transparent">
-            <Trash2 className="w-5 h-5 text-gray-500" />
-          </Button>
         </div>
       </div>
     </div>

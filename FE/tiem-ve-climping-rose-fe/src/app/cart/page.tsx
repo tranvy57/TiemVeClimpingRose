@@ -104,7 +104,7 @@ const Cart = () => {
         <div className="flex flex-col gap-10">
           {cartItems.length > 0 ? (
             <div className="flex gap-4">
-              <div className="flex-1 space-y-4">
+              <div className="flex-1 ">
                 {cartItems.map((item) => (
                   <CartItem
                     key={item.cartItemId}

@@ -52,26 +52,23 @@ export default function LoginForm() {
     <div className="flex justify-center items-center">
       <div className="min-w-[200px] max-w-[500px] bg-white flex flex-col justify-center items-center md:border md:px-8 md:py-6 rounded-2xl md:shadow-2xl">
         <Image
-          src="https://scontent.fsgn5-15.fna.fbcdn.net/v/t39.30808-6/438239357_1197871551199970_4062135167905877969_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHV9tnhydUXMgoL0xxeViRV2krt3c9t7ynaSu3dz23vKaqNObRhuzj73yqrZZTnv0s_kwTY8ENRweAXrGqIbGbs&_nc_ohc=O7Y-6lk3RYYQ7kNvwGkK1p4&_nc_oc=Adm88EWN0VVvokBgkLJZ8vo7BIIID6aCMw4-CEjfnkxYuAwSTdHCMonp_hgDLX6TIZk&_nc_zt=23&_nc_ht=scontent.fsgn5-15.fna&_nc_gid=wF4bewnfI2rCsaN2nrI_HQ&oh=00_AfN94rNKm24a1S07QcJHtJhiKkDLFgZGyJIwgAWWSb_hYw&oe=685C8B6D"
-          width={100}
-          height={100}
+          src={"/avt.jpg"}
+          width={80}
+          height={80}
           alt="Tiệm vẽ Climping Rose"
-          className="rounded-full md:mb-4"
+          className="rounded-full md:mb-2"
         />
 
         <form className="w-full">
           <div className="flex flex-col items-center gap-2 text-center">
             <h1 className="text-2xl font-bold py-2">Tiệm vẽ Climping Rose</h1>
-            <p className="text-muted-foreground text-sm text-balance mb-3">
-              Enter your email below to login to your account
-            </p>
           </div>
 
           <div className="grid gap-6">
             <div className="grid gap-3">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Username</Label>
               <Input
-                id="email"
+                id="username"
                 name="username"
                 placeholder="Enter your username"
                 type="text"

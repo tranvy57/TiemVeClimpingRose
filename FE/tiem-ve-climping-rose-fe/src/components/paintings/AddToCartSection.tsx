@@ -40,16 +40,19 @@ export default function AddToCartSection({
   };
 
   return (
-    <div className="flex items-center gap-4 mt-6">
+    <div className="flex gap-4 mt-6 items-between">
       <QuantitySelector max={stock} onChange={setQuantity} />
 
-      <Button
-        onClick={() => handleAddCartItem(paintingId, quantity)}
-        className="flex items-center gap-2"
-      >
-        <ShoppingCart className="w-4 h-4" />
-        Thêm vào giỏ
-      </Button>
+      <div className="flex gap-1">
+        <Button
+          onClick={() => handleAddCartItem(paintingId, quantity)}
+          className="flex items-center gap-2"
+        >
+          <ShoppingCart className="w-4 h-4 font-bold" />
+        </Button>
+
+        <Button>Mua ngay</Button>
+      </div>
     </div>
   );
 }
