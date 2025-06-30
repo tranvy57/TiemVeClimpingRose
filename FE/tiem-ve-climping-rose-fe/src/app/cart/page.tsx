@@ -25,6 +25,7 @@ import { CouponList } from "@/components/home";
 const Cart = () => {
   const [cartItems, setCartItems] = useState<ICartItem[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   const fetchCartItems = async () => {
     try {
@@ -40,6 +41,14 @@ const Cart = () => {
     }
   };
 
+  const handleToggleItem = (cartItemId: string) => {
+    setSelectedItems((prev) =>
+      prev.includes(cartItemId)
+        ? prev.filter((id) => id !== cartItemId)
+        : [...prev, cartItemId]
+    );
+  };
+
   const handleDeleteItem = async (cartItemId: string) => {
     try {
       await deleteCartItem(cartItemId);
@@ -51,6 +60,14 @@ const Cart = () => {
       console.error("Failed to delete item:", error);
     }
   };
+
+  const totalPrice =
+    cartItems
+      ?.filter((item) => selectedItems.includes(item.cartItemId))
+      .reduce(
+        (total, item) => total + item.painting.price * item.quantity,
+        0
+      ) ?? 0;
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -75,6 +92,8 @@ const Cart = () => {
                     painting={item.painting}
                     quantity={item.quantity}
                     onDelete={handleDeleteItem}
+                    isSelected={selectedItems.includes(item.cartItemId)}
+                    onToggle={handleToggleItem}
                   />
                 ))}
               </div>
@@ -101,17 +120,7 @@ const Cart = () => {
                   </DialogContent>
                 </Dialog>
                 <p className=" text-gray-800 font-semibold">
-                  Tổng:{" "}
-                  {cartItems
-                    .reduce(
-                      (total, item) =>
-                        total + item.painting.price * item.quantity,
-                      0
-                    )
-                    .toLocaleString("ja-JP", {
-                      style: "currency",
-                      currency: "JPY",
-                    })}
+                  Tổng: ¥{totalPrice.toLocaleString("ja-JP")}
                 </p>
                 <Button>Đặt hàng</Button>
               </div>
@@ -143,19 +152,7 @@ const Cart = () => {
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between">
                     <p className="text-xl text-gray-700">
-                      Tổng:{" "}
-                      <span className="font-semibold">
-                        {cartItems
-                          .reduce(
-                            (total, item) =>
-                              total + item.painting.price * item.quantity,
-                            0
-                          )
-                          .toLocaleString("ja-JP", {
-                            style: "currency",
-                            currency: "JPY",
-                          })}
-                      </span>
+                      Tổng: ¥{totalPrice.toLocaleString("ja-JP")}
                     </p>
                   </div>
                   <Button className="w-full py-6 font-bold text-md">

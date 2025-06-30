@@ -15,6 +15,8 @@ interface CartItemProps {
   painting: IPainting;
   quantity: number;
   onDelete: (id: string) => void;
+  isSelected: boolean;
+  onToggle: (id: string) => void;
 }
 
 const CartItem = ({
@@ -22,6 +24,8 @@ const CartItem = ({
   painting,
   quantity,
   onDelete,
+  isSelected,
+  onToggle,
 }: CartItemProps) => {
   const [count, setCount] = useState(quantity);
 
@@ -43,7 +47,10 @@ const CartItem = ({
       <div className="flex w-full 0">
         {/* Checkbox  */}
         <div className="flex-shrink-0 px-2 flex items-center">
-          <Checkbox />
+          <Checkbox
+            checked={isSelected}
+            onCheckedChange={() => onToggle(cartItemId)}
+          />
         </div>
 
         {/* Ảnh sản phẩm */}
@@ -82,9 +89,9 @@ const CartItem = ({
                 variant="ghost"
                 size="icon"
                 disabled={quantity <= 1}
-                className="h-7 w-7 rounded-md bg-red-400"
+                className="h-7 w-7 rounded-md bg-red-400 hover:bg-red-500"
               >
-                <Minus className="w-4 h-4 text-white" />
+                <Minus className="w-4 h-4 text-white " />
               </Button>
 
               <Input
@@ -97,7 +104,7 @@ const CartItem = ({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 rounded-md bg-red-400"
+                className="h-7 w-7 rounded-md bg-red-400 hover:bg-red-500"
               >
                 <Plus className="w-4 h-4 text-white" />
               </Button>
@@ -105,7 +112,7 @@ const CartItem = ({
           </div>
         </div>
         <div className=" flex items-start justify-center">
-          <Button onClick={handleDelete} className="bg-none">
+          <Button onClick={handleDelete} className="bg-transparent">
             <Trash2 className="w-5 h-5 text-gray-500" />
           </Button>
         </div>
