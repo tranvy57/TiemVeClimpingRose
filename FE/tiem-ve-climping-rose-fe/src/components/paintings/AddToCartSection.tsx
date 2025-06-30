@@ -3,8 +3,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
-import { showSuccess } from "@/libs/toast";
+import { showLoginWarning, showSuccess } from "@/libs/toast";
 import QuantitySelector from "./QuantitySelector";
+import { useAppSelector } from "@/hooks/store-hook";
+import { caddCartItem } from "@/api/cartApi";
+import { toast } from "sonner";
 
 interface AddToCartSectionProps {
   paintingId: string;
@@ -16,33 +19,34 @@ export default function AddToCartSection({
   stock,
 }: AddToCartSectionProps) {
   const [quantity, setQuantity] = useState(1);
+  const authenticated = useAppSelector((state) => state.auth.authenticated);
 
-  const handleAddToCart = () => {
-    // 🛒 1. Bạn có thể gửi đến BE
-    // await axios.post("/cart", { paintingId, quantity })
-
-    // 🧠 2. Hoặc lưu vào localStorage (tạm thời)
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-
-    const existingIndex = cart.findIndex(
-      (item: any) => item.paintingId === paintingId
-    );
-    if (existingIndex >= 0) {
-      cart[existingIndex].quantity += quantity;
-    } else {
-      cart.push({ paintingId, quantity });
+  // Handle adding item to cart
+  const handleAddCartItem = async (id: string, quantity: number) => {
+    if (!authenticated) {
+      showLoginWarning();
+      return;
     }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    showSuccess("Đã thêm vào giỏ hàng!");
+    try {
+      // Call API to add item to cart
+      const response = await caddCartItem({ paintingId: id, quantity });
+      if (response.data) {
+        showSuccess("Đã thêm vào giỏ hàng!");
+      }
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
+      toast.error("Không thể thêm vào giỏ hàng. Vui lòng thử lại sau.");
+    }
   };
 
   return (
     <div className="flex items-center gap-4 mt-6">
       <QuantitySelector max={stock} onChange={setQuantity} />
 
-      <Button onClick={handleAddToCart} className="flex items-center gap-2">
+      <Button
+        onClick={() => handleAddCartItem(paintingId, quantity)}
+        className="flex items-center gap-2"
+      >
         <ShoppingCart className="w-4 h-4" />
         Thêm vào giỏ
       </Button>
