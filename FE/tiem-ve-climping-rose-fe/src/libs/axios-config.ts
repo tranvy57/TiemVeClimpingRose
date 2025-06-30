@@ -20,36 +20,41 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// api.interceptors.response.use(
-//   (res) => res,
-//   async (error) => {
-//     const original = error.config;
+api.interceptors.response.use(
+  (res) => res,
+  async (error) => {
+    const original = error.config;
 
-//     if (error.response?.status === 401 && !original._retry) {
-//       original._retry = true;
-//       try {
-//         const token = Cookies.get("accessToken");
-//         const res = await axios.post(
-//           `${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`,
-//           {
-//             token,
-//           }
-//         );
+    if (error.response?.status === 401 && !original._retry) {
+      original._retry = true;
 
-//         const newToken = res.data.data.token;
-//         Cookies.set("accessToken", newToken);
-//         store.dispatch(setAccessToken(newToken));
+      try {
+        const oldToken = localStorage.getItem("accessToken");
+        if (!oldToken) throw new Error("No token");
 
-//         original.headers.Authorization = `Bearer ${newToken}`;
-//         return api(original);
-//       } catch (e) {
-//         store.dispatch(logout());
-//         return Promise.reject(e);
-//       }
-//     }
+        const res = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
+          {
+            token: oldToken,
+          }
+        );
 
-//     return Promise.reject(error);
-//   }
-// );
+        const newToken = res.data?.token;
+        if (newToken) {
+          localStorage.setItem("accessToken", newToken);
+
+          original.headers.Authorization = `Bearer ${newToken}`;
+          return api(original); // retry
+        } else {
+          localStorage.removeItem("accessToken");
+        }
+      } catch (err) {
+        localStorage.removeItem("accessToken");
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export default api;

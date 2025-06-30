@@ -20,6 +20,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ChevronRight, Ticket } from "lucide-react";
+import { CouponList } from "@/components/home";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState<ICartItem[]>();
@@ -49,9 +50,9 @@ const Cart = () => {
   }, []);
 
   return (
-    <div className="min-h-100 pb-[90px]">
+    <div className=" pb-[90px]  ">
       {cartItems ? (
-        <>
+        <div className="flex flex-col gap-10">
           {cartItems.length > 0 ? (
             <div className="flex gap-4">
               <div className="flex-1 space-y-4">
@@ -64,26 +65,46 @@ const Cart = () => {
                   />
                 ))}
               </div>
-              <div className="hidden border pl-4 p-4 min-w-[300px] w-80 md:flex flex-col gap-4">
-                <p className="text-lg text-gray-800 font-semibold">
-                  Tổng số sản phẩm: {cartItems.length}
+
+              <div className="hidden border pl-4 p-4 min-w-[200px] w-[25%] md:flex flex-col gap-4">
+                <p className="text-red-500 text-xl font-semibold">
+                  Thông tin đơn hàng:
                 </p>
-                <p className="text-lg text-gray-800 font-semibold">
-                  Tổng tiền:{" "}
+                <p>
+                  Tổng số sản phẩm:{" "}
+                  <span className="font-semibold">{cartItems.length}</span>
+                </p>
+                <Dialog>
+                  <DialogTrigger>
+                    <div className="flex justify-between items-center gap-2 cursor-pointer">
+                      <p>Xem mã giảm giá </p>
+                      <ChevronRight className="float-right" />
+                    </div>{" "}
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Chưa làm</DialogTitle>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
+                <p className=" text-gray-800 font-semibold">
+                  Tổng:{" "}
                   {cartItems
                     .reduce(
                       (total, item) =>
                         total + item.painting.price * item.quantity,
                       0
                     )
-                    .toLocaleString("vi-VN", {
+                    .toLocaleString("ja-JP", {
                       style: "currency",
-                      currency: "VND",
+                      currency: "JPY",
                     })}
                 </p>
+                <Button>Đặt hàng</Button>
               </div>
 
-              <div className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t z-50 px-4 py-3 shadow-md space-y-4">
+              {/* mobile */}
+              <div className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t z-50 px-4 py-3 shadow-md gap-2 flex flex-col">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Ticket className="text-red-400" />
@@ -102,13 +123,11 @@ const Cart = () => {
                     </DialogContent>
                   </Dialog>
                 </div>
-                <div>
-                  <div>
-                    <p>
-                      Tổng số sản phẩm:{" "}
-                      <span className="font-semibold">{cartItems.length}</span>
-                    </p>
-                  </div>
+                <p>
+                  Tổng số sản phẩm:{" "}
+                  <span className="font-semibold">{cartItems.length}</span>
+                </p>
+                <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between">
                     <p className="text-xl text-gray-700">
                       Tổng:{" "}
@@ -125,10 +144,10 @@ const Cart = () => {
                           })}
                       </span>
                     </p>
-                    <button className="bg-red-400 hover:bg-red-600 text-white py-3 px-6 rounded text-sm font-medium">
-                      Đặt hàng
-                    </button>
                   </div>
+                  <Button className="w-full py-6 font-bold text-md">
+                    Đặt hàng
+                  </Button>
                 </div>
               </div>
             </div>
@@ -146,7 +165,7 @@ const Cart = () => {
               </p>
             </div>
           )}
-        </>
+        </div>
       ) : (
         <div>{isLoading && <PinkSpinner />}</div>
       )}

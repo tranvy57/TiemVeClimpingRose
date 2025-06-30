@@ -3,9 +3,8 @@
 import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header/header";
 import { store } from "@/store/store";
-import { NextIntlClientProvider, useLocale, useMessages } from "next-intl";
+import { NextIntlClientProvider } from "next-intl";
 import { usePathname } from "next/navigation";
-import { ReactNode } from "react";
 import { Provider } from "react-redux";
 import { Toaster } from "sonner";
 

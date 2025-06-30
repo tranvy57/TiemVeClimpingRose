@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
-import { NextIntlClientProvider } from "next-intl";
 import Providers from "@/provider/provider";
-import Header from "@/components/layout/header/header";
-import Footer from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/sonner";
 import { getLocale, getMessages } from "next-intl/server";
 import AppInit from "@/components/AppInit";

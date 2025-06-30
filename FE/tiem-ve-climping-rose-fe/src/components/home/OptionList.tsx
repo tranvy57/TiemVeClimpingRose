@@ -37,7 +37,7 @@ export function OptionList() {
     <div>
       <div className="flex md:justify-between items-center mt-4 overflow-x-auto scrollbar-hidden gap-4">
         <div
-          onClick={() => handleClick("SIZE_20x30")}
+          onClick={() => handleClick("SIZE_20x20")}
           className="cursor-pointer md:w-[180px]"
         >
           <OptionItem

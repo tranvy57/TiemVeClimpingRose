@@ -13,6 +13,7 @@ export function PaintingList({ paintings }: PatingsProps) {
         return (
           <PaitingItem
             key={p.paintingId}
+            paintingId={p.paintingId}
             name={p.name}
             image_url={p.imageUrl}
             price={p.price}

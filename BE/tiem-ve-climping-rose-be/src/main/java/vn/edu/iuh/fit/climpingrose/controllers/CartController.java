@@ -24,7 +24,7 @@ public class CartController {
                 .build();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ApiResponse<CartItemResponse> createCartItem(@RequestBody CartItemRequest cartItemResponse) {
         return ApiResponse.<CartItemResponse>builder()
                 .data(cartService.addCartItem(cartItemResponse))
@@ -32,4 +32,6 @@ public class CartController {
                 .statusCode(200)
                 .build();
     }
+
+
 }

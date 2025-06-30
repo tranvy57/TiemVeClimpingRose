@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { IPainting } from "@/types/implements/painting";
 import { Checkbox } from "../ui/checkbox";
+import { Input } from "../ui/input";
 
 interface CartItemProps {
   cartItemId: string;
@@ -30,10 +31,10 @@ const CartItem = ({ cartItemId, painting, quantity }: CartItemProps) => {
   };
 
   return (
-    <div className="relative w-full overflow-hidden group border-b py-4">
+    <div className="relative w-full overflow-hidden group border-b py-2">
       {/* Nội dung chính */}
       <div className="flex w-full 0">
-        {/* Checkbox nếu có dùng chọn */}
+        {/* Checkbox  */}
         <div className="flex-shrink-0 px-2 flex items-center">
           <Checkbox />
         </div>
@@ -79,7 +80,7 @@ const CartItem = ({ cartItemId, painting, quantity }: CartItemProps) => {
                 <Minus className="w-4 h-4 text-white" />
               </Button>
 
-              <input
+              <Input
                 type="number"
                 value={quantity}
                 min={1}

@@ -58,3 +58,18 @@ export const checkToken = async (body: CheckTokenRequest) => {
     throw error;
   }
 };
+
+export const refreshToken = async (token: string) => {
+  try {
+    const response = await api.post<ApiResponse<{ token: string }>>(
+      `/auth/refresh`,
+      { token }
+    );
+    console.log("Refresh token response at api:", response);
+    return response.data;
+  } catch (error) {
+    console.log("Refresh token error at api:", error);
+    showError("Token refresh failed. Please log in again.");
+    throw error;
+  }
+};

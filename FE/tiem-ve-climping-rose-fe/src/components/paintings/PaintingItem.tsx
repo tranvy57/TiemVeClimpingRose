@@ -1,9 +1,11 @@
+import { caddCartItem } from "@/api/cartApi";
 import { showSuccess } from "@/libs/toast";
 import { BadgeJapaneseYen, Check, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
 interface PaitingItemProps {
+  paintingId: string;
   name: string;
   image_url: string;
   price: number;
@@ -11,11 +13,24 @@ interface PaitingItemProps {
 }
 
 export function PaitingItem({
+  paintingId,
   name,
   image_url,
   price,
   href,
 }: PaitingItemProps) {
+  const handleAddCartItem = async (id: string, quantity: number) => {
+    try {
+      // Call API to add item to cart
+      const response = await caddCartItem({ paintingId: id, quantity });
+      if (response.data) {
+        showSuccess("Đã thêm vào giỏ hàng!");
+      }
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
+      toast.error("Không thể thêm vào giỏ hàng. Vui lòng thử lại sau.");
+    }
+  };
   return (
     <Link
       href={href}
@@ -54,7 +69,7 @@ export function PaitingItem({
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              showSuccess("Đã thêm vào giỏ hàng!");
+              handleAddCartItem(paintingId, 1);
             }}
           />
         </div>
