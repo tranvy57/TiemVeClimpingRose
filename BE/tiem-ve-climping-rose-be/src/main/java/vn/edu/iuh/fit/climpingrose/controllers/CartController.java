@@ -3,6 +3,7 @@ package vn.edu.iuh.fit.climpingrose.controllers;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.climpingrose.dtos.requests.CartItemRequest;
+import vn.edu.iuh.fit.climpingrose.dtos.requests.CartItemUpdateRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.CartItemResponse;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.ApiResponse;
 import vn.edu.iuh.fit.climpingrose.services.CartService;
@@ -41,6 +42,19 @@ public class CartController {
                 .statusCode(200)
                 .build();
     }
+
+    @PutMapping("/update")
+    public ApiResponse<CartItemResponse> updateCartItem(@RequestBody CartItemUpdateRequest request) {
+        return ApiResponse.<CartItemResponse>builder()
+                .data(cartService.updateCartItemQuantity(request))
+                .message("Cập nhật sản phẩm trong giỏ hàng thành công")
+                .statusCode(200)
+                .build();
+    }
+
+
+
+
 
 
 }

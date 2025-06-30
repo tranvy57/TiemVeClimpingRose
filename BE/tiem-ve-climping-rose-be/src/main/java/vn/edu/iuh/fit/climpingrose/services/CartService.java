@@ -4,10 +4,12 @@ package vn.edu.iuh.fit.climpingrose.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.climpingrose.dtos.requests.CartItemRequest;
+import vn.edu.iuh.fit.climpingrose.dtos.requests.CartItemUpdateRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.CartItemResponse;
 import vn.edu.iuh.fit.climpingrose.entities.CartItem;
 import vn.edu.iuh.fit.climpingrose.entities.Painting;
 import vn.edu.iuh.fit.climpingrose.entities.User;
+import vn.edu.iuh.fit.climpingrose.exceptions.BadRequestException;
 import vn.edu.iuh.fit.climpingrose.exceptions.NotFoundException;
 import vn.edu.iuh.fit.climpingrose.mappers.CartItemMapper;
 import vn.edu.iuh.fit.climpingrose.repositories.CartItemRepository;
@@ -54,6 +56,26 @@ public class CartService {
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new NotFoundException("Cart item not found"));
         cartItemRepository.delete(cartItem);
+    }
+
+    public CartItemResponse updateCartItemQuantity(CartItemUpdateRequest request) {
+        CartItem cartItem = cartItemRepository.findById(request.getCartItemId())
+                .orElseThrow(() -> new NotFoundException("Cart item not found"));
+        Painting painting = cartItem.getPainting();
+        if (painting == null) {
+            throw new NotFoundException("Painting not found for the cart item");
+        }
+        if (request.getQuantity() > painting.getQuantity()) {
+            throw new BadRequestException("Số lượng sản phẩm trong giỏ hàng không đủ");
+        }
+
+        if (request.getQuantity() <= 0) {
+            deleteCartItem(request.getCartItemId());
+            return null;
+        }
+        cartItem.setQuantity(request.getQuantity());
+        CartItem updatedCartItem = cartItemRepository.save(cartItem);
+        return cartItemMapper.toCartItemResponse(updatedCartItem);
     }
 
 }
