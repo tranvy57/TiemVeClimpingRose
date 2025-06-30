@@ -91,7 +91,12 @@ const CartItem = ({
         {/* Thông tin sản phẩm */}
         <div className="flex-1 px-3 flex flex-col justify-between text-sm">
           <div>
-            <p className="font-medium text-gray-800 line-clamp-2">
+            <p
+              className="font-medium text-gray-800 line-clamp-2 cursor-pointer hover:underline"
+              onClick={() => {
+                window.location.href = `/paintings/${painting.paintingId}`;
+              }}
+            >
               {painting.name}
             </p>
             {painting.size && (

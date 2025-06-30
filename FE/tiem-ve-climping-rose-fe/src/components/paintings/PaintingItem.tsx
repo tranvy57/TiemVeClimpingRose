@@ -71,8 +71,7 @@ export function PaitingItem({
 
         <div className="bg-red-200 rounded-full p-1 hover:p-2 transition-all duration-300 shadow-sm ">
           <ShoppingCart
-            className="font-light size-4 text-gray-800 
-          "
+            className="font-light size-4 text-gray-800"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();

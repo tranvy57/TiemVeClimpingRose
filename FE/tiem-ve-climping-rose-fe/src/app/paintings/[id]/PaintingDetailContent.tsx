@@ -36,20 +36,25 @@ export default async function PaintingDetailContent({
           <h1 className="text-2xl lg:text-4xl font-bold text-red-500">
             {painting.name}
           </h1>
-          <p className="mt-1 md:mt-4 text-gray-700">{painting.paintingId}</p>
+          <p className=" md:mt-4 text-gray-700">{painting.paintingId}</p>
 
           <div className="flex items-center">
-            <BadgeJapaneseYen className="text-red-500" />
-            <p className="mt-2 text-red-400 text-3xl">{painting.price}</p>
+            <p className="mt-2 text-red-400 font-bold text-2xl lg:text-3xl">
+              ¥{painting.price}
+            </p>
           </div>
 
+          <div className="flex gap-4">
+            {categories.map((c) => (
+              <p
+                key={c.categoryId}
+                className="bg-red-300 font-semibold p-1 rounded-sm"
+              >
+                {c.name}
+              </p>
+            ))}
+          </div>
           <p className="mt-2">Số lượng sẵn có: {painting.quantity}</p>
-
-          {categories.map((c) => (
-            <div key={c.categoryId}>
-              <p>{c.name}</p>
-            </div>
-          ))}
 
           <AddToCartSection
             paintingId={painting.paintingId}
