@@ -7,6 +7,11 @@ interface CartItemRequest {
   quantity: number;
 }
 
+interface CartItemUpdateRequest {
+  cartItemId: string;
+  quantity: number;
+}
+
 export const getCart = async () => {
   try {
     const response = await api.get<ApiResponse<ICartItem[]>>(`/cart`);
@@ -34,6 +39,19 @@ export const deleteCartItem = async (cartItemId: string) => {
   try {
     const response = await api.delete<ApiResponse<void>>(
       `/cart/delete/${cartItemId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting cart item:", error);
+    throw error;
+  }
+};
+
+export const updateCartItem = async (body: CartItemUpdateRequest) => {
+  try {
+    const response = await api.put<ApiResponse<ICartItem>>(
+      `/cart/update`,
+      body
     );
     return response.data;
   } catch (error) {

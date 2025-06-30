@@ -17,6 +17,7 @@ interface CartItemProps {
   onDelete: (id: string) => void;
   isSelected: boolean;
   onToggle: (id: string) => void;
+  handleUpdateQuantity?: (cartItemId: string, quantity: number) => void;
 }
 
 const CartItem = ({
@@ -26,15 +27,22 @@ const CartItem = ({
   onDelete,
   isSelected,
   onToggle,
+  handleUpdateQuantity,
 }: CartItemProps) => {
   const [count, setCount] = useState(quantity);
 
   const handleDecrease = () => {
     if (count > 1) setCount(count - 1);
+    if (handleUpdateQuantity) {
+      handleUpdateQuantity(cartItemId, count - 1);
+    }
   };
 
   const handleIncrease = () => {
     setCount(count + 1);
+    if (handleUpdateQuantity) {
+      handleUpdateQuantity(cartItemId, count + 1);
+    }
   };
 
   const handleDelete = () => {
@@ -90,6 +98,7 @@ const CartItem = ({
                 size="icon"
                 disabled={quantity <= 1}
                 className="h-7 w-7 rounded-md bg-red-400 hover:bg-red-500"
+                onClick={() => handleDecrease()}
               >
                 <Minus className="w-4 h-4 text-white " />
               </Button>
@@ -105,6 +114,7 @@ const CartItem = ({
                 variant="ghost"
                 size="icon"
                 className="h-7 w-7 rounded-md bg-red-400 hover:bg-red-500"
+                onClick={() => handleIncrease()}
               >
                 <Plus className="w-4 h-4 text-white" />
               </Button>

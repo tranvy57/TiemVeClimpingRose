@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteCartItem, getCart } from "@/api/cartApi";
+import { deleteCartItem, getCart, updateCartItem } from "@/api/cartApi";
 import CartItem from "@/components/cart/CartItem";
 import { Button } from "@/components/ui/button";
 import PinkSpinner from "@/components/ui/pink-spiner";
@@ -9,7 +9,6 @@ import api from "@/libs/axios-config";
 import { showError, showLoginWarning } from "@/libs/toast";
 import { ICartItem } from "@/types/implements/cart-item";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import React, { use, useEffect, useState } from "react";
 import {
   Dialog,
@@ -47,6 +46,27 @@ const Cart = () => {
         ? prev.filter((id) => id !== cartItemId)
         : [...prev, cartItemId]
     );
+  };
+
+  const handleUpdateQuantity = async (cartItemId: string, quantity: number) => {
+    try {
+      const response = await updateCartItem({
+        cartItemId,
+        quantity,
+      });
+
+      if (response.data) {
+        setCartItems((prev) =>
+          (prev ?? []).map((item) =>
+            item.cartItemId === cartItemId ? { ...item, quantity } : item
+          )
+        );
+      }
+    } catch (error) {
+      showError(
+        error instanceof Error ? error.message : "Cập nhật số lượng thất bại"
+      );
+    }
   };
 
   const handleDeleteItem = async (cartItemId: string) => {
@@ -94,6 +114,7 @@ const Cart = () => {
                     onDelete={handleDeleteItem}
                     isSelected={selectedItems.includes(item.cartItemId)}
                     onToggle={handleToggleItem}
+                    handleUpdateQuantity={handleUpdateQuantity}
                   />
                 ))}
               </div>
