@@ -48,7 +48,7 @@ function HideLayoutWrapper({ children }: { children: React.ReactNode }) {
   return (
     <>
       {!hideLayout && <Header />}
-      <main className="pt-[65px] px-4 md:px-20 py-10 flex flex-col md:gap-8 max-w-7xl mx-auto">
+      <main className="pt-[75px] px-2 md:px-20 py-10 flex flex-col md:gap-8 max-w-7xl mx-auto">
         {children}
       </main>
       {!hideLayout && <Footer />}

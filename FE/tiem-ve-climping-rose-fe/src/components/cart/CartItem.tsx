@@ -67,7 +67,7 @@ const CartItem = ({
   };
 
   return (
-    <div className="relative w-full overflow-hidden group border-b p-2">
+    <div className="relative w-full overflow-hidden group border-b py-2">
       {/* Nội dung chính */}
       <div className="flex w-full 0">
         {/* Checkbox  */}

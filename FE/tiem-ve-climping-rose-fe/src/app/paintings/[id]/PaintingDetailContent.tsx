@@ -22,7 +22,7 @@ export default async function PaintingDetailContent({
   const categories: ICategory[] = painting.categories;
 
   return (
-    <div>
+    <div className="p-0">
       <div className="flex flex-col md:flex-row p-0">
         <div className="relative w-full md:w-1/2 aspect-square mt-4">
           <Image
