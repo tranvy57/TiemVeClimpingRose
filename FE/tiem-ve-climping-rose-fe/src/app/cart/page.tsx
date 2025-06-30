@@ -1,6 +1,6 @@
 "use client";
 
-import { getCart } from "@/api/cartApi";
+import { deleteCartItem, getCart } from "@/api/cartApi";
 import CartItem from "@/components/cart/CartItem";
 import { Button } from "@/components/ui/button";
 import PinkSpinner from "@/components/ui/pink-spiner";
@@ -40,6 +40,18 @@ const Cart = () => {
     }
   };
 
+  const handleDeleteItem = async (cartItemId: string) => {
+    try {
+      await deleteCartItem(cartItemId);
+      // Cập nhật lại danh sách sau khi xóa
+      setCartItems((prev) =>
+        (prev ?? []).filter((item) => item.cartItemId !== cartItemId)
+      );
+    } catch (error) {
+      console.error("Failed to delete item:", error);
+    }
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
@@ -62,6 +74,7 @@ const Cart = () => {
                     cartItemId={item.cartItemId}
                     painting={item.painting}
                     quantity={item.quantity}
+                    onDelete={handleDeleteItem}
                   />
                 ))}
               </div>

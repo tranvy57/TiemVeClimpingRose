@@ -29,3 +29,15 @@ export const caddCartItem = async (body: CartItemRequest) => {
     throw error;
   }
 };
+
+export const deleteCartItem = async (cartItemId: string) => {
+  try {
+    const response = await api.delete<ApiResponse<void>>(
+      `/cart/delete/${cartItemId}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting cart item:", error);
+    throw error;
+  }
+};

@@ -7,14 +7,22 @@ import { Button } from "@/components/ui/button";
 import { IPainting } from "@/types/implements/painting";
 import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
+import { deleteCartItem } from "@/api/cartApi";
+import { on } from "events";
 
 interface CartItemProps {
   cartItemId: string;
   painting: IPainting;
   quantity: number;
+  onDelete: (id: string) => void;
 }
 
-const CartItem = ({ cartItemId, painting, quantity }: CartItemProps) => {
+const CartItem = ({
+  cartItemId,
+  painting,
+  quantity,
+  onDelete,
+}: CartItemProps) => {
   const [count, setCount] = useState(quantity);
 
   const handleDecrease = () => {
@@ -26,8 +34,7 @@ const CartItem = ({ cartItemId, painting, quantity }: CartItemProps) => {
   };
 
   const handleDelete = () => {
-    // TODO: gọi API hoặc redux action để xoá item
-    console.log("Delete", cartItemId);
+    onDelete(cartItemId);
   };
 
   return (
@@ -98,9 +105,9 @@ const CartItem = ({ cartItemId, painting, quantity }: CartItemProps) => {
           </div>
         </div>
         <div className=" flex items-start justify-center">
-          <button onClick={handleDelete}>
+          <Button onClick={handleDelete} className="bg-none">
             <Trash2 className="w-5 h-5 text-gray-500" />
-          </button>
+          </Button>
         </div>
       </div>
     </div>

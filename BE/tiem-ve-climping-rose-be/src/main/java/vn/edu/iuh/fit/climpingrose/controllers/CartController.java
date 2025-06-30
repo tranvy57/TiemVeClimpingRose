@@ -33,5 +33,14 @@ public class CartController {
                 .build();
     }
 
+    @DeleteMapping("/delete/{cartItemId}")
+    public ApiResponse<Void> deleteCartItem(@PathVariable String cartItemId) {
+        cartService.deleteCartItem(cartItemId);
+        return ApiResponse.<Void>builder()
+                .message("Xoá sản phẩm khỏi giỏ hàng thành công")
+                .statusCode(200)
+                .build();
+    }
+
 
 }

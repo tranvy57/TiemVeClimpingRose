@@ -50,5 +50,10 @@ public class CartService {
         return cartItemMapper.toCartItemResponse(cartItemSaved);
     }
 
+    public void deleteCartItem(String cartItemId) {
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new NotFoundException("Cart item not found"));
+        cartItemRepository.delete(cartItem);
+    }
 
 }
