@@ -45,6 +45,23 @@ const CartItem = ({
     }
   };
 
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+    const newQuantity = parseInt(input, 10);
+
+    if (input === "") {
+      setCount(0); // Cho phép người dùng xóa sạch input
+      return;
+    }
+
+    if (!isNaN(newQuantity) && newQuantity > 0) {
+      setCount(newQuantity);
+      if (handleUpdateQuantity) {
+        handleUpdateQuantity(cartItemId, newQuantity);
+      }
+    }
+  };
+
   const handleDelete = () => {
     onDelete(cartItemId);
   };
@@ -105,9 +122,10 @@ const CartItem = ({
 
               <Input
                 type="number"
-                value={quantity}
+                value={count}
                 min={1}
-                className="w-12 text-center border rounded-md text-sm py-1"
+                className="w-15 text-center border rounded-md text-sm py-1"
+                onChange={handleQuantityChange}
               />
 
               <Button
