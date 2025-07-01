@@ -36,44 +36,12 @@ export function OptionList() {
   return (
     <div>
       <div className="flex md:justify-between items-center mt-4 overflow-x-auto scrollbar-hidden gap-4">
-        <div
-          onClick={() => handleClick("SIZE_20x20")}
-          className="cursor-pointer md:w-[180px]"
-        >
-          <OptionItem
-            name={t("options.size2020")}
-            image_url="https://res.cloudinary.com/dztelvbah/image/upload/v1751348011/2020_dl8yj5.jpg"
-          />
-        </div>
-
-        <div
-          onClick={() => handleClick("SIZE_30x40")}
-          className="cursor-pointer md:w-[180px]"
-        >
-          <OptionItem
-            name={t("options.size3040")}
-            image_url="https://res.cloudinary.com/dztelvbah/image/upload/v1751348141/3040_jeqi0d.jpg"
-          />
-        </div>
-
-        <div
-          onClick={() => handleClick("SIZE_40x50")}
-          className="cursor-pointer md:w-[180px]"
-        >
-          <OptionItem
-            name={t("options.size4050")}
-            image_url="https://res.cloudinary.com/dztelvbah/image/upload/v1751348216/4050_ytizz6.jpg"
-          />
-        </div>
-
         <Dialog>
           <DialogTrigger asChild>
-            <div>
-              <OptionItem
-                name={t("options.custom")}
-                image_url="https://res.cloudinary.com/dztelvbah/image/upload/v1751353652/custom_ztgqkp.jpg"
-              />
-            </div>
+            <OptionItem
+              name={t("options.custom")}
+              image_url="https://res.cloudinary.com/dztelvbah/image/upload/v1751353652/custom_ztgqkp.jpg"
+            />
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
@@ -84,7 +52,7 @@ export function OptionList() {
               </DialogDescription>
             </DialogHeader>
 
-            <div className="relative w-[300px] h-[120px] inline-block ml-2">
+            <div className="relative h-[120px] inline-block w-full">
               <p>Nhấp vào để mở: </p>
               <a
                 href="https://www.facebook.com/tiemveclimpingrose"
@@ -94,7 +62,7 @@ export function OptionList() {
               >
                 https://www.facebook.com/tiemveclimpingrose
               </a>
-              <div className="relative w-[300px] h-[100px] inline-block ml-2 mt-1">
+              <div className="relative w-[300px] h-[100px] inline-block  mt-1">
                 <Image
                   src="/fb.png"
                   alt="Facebook"
@@ -113,6 +81,35 @@ export function OptionList() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+        <div
+          onClick={() => handleClick("SIZE_20x20")}
+          className="cursor-pointer md:w-full"
+        >
+          <OptionItem
+            name={t("options.size2020")}
+            image_url="https://res.cloudinary.com/dztelvbah/image/upload/v1751348011/2020_dl8yj5.jpg"
+          />
+        </div>
+
+        <div
+          onClick={() => handleClick("SIZE_30x40")}
+          className="cursor-pointer md:w-full"
+        >
+          <OptionItem
+            name={t("options.size3040")}
+            image_url="https://res.cloudinary.com/dztelvbah/image/upload/v1751348141/3040_jeqi0d.jpg"
+          />
+        </div>
+
+        <div
+          onClick={() => handleClick("SIZE_40x50")}
+          className="cursor-pointer md:w-w-full"
+        >
+          <OptionItem
+            name={t("options.size4050")}
+            image_url="https://res.cloudinary.com/dztelvbah/image/upload/v1751348216/4050_ytizz6.jpg"
+          />
+        </div>
       </div>
     </div>
   );
