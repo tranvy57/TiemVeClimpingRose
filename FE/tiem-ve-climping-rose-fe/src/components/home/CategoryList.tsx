@@ -8,11 +8,14 @@ import { CategoryItem } from "./CategoryItem";
 import { useRouter } from "next/navigation";
 import { getCategories } from "@/api/categoryApi";
 import { ICategory } from "@/types/implements/painting";
+import { Pin } from "lucide-react";
+import PinkSpinner from "../ui/pink-spiner";
 
 export function CategoryList() {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const t = useTranslations("home");
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(true);
 
   const fetchCategories = async () => {
     try {
@@ -20,6 +23,8 @@ export function CategoryList() {
       setCategories(response.data || []);
     } catch (error) {
       console.error("Error fetching categories:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -39,7 +44,7 @@ export function CategoryList() {
         <p className="text-md md:text-xl font-bold underline decoration-red-500 underline-offset-8">
           {t("categories")}
         </p>
-        <Link href="#" className="font-normal text-red-400 underline">
+        <Link href="/paintings" className="font-normal text-red-400 underline">
           {t("seemore")}
         </Link>
       </div>
@@ -56,6 +61,8 @@ export function CategoryList() {
           </div>
         ))}
       </div>
+
+      {loading && <PinkSpinner />}
     </div>
   );
 }
