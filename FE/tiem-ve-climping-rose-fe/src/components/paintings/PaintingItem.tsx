@@ -41,7 +41,7 @@ export function PaitingItem({
   return (
     <Link
       href={href}
-      className="rounded-md border border-gray-200 overflow-hidden group"
+      className="rounded-md border border-gray-200 overflow-hidden group "
     >
       <div className="relative aspect-square w-full min-w-[100px] overflow-hidden ">
         <Image
@@ -51,13 +51,15 @@ export function PaitingItem({
           className="object-cover rounded-sm transition-transform duration-300 group-hover:scale-105"
         />
       </div>
-
-      <div className="p-2 flex items-center justify-between">
-        <div>
-          <p className=" text-sm font-semibold text-gray-800 transition-colors">
+      <div className="p-2 md:p-3">
+        <div className="h-[20px] overflow-hidden">
+          <p className="truncate whitespace-nowrap overflow-hidden text-sm font-semibold">
             {name}
           </p>
-          <div className="text-xs text-red-500 font-semibold flex">
+        </div>
+
+        <div className="text-xs text-red-500 font-semibold flex justify-between">
+          <div className="flex items-center">
             <BadgeJapaneseYen
               className="size-4"
               onClick={(e) => {
@@ -67,17 +69,17 @@ export function PaitingItem({
             />
             {price}
           </div>
-        </div>
 
-        <div className="bg-red-200 rounded-full p-1 hover:p-2 transition-all duration-300 shadow-sm ">
-          <ShoppingCart
-            className="font-light size-4 text-gray-800"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleAddCartItem(paintingId, 1);
-            }}
-          />
+          <div className="bg-red-200 rounded-full p-1 hover:p-2 transition-all duration-300 shadow-sm ">
+            <ShoppingCart
+              className="font-light size-4 text-gray-800"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleAddCartItem(paintingId, 1);
+              }}
+            />
+          </div>
         </div>
       </div>
     </Link>

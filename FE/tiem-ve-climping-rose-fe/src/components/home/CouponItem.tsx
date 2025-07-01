@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { Copy, CopyCheck } from "lucide-react";
 
 type DiscountType = "disc300" | "disc500" | "freeship";
 
@@ -34,6 +35,8 @@ export function CouponItem({
   conditions,
 }: CouponItemProps) {
   const t = useTranslations("home");
+  const [copied, setCopied] = useState(false);
+  const [copiedInDialog, setCopiedInDialog] = useState(false);
 
   const getDescription = () => {
     return t(`coupon.desc.${discountType}`, {
@@ -41,6 +44,26 @@ export function CouponItem({
       minOrder,
     });
   };
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Copy failed", err);
+    }
+  };
+
+  const handleDialogCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopiedInDialog(true);
+      setTimeout(() => setCopiedInDialog(false), 2000);
+    } catch (err) {
+      console.error("Copy in dialog failed", err);
+    }
+  };
+
   return (
     <div className="flex items-start min-w-[300px] max-w-[400px] max-h-fit">
       <Image src={image_url} height={100} width={100} alt="coupon" />
@@ -50,10 +73,23 @@ export function CouponItem({
           {t("coupon.enterCode", { code })}
         </p>
         <p className="text-sm text-gray-700">{getDescription()}</p>
+
         <div className="flex items-end space-x-3 justify-between">
-          <Button className="bg-red-300 hover:bg-red-400 text-white px-3 py-1 text-sm">
-            {t("coupon.copy")}
+          <Button
+            className="bg-red-300 hover:bg-red-400 text-white px-3 py-1 text-sm"
+            onClick={handleCopy}
+          >
+            {copied ? (
+              <div className="flex items-center gap-1">
+                <CopyCheck /> Đã sao chép
+              </div>
+            ) : (
+              <div className="flex items-center gap-1">
+                <Copy /> {t("coupon.copy")}
+              </div>
+            )}
           </Button>
+
           {/* Modal điều kiện */}
           <Dialog>
             <DialogTrigger asChild>
@@ -66,10 +102,15 @@ export function CouponItem({
                 <DialogTitle>{t("coupon.conditionTitle")}</DialogTitle>
                 <DialogDescription>Để sử dụng mã giảm giá:</DialogDescription>
               </DialogHeader>
+
               {conditions}
+
               <DialogFooter className="mt-4">
-                <Button className="bg-red-300 hover:bg-red-400 text-white px-3 py-1 text-sm">
-                  {t("coupon.copy")}
+                <Button
+                  className="bg-red-300 hover:bg-red-400 text-white px-3 py-1 text-sm"
+                  onClick={handleDialogCopy}
+                >
+                  {copiedInDialog ? "✅ Copied!" : t("coupon.copy")}
                 </Button>
               </DialogFooter>
             </DialogContent>
