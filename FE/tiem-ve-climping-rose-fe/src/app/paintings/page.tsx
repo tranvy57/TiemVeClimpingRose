@@ -164,7 +164,7 @@ const PaintingsPage = () => {
   return (
     <div className=" relative flex flex-col md:flex-row gap-4">
       {/* Filters */}
-      <div className="hidden md:flex flex-col gap-4 md:w-48  h-fit sticky md:top-[65px]">
+      <div className="hidden md:flex flex-col gap-4 md:w-[15%]  h-fit sticky md:top-[65px]">
         {/* <div className="flex justify-between items-center gap-1">
           <Input
             type="text"

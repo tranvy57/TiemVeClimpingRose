@@ -16,7 +16,7 @@ const banners = [
 
 export function ImageCarousel() {
   return (
-    <div className="w-full max-w-6xl mx-auto relative rounded-2xl overflow-hidden shadow-sm">
+    <div className="w-full max-w-7xl mx-auto relative rounded-2xl overflow-hidden shadow-sm">
       {/* Swiper Carousel */}
       <Swiper
         modules={[Autoplay, Navigation]}

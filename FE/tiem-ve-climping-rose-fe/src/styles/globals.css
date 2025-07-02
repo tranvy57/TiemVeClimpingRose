@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -122,7 +121,6 @@
   }
 }
 
-
 .menu-link {
   @apply px-2 py-1 font-semibold rounded-sm hover:text-red-400 transition-all duration-200;
 }
@@ -140,12 +138,9 @@
   display: none; /* Chrome, Safari */
 }
 
-
 .swiper-button-prev::after,
 .swiper-button-next::after {
   display: none !important;
   content: none !important;
 }
-
-
 

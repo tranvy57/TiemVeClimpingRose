@@ -3,7 +3,7 @@ import { CouponItem } from "./CouponItem";
 
 export function CouponList() {
   return (
-    <div className="flex gap-4 my-4 overflow-x-auto scrollbar-hidden ">
+    <div className="flex gap-4 my-4 overflow-x-auto scrollbar-hidden md:justify-center">
       <CouponItem
         image_url="/coupons/coupon300.png"
         code="CPR300"
