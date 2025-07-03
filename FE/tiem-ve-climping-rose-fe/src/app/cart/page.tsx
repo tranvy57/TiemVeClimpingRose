@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { ChevronRight, Ticket } from "lucide-react";
 import { CouponList } from "@/components/home";
+import Link from "next/link";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState<ICartItem[]>();
@@ -143,7 +144,9 @@ const Cart = () => {
                 <p className=" text-gray-800 font-semibold">
                   Tổng: ¥{totalPrice.toLocaleString("ja-JP")}
                 </p>
-                <Button>Đặt hàng</Button>
+                <Button>
+                  <Link href="/checkout">Đặt hàng</Link>
+                </Button>
               </div>
 
               {/* mobile */}
@@ -177,7 +180,7 @@ const Cart = () => {
                     </p>
                   </div>
                   <Button className="w-full py-6 font-bold text-md">
-                    Đặt hàng
+                    <Link href="/checkout">Đặt hàng</Link>
                   </Button>
                 </div>
               </div>

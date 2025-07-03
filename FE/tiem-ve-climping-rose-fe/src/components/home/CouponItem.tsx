@@ -57,8 +57,8 @@ export function CouponItem({
   };
 
   return (
-    <div className="flex items-start min-w-[300px] max-w-[400px] max-h-fit">
-      <Image src={imageUrl} height={120} width={120} alt="coupon" />
+    <div className="flex items-start min-w-[320px] max-w-[400px] max-h-fit ">
+      <Image src={imageUrl} height={50} width={110} alt="coupon" />
 
       <div className="flex-1 space-y-2 border h-full p-2 justify-between flex flex-col">
         <p className="text-red400 font-bold">
@@ -66,7 +66,7 @@ export function CouponItem({
         </p>
         <p className="text-sm text-gray-700">{description}</p>
 
-        <div className="flex items-end space-x-3 justify-between">
+        <div className="flex items-end justify-between">
           <Button
             className="bg-red-300 hover:bg-red-400 text-white px-3 py-1 text-sm"
             onClick={handleCopy}
