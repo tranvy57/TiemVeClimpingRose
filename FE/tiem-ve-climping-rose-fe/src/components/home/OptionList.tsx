@@ -36,53 +36,51 @@ export function OptionList() {
   return (
     <div className="w-full flex justify-center">
       <div className="flex md:justify-between items-center mt-4 overflow-x-auto scrollbar-hidden gap-4 md:w-7xl">
-        <div className="w-full">
-          <Dialog>
-            <DialogTrigger asChild>
-              <OptionItem
-                name={t("options.custom")}
-                image_url="https://res.cloudinary.com/dztelvbah/image/upload/v1751353652/custom_ztgqkp.jpg"
-              />
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>Tranh theo yêu cầu</DialogTitle>
-                <DialogDescription>
-                  Để đặt tranh theo yêu cầu, bạn vui lòng nhắn tin trực tiếp vào
-                  Facebook của tiệm để được tư vấn và báo giá:
-                </DialogDescription>
-              </DialogHeader>
+        <Dialog>
+          <DialogTrigger asChild>
+            <OptionItem
+              name={t("options.custom")}
+              image_url="https://res.cloudinary.com/dztelvbah/image/upload/v1751353652/custom_ztgqkp.jpg"
+            />
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Tranh theo yêu cầu</DialogTitle>
+              <DialogDescription>
+                Để đặt tranh theo yêu cầu, bạn vui lòng nhắn tin trực tiếp vào
+                Facebook của tiệm để được tư vấn và báo giá:
+              </DialogDescription>
+            </DialogHeader>
 
-              <div className="relative h-[120px] inline-block w-full">
-                <p>Nhấp vào để mở: </p>
-                <a
-                  href="https://www.facebook.com/tiemveclimpingrose"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 underline hover:text-blue-800 transition-colors"
-                >
-                  https://www.facebook.com/tiemveclimpingrose
-                </a>
-                <div className="relative w-[300px] h-[100px] inline-block  mt-1">
-                  <Image
-                    src="/fb.png"
-                    alt="Facebook"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
+            <div className="relative h-[120px] inline-block w-full">
+              <p>Nhấp vào để mở: </p>
+              <a
+                href="https://www.facebook.com/tiemveclimpingrose"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline hover:text-blue-800 transition-colors"
+              >
+                https://www.facebook.com/tiemveclimpingrose
+              </a>
+              <div className="relative w-[300px] h-[100px] inline-block  mt-1">
+                <Image
+                  src="/fb.png"
+                  alt="Facebook"
+                  fill
+                  className="object-contain"
+                />
               </div>
+            </div>
 
-              <DialogFooter className="sm:justify-start mt-6">
-                <DialogClose asChild>
-                  <Button type="button" variant="secondary">
-                    Đóng
-                  </Button>
-                </DialogClose>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
+            <DialogFooter className="sm:justify-start mt-6">
+              <DialogClose asChild>
+                <Button type="button" variant="secondary">
+                  Đóng
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
         <div
           onClick={() => handleClick("SIZE_20x20")}
           className="cursor-pointer md:w-full"

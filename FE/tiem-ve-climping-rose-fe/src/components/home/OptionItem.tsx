@@ -1,16 +1,19 @@
-import Image from "next/image";
-import Link from "next/link";
 import React from "react";
+import Image from "next/image";
 
-interface OptionItemProps {
+interface OptionItemProps extends React.ComponentPropsWithoutRef<"div"> {
   name: string;
   image_url: string;
 }
 
-export function OptionItem({ name, image_url }: OptionItemProps) {
-  return (
+export const OptionItem = React.forwardRef<HTMLDivElement, OptionItemProps>(
+  ({ name, image_url, ...rest }, ref) => (
     <div
-      className="group w-[120px] md:w-[180px] flex-shrink-0 lg:mx-10 md:mx-3"
+      ref={ref}
+      {...rest}
+      className={`group w-[120px] md:w-[180px] flex-shrink-0 lg:mx-10 md:mx-3 cursor-pointer ${
+        rest.className || ""
+      }`}
       tabIndex={0}
       role="button"
     >
@@ -26,5 +29,7 @@ export function OptionItem({ name, image_url }: OptionItemProps) {
         {name}
       </p>
     </div>
-  );
-}
+  )
+);
+
+OptionItem.displayName = "OptionItem";
