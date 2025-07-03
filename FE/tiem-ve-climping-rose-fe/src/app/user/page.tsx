@@ -1,24 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Collapsible,
   CollapsibleTrigger,
   CollapsibleContent,
 } from "@/components/ui/collapsible";
 import { ChevronDown } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function UserAccountPage() {
-  const [selected, setSelected] = useState<"profile" | "orders">("profile");
+  const [selected, setSelected] = useState<"profile" | "orders" | null>(
+    "profile"
+  );
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab === "profile" || tab === "orders") {
+      setSelected(tab);
+    }
+  }, [searchParams]);
+
+  const handleTabChange = (tab: "profile" | "orders") => {
+    const url = new URL(window.location.href);
+    if (selected === tab) {
+      url.searchParams.delete("tab");
+      setSelected(null); // toggle off
+    } else {
+      url.searchParams.set("tab", tab);
+      setSelected(tab);
+    }
+    router.push(url.toString());
+  };
 
   return (
-    <div className="w-full px-4 md:px-6 py-10">
+    <div className="w-full md:px-6">
       <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row gap-6">
         {/* Sidebar – chỉ hiện trên desktop */}
         <aside className="hidden md:block w-64 shrink-0 border-r pr-4">
           <nav className="flex flex-col gap-2">
             <button
-              onClick={() => setSelected("profile")}
+              onClick={() => handleTabChange("profile")}
               className={`text-left px-4 py-2 rounded-md ${
                 selected === "profile"
                   ? "bg-gray-200 dark:bg-gray-700 font-semibold"
@@ -28,7 +52,7 @@ export default function UserAccountPage() {
               Thông tin tài khoản
             </button>
             <button
-              onClick={() => setSelected("orders")}
+              onClick={() => handleTabChange("orders")}
               className={`text-left px-4 py-2 rounded-md ${
                 selected === "orders"
                   ? "bg-gray-200 dark:bg-gray-700 font-semibold"
@@ -67,8 +91,11 @@ export default function UserAccountPage() {
 
           {/* Mobile – collapsible */}
           <div className="md:hidden space-y-4">
-            <Collapsible defaultOpen>
-              <CollapsibleTrigger className="flex items-center justify-between w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-md font-medium">
+            <Collapsible open={selected === "profile"} className="w-full">
+              <CollapsibleTrigger
+                className="flex items-center justify-between w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-md font-medium"
+                onClick={() => handleTabChange("profile")}
+              >
                 <span>Thông tin tài khoản</span>
                 <ChevronDown className="h-4 w-4" />
               </CollapsibleTrigger>
@@ -79,8 +106,11 @@ export default function UserAccountPage() {
               </CollapsibleContent>
             </Collapsible>
 
-            <Collapsible>
-              <CollapsibleTrigger className="flex items-center justify-between w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-md font-medium">
+            <Collapsible open={selected === "orders"} className="w-full">
+              <CollapsibleTrigger
+                className="flex items-center justify-between w-full px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-md font-medium"
+                onClick={() => handleTabChange("orders")}
+              >
                 <span>Đơn hàng đã đặt</span>
                 <ChevronDown className="h-4 w-4" />
               </CollapsibleTrigger>

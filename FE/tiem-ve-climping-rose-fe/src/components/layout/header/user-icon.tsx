@@ -56,8 +56,11 @@ export default function UserIcon() {
           </DropdownMenuItem>
         ) : (
           <>
-            <DropdownMenuItem disabled>
-              {user?.username || "Tài khoản"}
+            <DropdownMenuItem>
+              <Link href="/user">Tài khoản của tôi</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href="/user?tab=orders">Đơn hàng</Link>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={handleLogout}>
               Đăng xuất
