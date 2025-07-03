@@ -18,32 +18,24 @@ import { Copy, CopyCheck } from "lucide-react";
 type DiscountType = "disc300" | "disc500" | "freeship";
 
 interface CouponItemProps {
-  image_url: string;
+  imageUrl: string;
   code: string;
-  discount: string;
-  minOrder: string;
-  discountType: DiscountType;
-  conditions: React.ReactNode;
+  discountPercentage: number;
+  condition: string;
+  description: string;
 }
 
 export function CouponItem({
-  image_url,
-  discount,
+  imageUrl,
+  discountPercentage,
   code,
-  minOrder,
-  discountType,
-  conditions,
+  description,
+  condition,
 }: CouponItemProps) {
   const t = useTranslations("home");
   const [copied, setCopied] = useState(false);
   const [copiedInDialog, setCopiedInDialog] = useState(false);
 
-  const getDescription = () => {
-    return t(`coupon.desc.${discountType}`, {
-      discount,
-      minOrder,
-    });
-  };
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(code);
@@ -66,13 +58,13 @@ export function CouponItem({
 
   return (
     <div className="flex items-start min-w-[300px] max-w-[400px] max-h-fit">
-      <Image src={image_url} height={100} width={100} alt="coupon" />
+      <Image src={imageUrl} height={120} width={120} alt="coupon" />
 
       <div className="flex-1 space-y-2 border h-full p-2 justify-between flex flex-col">
         <p className="text-red400 font-bold">
           {t("coupon.enterCode", { code })}
         </p>
-        <p className="text-sm text-gray-700">{getDescription()}</p>
+        <p className="text-sm text-gray-700">{description}</p>
 
         <div className="flex items-end space-x-3 justify-between">
           <Button
@@ -103,7 +95,7 @@ export function CouponItem({
                 <DialogDescription>Để sử dụng mã giảm giá:</DialogDescription>
               </DialogHeader>
 
-              {conditions}
+              {condition}
 
               <DialogFooter className="mt-4">
                 <Button

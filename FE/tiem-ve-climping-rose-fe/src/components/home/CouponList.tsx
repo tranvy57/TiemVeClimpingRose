@@ -1,38 +1,44 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { CouponItem } from "./CouponItem";
+import { getCoupons } from "@/api/couponAPi";
+import { useTranslations } from "next-intl";
+import { ICategory } from "@/types/implements/painting";
+import { ICoupon } from "@/types/implements/coupon";
 
 export function CouponList() {
+  const [coupons, setCoupons] = useState<ICoupon[]>([]);
+  const t = useTranslations("home");
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const fetchCoupons = async () => {
+    try {
+      const response = await getCoupons();
+      setCoupons(response.data || []);
+    } catch (error) {
+      console.error("Error fetching Coupons:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchCoupons();
+  }, []);
   return (
     <div className="flex gap-4 my-4 overflow-x-auto scrollbar-hidden md:justify-center">
-      <CouponItem
-        image_url="/coupons/couponfreeship.png"
-        code="CPR300"
-        discount="300¥"
-        minOrder="3,000¥"
-        discountType="disc300"
-        conditions={
-          <ul className="list-disc pl-5 space-y-1">
-            <li>Đơn hàng tối thiểu 3,000¥</li>
-            <li>Áp dụng 1 lần</li>
-          </ul>
-        }
-      />
-      <CouponItem
-        image_url="/coupons/couponfreeship.png"
-        code="CPR500"
-        discount="500¥"
-        minOrder="6,000¥"
-        discountType="disc500"
-        conditions={<p>Áp dụng cho đơn từ 6,000¥</p>}
-      />
-      <CouponItem
-        image_url="/coupons/couponfreeship.png"
-        code="FREESHIP"
-        discount="phí vận chuyển"
-        minOrder="10,000¥"
-        discountType="freeship"
-        conditions={<p>Giao hàng miễn phí cho đơn hàng từ 10,000¥</p>}
-      />
+      {coupons.map((c) => {
+        return (
+          <CouponItem
+            imageUrl="/coupons/couponfreeship.png"
+            code={c.code}
+            discountPercentage={c.discountPercentage}
+            condition={c.condition}
+            description={c.description}
+          />
+        );
+      })}
     </div>
   );
 }
