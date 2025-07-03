@@ -17,7 +17,10 @@ interface CartItemProps {
   onDelete: (id: string) => void;
   isSelected: boolean;
   onToggle: (id: string) => void;
-  handleUpdateQuantity?: (cartItemId: string, quantity: number) => void;
+  handleUpdateQuantity?: (
+    cartItemId: string,
+    quantity: number
+  ) => Promise<void>;
 }
 
 const CartItem = ({
@@ -31,33 +34,52 @@ const CartItem = ({
 }: CartItemProps) => {
   const [count, setCount] = useState(quantity);
 
-  const handleDecrease = () => {
-    if (count > 1) setCount(count - 1);
+  const handleDecrease = async () => {
+    if (count <= 1) return;
+
+    const newCount = count - 1;
+    setCount(newCount);
     if (handleUpdateQuantity) {
-      handleUpdateQuantity(cartItemId, count - 1);
+      try {
+        await handleUpdateQuantity(cartItemId, newCount);
+      } catch (err) {
+        setCount(count); // rollback nếu lỗi
+      }
     }
   };
 
-  const handleIncrease = () => {
-    setCount(count + 1);
+  const handleIncrease = async () => {
+    const newCount = count + 1;
+    setCount(newCount);
     if (handleUpdateQuantity) {
-      handleUpdateQuantity(cartItemId, count + 1);
+      try {
+        await handleUpdateQuantity(cartItemId, newCount);
+      } catch (err) {
+        // đã showError bên trong rồi, không cần xử lý nữa
+        setCount(count); // rollback nếu cần
+      }
     }
   };
 
-  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleQuantityChange = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const input = e.target.value;
     const newQuantity = parseInt(input, 10);
 
     if (input === "") {
-      setCount(0); // Cho phép người dùng xóa sạch input
+      setCount(0);
       return;
     }
 
     if (!isNaN(newQuantity) && newQuantity > 0) {
       setCount(newQuantity);
       if (handleUpdateQuantity) {
-        handleUpdateQuantity(cartItemId, newQuantity);
+        try {
+          await handleUpdateQuantity(cartItemId, newQuantity);
+        } catch {
+          setCount(count); // rollback nếu lỗi
+        }
       }
     }
   };

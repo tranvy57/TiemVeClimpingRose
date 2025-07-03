@@ -31,6 +31,7 @@ export function CouponList() {
       {coupons.map((c) => {
         return (
           <CouponItem
+            key={c.couponId}
             imageUrl="/coupons/couponfreeship.png"
             code={c.code}
             discountPercentage={c.discountPercentage}

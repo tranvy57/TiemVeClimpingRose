@@ -4,7 +4,7 @@ import { deleteCartItem, getCart, updateCartItem } from "@/api/cartApi";
 import CartItem from "@/components/cart/CartItem";
 import { Button } from "@/components/ui/button";
 import PinkSpinner from "@/components/ui/pink-spiner";
-import { useAppSelector } from "@/hooks/store-hook";
+import { useAppDispatch, useAppSelector } from "@/hooks/store-hook";
 import api from "@/libs/axios-config";
 import { showError, showLoginWarning } from "@/libs/toast";
 import { ICartItem } from "@/types/implements/cart-item";
@@ -21,11 +21,17 @@ import {
 import { ChevronRight, Ticket } from "lucide-react";
 import { CouponList } from "@/components/home";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { setCheckoutData } from "@/store/slice/checkout-slice";
+import axios from "axios";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState<ICartItem[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const fetchCartItems = async () => {
     try {
@@ -51,11 +57,7 @@ const Cart = () => {
 
   const handleUpdateQuantity = async (cartItemId: string, quantity: number) => {
     try {
-      const response = await updateCartItem({
-        cartItemId,
-        quantity,
-      });
-
+      const response = await updateCartItem({ cartItemId, quantity });
       if (response.data) {
         setCartItems((prev) =>
           (prev ?? []).map((item) =>
@@ -64,9 +66,12 @@ const Cart = () => {
         );
       }
     } catch (error) {
-      showError(
-        error instanceof Error ? error.message : "Cập nhật số lượng thất bại"
-      );
+      const message =
+        axios.isAxiosError(error) && error.response?.data?.message
+          ? error.response.data.message
+          : "Cập nhật số lượng thất bại";
+      showError(message);
+      throw error; // ⬅ vẫn nên throw để component gọi có thể xử lý tiếp
     }
   };
 
@@ -82,6 +87,48 @@ const Cart = () => {
     }
   };
 
+  const handleCheckout = () => {
+    if (!cartItems) return;
+
+    const selectedCartItems = cartItems.filter((item) =>
+      selectedItems.includes(item.cartItemId)
+    );
+
+    const orderItems = selectedCartItems.map((item) => ({
+      paintingId: item.painting.paintingId,
+      quantity: item.quantity,
+    }));
+
+    const selectedPaintings = selectedCartItems.map((item) => item.painting);
+
+    const totalPaintingsPrice = selectedCartItems.reduce(
+      (sum, item) => sum + item.painting.price * item.quantity,
+      0
+    );
+
+    const paintingMap = Object.fromEntries(
+      selectedPaintings.map((p) => [p.paintingId, p])
+    );
+
+    const deliveryCost = calculateDeliveryCost(
+      orderItems,
+      paintingMap,
+      "tokyo" // default estimate
+    );
+
+    dispatch(
+      setCheckoutData({
+        orderItems,
+        selectedPaintings,
+        totalPaintingsPrice,
+        deliveryCost,
+        totalPrice: totalPaintingsPrice + deliveryCost,
+      })
+    );
+
+    router.push("/checkout");
+  };
+
   const totalPrice =
     cartItems
       ?.filter((item) => selectedItems.includes(item.cartItemId))
@@ -89,6 +136,21 @@ const Cart = () => {
         (total, item) => total + item.painting.price * item.quantity,
         0
       ) ?? 0;
+
+  const estimatedDeliveryCost = (() => {
+    if (!cartItems || selectedItems.length === 0) return 0;
+    const selectedCartItems = cartItems.filter((item) =>
+      selectedItems.includes(item.cartItemId)
+    );
+    const orderItems = selectedCartItems.map((item) => ({
+      paintingId: item.painting.paintingId,
+      quantity: item.quantity,
+    }));
+    const paintingMap = Object.fromEntries(
+      selectedCartItems.map((item) => [item.painting.paintingId, item.painting])
+    );
+    return calculateDeliveryCost(orderItems, paintingMap, "tokyo");
+  })();
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -120,32 +182,38 @@ const Cart = () => {
                 ))}
               </div>
 
+              {/* Sidebar */}
               <div className="hidden border pl-4 p-4 min-w-[200px] w-[25%] md:flex flex-col gap-4">
                 <p className="text-red-500 text-xl font-semibold">
                   Thông tin đơn hàng:
                 </p>
                 <p>
-                  Tổng số sản phẩm:{" "}
-                  <span className="font-semibold">{cartItems.length}</span>
+                  Tổng tiền tranh:{" "}
+                  <span className="font-semibold">
+                    {totalPrice.toLocaleString("ja-JP")}
+                  </span>
                 </p>
-                <Dialog>
-                  <DialogTrigger>
-                    <div className="flex justify-between items-center gap-2 cursor-pointer">
-                      <p>Xem mã giảm giá </p>
-                      <ChevronRight className="float-right" />
-                    </div>{" "}
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Chưa làm</DialogTitle>
-                    </DialogHeader>
-                  </DialogContent>
-                </Dialog>
-                <p className=" text-gray-800 font-semibold">
-                  Tổng: ¥{totalPrice.toLocaleString("ja-JP")}
+
+                <p>
+                  Phí vận chuyển (ước lượng): ¥
+                  {estimatedDeliveryCost.toLocaleString("ja-JP")}
                 </p>
-                <Button>
-                  <Link href="/checkout">Đặt hàng</Link>
+
+                <p className="text-gray-800 font-semibold">
+                  Tổng: ¥
+                  {(totalPrice + estimatedDeliveryCost).toLocaleString("ja-JP")}
+                </p>
+
+                <Button
+                  className={`w-full py-6 font-bold text-md ${
+                    selectedItems.length === 0
+                      ? "opacity-50 pointer-events-none"
+                      : ""
+                  }`}
+                  disabled={selectedItems.length === 0}
+                  onClick={handleCheckout}
+                >
+                  Đặt hàng
                 </Button>
               </div>
 
@@ -160,7 +228,7 @@ const Cart = () => {
                     <DialogTrigger>
                       <div className="flex items-center gap-2 cursor-pointer">
                         Xem mã giảm giá <ChevronRight />
-                      </div>{" "}
+                      </div>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
@@ -170,19 +238,30 @@ const Cart = () => {
                   </Dialog>
                 </div>
                 <p>
-                  Tổng số sản phẩm:{" "}
-                  <span className="font-semibold">{cartItems.length}</span>
+                  Tổng tiền tranh:{" "}
+                  <span className="font-semibold">
+                    {totalPrice.toLocaleString("ja-JP")}
+                  </span>
                 </p>
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-center justify-between">
-                    <p className="text-xl text-gray-700">
-                      Tổng: ¥{totalPrice.toLocaleString("ja-JP")}
-                    </p>
-                  </div>
-                  <Button className="w-full py-6 font-bold text-md">
-                    <Link href="/checkout">Đặt hàng</Link>
-                  </Button>
-                </div>
+                <p>
+                  Phí vận chuyển (ước lượng): ¥
+                  {estimatedDeliveryCost.toLocaleString("ja-JP")}
+                </p>
+                <p className="font-semibold text-lg">
+                  Tổng: ¥
+                  {(totalPrice + estimatedDeliveryCost).toLocaleString("ja-JP")}
+                </p>
+                <Button
+                  className={`w-full py-6 font-bold text-md ${
+                    selectedItems.length === 0
+                      ? "opacity-50 pointer-events-none"
+                      : ""
+                  }`}
+                  disabled={selectedItems.length === 0}
+                  onClick={handleCheckout}
+                >
+                  Đặt hàng
+                </Button>
               </div>
             </div>
           ) : (
@@ -205,6 +284,62 @@ const Cart = () => {
       )}
     </div>
   );
+};
+
+const calculateDeliveryCost = (
+  orderItems: { paintingId: string; quantity: number }[],
+  paintingMap: Record<string, { size: string; quantity: number }>,
+  shippingAddress: string
+): number => {
+  let deliveryCost = 0;
+
+  let count2020 = 0;
+  let count3040 = 0;
+  let count4050 = 0;
+
+  for (const item of orderItems) {
+    const painting = paintingMap[item.paintingId];
+    if (!painting) {
+      throw new Error(`Không tìm thấy paintingId: ${item.paintingId}`);
+    }
+
+    if (item.quantity > painting.quantity || item.quantity <= 0) {
+      throw new Error(`Số lượng không hợp lệ cho tranh ID: ${item.paintingId}`);
+    }
+
+    switch (painting.size) {
+      case "SIZE_20x20":
+        count2020 += item.quantity;
+        break;
+      case "SIZE_30x40":
+        count3040 += item.quantity;
+        break;
+      case "SIZE_40x50":
+        count4050 += item.quantity;
+        break;
+    }
+  }
+
+  if (count4050 > 0 && count4050 < 2) {
+    deliveryCost += 1500;
+  } else if (count3040 > 0 && count3040 < 2) {
+    deliveryCost += 1200;
+  } else if (count2020 > 0) {
+    if (count2020 === 1) {
+      deliveryCost += 370;
+    } else if (count2020 <= 3) {
+      deliveryCost += 520;
+    } else if (count2020 <= 7) {
+      deliveryCost += 840;
+    }
+  }
+
+  const address = shippingAddress.toLowerCase();
+  if (address.includes("okinawa") || address.includes("hokkaido")) {
+    deliveryCost += 400;
+  }
+
+  return deliveryCost;
 };
 
 export default Cart;
