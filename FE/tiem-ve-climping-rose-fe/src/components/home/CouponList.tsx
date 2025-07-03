@@ -5,7 +5,7 @@ export function CouponList() {
   return (
     <div className="flex gap-4 my-4 overflow-x-auto scrollbar-hidden md:justify-center">
       <CouponItem
-        image_url="/coupons/coupon300.png"
+        image_url="/coupons/couponfreeship.png"
         code="CPR300"
         discount="300¥"
         minOrder="3,000¥"
@@ -18,7 +18,7 @@ export function CouponList() {
         }
       />
       <CouponItem
-        image_url="/coupons/coupon500.png"
+        image_url="/coupons/couponfreeship.png"
         code="CPR500"
         discount="500¥"
         minOrder="6,000¥"

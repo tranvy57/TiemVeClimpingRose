@@ -62,9 +62,14 @@ const Header = () => {
             />
           </Link>
 
-          <p className="font-bold text-md lg:text-lg text-gray-700">
-            {t("title")}
-          </p>
+          <div>
+            <p className="font-bold text-md lg:text-lg text-gray-700">
+              {t("title")}
+            </p>
+            <p className=" text-sm font-thin italic">
+              Tiệm tranh số hóa tại Nhật
+            </p>
+          </div>
         </div>
 
         {/* Nút menu mobile */}
@@ -91,7 +96,7 @@ const Header = () => {
                   <ShoppingCart className="icon-button" />
                 </Link>
                 <UserIcon />
-                <LanguageSwitcher />
+                {/* <LanguageSwitcher /> */}
               </div>
             </SheetHeader>
           </SheetContent>
@@ -118,7 +123,7 @@ const Header = () => {
                 <ShoppingCart className="icon-button" />
               </button>
               <UserIcon />
-              <LanguageSwitcher />
+              {/* <LanguageSwitcher /> */}
             </div>
           </div>
         </div>
