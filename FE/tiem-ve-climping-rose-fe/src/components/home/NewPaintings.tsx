@@ -51,6 +51,7 @@ const NewPaintings = () => {
               image_url={p.imageUrl}
               price={p.price}
               href={`/paintings/${p.paintingId}`}
+              size={p.size}
             />
           );
         })}

@@ -17,6 +17,7 @@ import { useAppSelector } from "@/hooks/store-hook";
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { showError } from "@/libs/toast";
+import OrderItem from "./OrderItem";
 
 export default function ChekoutPage() {
   const { selectedCartItems } = useAppSelector((state) => state.checkout);
@@ -61,14 +62,18 @@ export default function ChekoutPage() {
       {/* Danh sách OrderItem */}
       <div className="md:w-[35%]">
         {selectedCartItems.map((item) => (
-          <div key={item.cartItemId}>
-            <p>{item.painting.name}</p>
-            <p>Số lượng: {item.quantity}</p>
-            <p>Giá: ¥{item.painting.price.toLocaleString("ja-JP")}</p>
-          </div>
+          <OrderItem
+            key={item.cartItemId}
+            paintingId={item.painting.paintingId}
+            name={item.painting.name}
+            price={item.painting.price}
+            size={item.painting.size}
+            quantity={item.quantity}
+            imageUrl={item.painting.imageUrl}
+          />
         ))}
       </div>
-      <div className="md:flex-1 flex gap-4">
+      <div className="md:flex-1 flex flex-col md:flex-row gap-4">
         <div className="md:w-[50%] space-y-4 ">
           <div className="space-y-2">
             <Label className="text-md" htmlFor="receiverName">
@@ -197,79 +202,6 @@ export default function ChekoutPage() {
             />
           </div>
         </div>
-
-        {/* <Card className="max-w-xl mx-auto">
-          <CardHeader>
-            <CardTitle>Upgrade your subscription</CardTitle>
-            <CardDescription>
-              You are currently on the free plan. Upgrade to the pro plan to get
-              access to all features.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-6">
-            <div className="grid grid-cols-2 gap-4">
-              <Input placeholder="Name" defaultValue="Evil Rabbit" />
-              <Input placeholder="Email" defaultValue="example@acme.co" />
-            </div>
-
-            <div className="grid grid-cols-4 gap-4">
-              <Input placeholder="1234 1234 1234 1234" className="col-span-2" />
-              <Input placeholder="MM/YY" />
-              <Input placeholder="CVC" />
-            </div>
-
-            <div className="grid gap-2">
-              <label className="text-md"  className="text-sm font-medium">Plan</label>
-              <p className="text-sm text-muted-foreground">
-                Select the plan that best fits your needs.
-              </p>
-              <RadioGroup
-                defaultValue="starter"
-                className="grid grid-cols-2 gap-4 pt-2"
-              >
-                <div className="border rounded-lg p-4">
-                  <RadioGroupItem value="starter" id="starter" />
-                  <label className="text-md"  htmlFor="starter" className="ml-2 font-medium">
-                    Starter Plan
-                  </label>
-                  <p className="text-sm text-muted-foreground">
-                    Perfect for small businesses.
-                  </p>
-                </div>
-                <div className="border rounded-lg p-4">
-                  <RadioGroupItem value="pro" id="pro" />
-                  <label className="text-md"  htmlFor="pro" className="ml-2 font-medium">
-                    Pro Plan
-                  </label>
-                  <p className="text-sm text-muted-foreground">
-                    More features and storage.
-                  </p>
-                </div>
-              </RadioGroup>
-            </div>
-
-            <Textarea placeholder="Enter notes" />
-
-            <div className="grid gap-2">
-              <div className="flex items-center space-x-2">
-                <Checkbox id="terms" />
-                <label className="text-md"  htmlFor="terms" className="text-sm">
-                  I agree to the terms and conditions
-                </label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox id="emails" defaultChecked />
-                <label className="text-md"  htmlFor="emails" className="text-sm">
-                  Allow us to send you emails
-                </label>
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button variant="outline">Cancel</Button>
-            <Button>Upgrade Plan</Button>
-          </CardFooter>
-        </Card> */}
       </div>
     </div>
   );

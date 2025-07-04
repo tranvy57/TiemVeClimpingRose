@@ -12,7 +12,7 @@ export interface IPainting extends BaseEntity {
   name: string;
   description: string;
   imageUrl: string;
-  size: "20x20" | "30x40" | "40x50";
+  size: string;
   price: number;
   quantity: number;
   categories: ICategory[];

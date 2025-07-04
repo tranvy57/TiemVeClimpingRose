@@ -11,6 +11,7 @@ interface PaitingItemProps {
   image_url: string;
   price: number;
   href: string;
+  size: string;
 }
 
 export function PaitingItem({
@@ -19,6 +20,7 @@ export function PaitingItem({
   image_url,
   price,
   href,
+  size,
 }: PaitingItemProps) {
   const { authenticated } = useAppSelector((state) => state.auth);
   // Handle adding item to cart
@@ -52,10 +54,12 @@ export function PaitingItem({
         />
       </div>
       <div className="p-2 md:p-3">
-        <div className="h-[20px] overflow-hidden">
+        <div className="h-fit">
           <p className="truncate whitespace-nowrap overflow-hidden text-sm font-semibold">
             {name}
           </p>
+
+          <p className="font-light text-[10px]">{size}</p>
         </div>
 
         <div className="text-xs text-red-500 font-semibold flex justify-between">
