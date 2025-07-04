@@ -20,7 +20,8 @@ import { showError } from "@/libs/toast";
 import OrderItem from "./OrderItem";
 
 export default function ChekoutPage() {
-  const { selectedCartItems } = useAppSelector((state) => state.checkout);
+  const { selectedCartItems, totalPaintingsPrice, totalPrice, deliveryCost } =
+    useAppSelector((state) => state.checkout);
   const [zipcode, setZipcode] = useState("");
   const [address, setAddress] = useState({
     prefecture: "",
@@ -72,6 +73,24 @@ export default function ChekoutPage() {
             imageUrl={item.painting.imageUrl}
           />
         ))}
+
+        <div className="space-y-2">
+          <p>
+            Tổng tiền tranh:{" "}
+            <span className="font-semibold">
+              {totalPaintingsPrice.toLocaleString("ja-JP")}
+            </span>
+          </p>
+
+          <p>Phí vận chuyển: ¥{deliveryCost.toLocaleString("ja-JP")}</p>
+
+          <p className="text-gray-800 font-semibold">
+            Tổng: ¥
+            {(totalPaintingsPrice + deliveryCost).toLocaleString("ja-JP")}
+          </p>
+
+          <Button className="w-full">Đặt hàng</Button>
+        </div>
       </div>
       <div className="md:flex-1 flex flex-col md:flex-row gap-4">
         <div className="md:w-[50%] space-y-4 ">
