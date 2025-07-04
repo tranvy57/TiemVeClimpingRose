@@ -39,9 +39,7 @@ public class OrderService {
         String normalized = address.toLowerCase();
         return normalized.contains("okinawa") || normalized.contains("hokkaido");
     }
-
-
-
+    
     @Transactional
     public OrderResponse createOrder(OrderRequest request) {
         User user = userUtils.getUserLogin();

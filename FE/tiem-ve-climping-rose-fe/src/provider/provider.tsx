@@ -2,10 +2,11 @@
 
 import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header/header";
-import { store } from "@/store/store";
+import { persistor, store } from "@/store/store";
 import { NextIntlClientProvider } from "next-intl";
 import { usePathname } from "next/navigation";
 import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 import { Toaster } from "sonner";
 
 export default function Providers({
@@ -21,22 +22,24 @@ export default function Providers({
 }>) {
   return (
     <Provider store={store}>
-      <NextIntlClientProvider
-        locale={locale}
-        messages={messages}
-        timeZone={timeZone}
-      >
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            classNames: {
-              toast: "text-xs",
-              icon: "text-pink-500",
-            },
-          }}
-        />
-        <HideLayoutWrapper>{children}</HideLayoutWrapper>
-      </NextIntlClientProvider>
+      <PersistGate loading={null} persistor={persistor}>
+        <NextIntlClientProvider
+          locale={locale}
+          messages={messages}
+          timeZone={timeZone}
+        >
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              classNames: {
+                toast: "text-xs",
+                icon: "text-pink-500",
+              },
+            }}
+          />
+          <HideLayoutWrapper>{children}</HideLayoutWrapper>
+        </NextIntlClientProvider>
+      </PersistGate>
     </Provider>
   );
 }
