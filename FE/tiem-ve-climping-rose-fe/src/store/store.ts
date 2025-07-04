@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slice/auth-slice";
+import checkoutReducer from "./slice/checkout-slice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    checkout: checkoutReducer,
   },
 });
 

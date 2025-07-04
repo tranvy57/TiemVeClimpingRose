@@ -94,32 +94,27 @@ const Cart = () => {
       selectedItems.includes(item.cartItemId)
     );
 
-    const orderItems = selectedCartItems.map((item) => ({
-      paintingId: item.painting.paintingId,
-      quantity: item.quantity,
-    }));
-
-    const selectedPaintings = selectedCartItems.map((item) => item.painting);
-
     const totalPaintingsPrice = selectedCartItems.reduce(
       (sum, item) => sum + item.painting.price * item.quantity,
       0
     );
 
     const paintingMap = Object.fromEntries(
-      selectedPaintings.map((p) => [p.paintingId, p])
+      selectedCartItems.map((item) => [item.painting.paintingId, item.painting])
     );
 
     const deliveryCost = calculateDeliveryCost(
-      orderItems,
+      selectedCartItems.map((item) => ({
+        paintingId: item.painting.paintingId,
+        quantity: item.quantity,
+      })),
       paintingMap,
-      "tokyo" // default estimate
+      "tokyo"
     );
 
     dispatch(
       setCheckoutData({
-        orderItems,
-        selectedPaintings,
+        selectedCartItems,
         totalPaintingsPrice,
         deliveryCost,
         totalPrice: totalPaintingsPrice + deliveryCost,

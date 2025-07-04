@@ -28,6 +28,6 @@ public class OrderRequest {
     String email;
     String postalCode;
     String contact;
-    List<CartItemRequest> orderItems;
+    List<String> cartItemIds;
     String couponCode;
 }

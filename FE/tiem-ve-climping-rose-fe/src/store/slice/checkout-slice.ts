@@ -1,22 +1,17 @@
 import { IPainting } from "@/types/implements/painting";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface OrderItemRequest {
-  paintingId: string;
-  quantity: number;
-}
+import { ICartItem } from "@/types/implements/cart-item";
 
 interface CheckoutState {
-  orderItems: OrderItemRequest[];
-  selectedPaintings: IPainting[];
+  selectedCartItems: ICartItem[];
   totalPaintingsPrice: number;
   deliveryCost: number;
   totalPrice: number;
 }
 
 const initialState: CheckoutState = {
-  orderItems: [],
-  selectedPaintings: [],
+  selectedCartItems: [],
   totalPaintingsPrice: 0,
   deliveryCost: 0,
   totalPrice: 0,

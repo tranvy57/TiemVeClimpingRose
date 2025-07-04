@@ -43,7 +43,7 @@ const CartItem = ({
       try {
         await handleUpdateQuantity(cartItemId, newCount);
       } catch (err) {
-        setCount(count); // rollback nếu lỗi
+        setCount(count);
       }
     }
   };
@@ -56,7 +56,7 @@ const CartItem = ({
         await handleUpdateQuantity(cartItemId, newCount);
       } catch (err) {
         // đã showError bên trong rồi, không cần xử lý nữa
-        setCount(count); // rollback nếu cần
+        setCount(count); 
       }
     }
   };
