@@ -39,7 +39,7 @@ public class OrderService {
         String normalized = address.toLowerCase();
         return normalized.contains("okinawa") || normalized.contains("hokkaido");
     }
-    
+
     @Transactional
     public OrderResponse createOrder(OrderRequest request) {
         User user = userUtils.getUserLogin();
@@ -145,8 +145,20 @@ public class OrderService {
 
         orderItemRepository.saveAll(orderItems);
 
+        // Giảm số lượng tranh sau khi đặt hàng
+        for (CartItem item : cartItems) {
+            Painting painting = item.getPainting();
+            int newQuantity = painting.getQuantity() - item.getQuantity();
+            painting.setQuantity(newQuantity);
+        }
+        paintingRepository.saveAll(cartItems.stream()
+                .map(CartItem::getPainting)
+                .distinct()
+                .toList());
+
         //  Xoá cartItems đã đặt hàng
         cartItemRepository.deleteAll(cartItems);
+
 
         // Trả response
         OrderResponse response = orderMapper.toResponse(order);
