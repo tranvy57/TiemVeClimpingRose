@@ -13,21 +13,47 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useAppSelector } from "@/hooks/store-hook";
+import { useAppDispatch, useAppSelector } from "@/hooks/store-hook";
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { showError } from "@/libs/toast";
 import OrderItem from "./OrderItem";
+import { setCheckoutData } from "@/store/slice/checkout-slice";
+import { calculateDeliveryCost } from "@/utils/orderUltils";
 
 export default function ChekoutPage() {
   const { selectedCartItems, totalPaintingsPrice, totalPrice, deliveryCost } =
     useAppSelector((state) => state.checkout);
+
+  const dispatch = useAppDispatch();
   const [zipcode, setZipcode] = useState("");
   const [address, setAddress] = useState({
     prefecture: "",
     city: "",
     town: "",
   });
+  const [addressDetail, setAddressDetail] = useState("");
+  const [receiverName, setReceiverName] = useState("");
+  const [note, setNote] = useState("");
+  const [contact, setContact] = useState("");
+
+  const handleReceiverNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setReceiverName(e.target.value);
+  };
+
+  const handleAddressDetailChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setAddressDetail(e.target.value);
+  };
+
+  const handleNoteChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setNote(e.target.value);
+  };
+
+  const handleContactChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setContact(e.target.value);
+  };
 
   const handleZipcodeChange = async (
     e: React.ChangeEvent<HTMLInputElement>
@@ -49,12 +75,43 @@ export default function ChekoutPage() {
             city: result.address2,
             town: result.address3,
           });
+
+          const paintingMap = Object.fromEntries(
+            selectedCartItems.map((item) => [
+              item.painting.paintingId,
+              { size: item.painting.size, quantity: item.painting.quantity },
+            ])
+          );
+
+          const updatedDeliveryCost = calculateDeliveryCost(
+            selectedCartItems.map((item) => ({
+              paintingId: item.painting.paintingId,
+              quantity: item.quantity,
+            })),
+            paintingMap,
+            result.address1 // prefecture
+          );
+
+          dispatch(
+            setCheckoutData({
+              selectedCartItems,
+              totalPaintingsPrice,
+              deliveryCost: updatedDeliveryCost,
+              totalPrice: totalPaintingsPrice + updatedDeliveryCost,
+            })
+          );
         } else {
           showError("Không tìm thấy địa chỉ cho mã bưu điện này.");
         }
       } catch {
         showError("Lỗi kết nối đến ZipCloud API.");
       }
+    } else {
+      setAddress({
+        prefecture: "",
+        city: "",
+        town: "",
+      });
     }
   };
 
@@ -100,6 +157,8 @@ export default function ChekoutPage() {
             </Label>
             <Input
               id="receiverName"
+              value={receiverName}
+              onChange={handleReceiverNameChange}
               type="text"
               placeholder="Nhập tên của bạn"
             />
@@ -118,40 +177,22 @@ export default function ChekoutPage() {
 
             <Input
               id="contact"
+              value={contact}
+              onChange={handleContactChange}
               type="text"
               placeholder="Ví dụ: https://www.facebook.com/tiemveclimpingrose"
             />
           </div>
 
-          <RadioGroup
-            defaultValue="starter"
-            className="grid grid-cols-2 gap-4 pt-2"
-          >
-            <div className="border rounded-lg p-4">
-              <RadioGroupItem value="starter" id="starter" />
-              <label className="text-md m-2 font-semibold" htmlFor="starter">
-                Ship kiểu này
-              </label>
-              <p className="text-sm text-muted-foreground">
-                Perfect for small businesses.
-              </p>
-            </div>
-            <div className="border rounded-lg p-4">
-              <RadioGroupItem value="pro" id="pro" />
-              <label className="text-md m-2 font-semibold" htmlFor="pro">
-                Ship kiểu kia
-              </label>
-              <p className="text-sm text-muted-foreground">
-                More features and storage.
-              </p>
-            </div>
-          </RadioGroup>
-
           <div className="space-y-2">
             <Label className="text-md" htmlFor="receiverName">
               Ghi chú:
             </Label>
-            <Textarea placeholder="Ví dụ: Giao hàng lúc 5h chiều" />
+            <Textarea
+              placeholder="Ví dụ: Giao hàng lúc 5h chiều"
+              value={note}
+              onChange={handleNoteChange}
+            />
           </div>
         </div>
         {/* Địa chỉ */}
@@ -217,6 +258,8 @@ export default function ChekoutPage() {
             </Label>
             <Input
               id="detail"
+              value={addressDetail}
+              onChange={handleAddressDetailChange}
               placeholder="Ví dụ: 1-2-3 サンプルビル 301号室"
             />
           </div>

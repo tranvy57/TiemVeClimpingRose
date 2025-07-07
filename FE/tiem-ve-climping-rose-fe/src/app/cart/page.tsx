@@ -24,6 +24,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { setCheckoutData } from "@/store/slice/checkout-slice";
 import axios from "axios";
+import { calculateDeliveryCost } from "@/utils/orderUltils";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState<ICartItem[]>();
@@ -279,62 +280,6 @@ const Cart = () => {
       )}
     </div>
   );
-};
-
-const calculateDeliveryCost = (
-  orderItems: { paintingId: string; quantity: number }[],
-  paintingMap: Record<string, { size: string; quantity: number }>,
-  shippingAddress: string
-): number => {
-  let deliveryCost = 0;
-
-  let count2020 = 0;
-  let count3040 = 0;
-  let count4050 = 0;
-
-  for (const item of orderItems) {
-    const painting = paintingMap[item.paintingId];
-    if (!painting) {
-      throw new Error(`Không tìm thấy paintingId: ${item.paintingId}`);
-    }
-
-    if (item.quantity > painting.quantity || item.quantity <= 0) {
-      throw new Error(`Số lượng không hợp lệ cho tranh ID: ${item.paintingId}`);
-    }
-
-    switch (painting.size) {
-      case "SIZE_20x20":
-        count2020 += item.quantity;
-        break;
-      case "SIZE_30x40":
-        count3040 += item.quantity;
-        break;
-      case "SIZE_40x50":
-        count4050 += item.quantity;
-        break;
-    }
-  }
-
-  if (count4050 > 0 && count4050 < 2) {
-    deliveryCost += 1500;
-  } else if (count3040 > 0 && count3040 < 2) {
-    deliveryCost += 1200;
-  } else if (count2020 > 0) {
-    if (count2020 === 1) {
-      deliveryCost += 370;
-    } else if (count2020 <= 3) {
-      deliveryCost += 520;
-    } else if (count2020 <= 7) {
-      deliveryCost += 840;
-    }
-  }
-
-  const address = shippingAddress.toLowerCase();
-  if (address.includes("okinawa") || address.includes("hokkaido")) {
-    deliveryCost += 400;
-  }
-
-  return deliveryCost;
 };
 
 export default Cart;
