@@ -35,11 +35,6 @@ public class OrderService {
     private OrderItemMapper orderItemMapper;
 
 
-    private boolean isRemoteArea(String address) {
-        String normalized = address.toLowerCase();
-        return normalized.contains("okinawa") || normalized.contains("hokkaido");
-    }
-
     @Transactional
     public OrderResponse createOrder(OrderRequest request) {
         User user = userUtils.getUserLogin();
@@ -90,19 +85,8 @@ public class OrderService {
             }
         }
 
-        BigDecimal deliveryCost = BigDecimal.ZERO;
+        BigDecimal deliveryCost = calculateShipping(cartItems, request.getPrefecture());
 
-        if (count4050 > 0 && count4050 < 2) deliveryCost = deliveryCost.add(BigDecimal.valueOf(1500));
-        else if (count3040 > 0 && count3040 < 2) deliveryCost = deliveryCost.add(BigDecimal.valueOf(1200));
-        else if (count2020 > 0) {
-            if (count2020 == 1) deliveryCost = deliveryCost.add(BigDecimal.valueOf(370));
-            else if (count2020 <= 3) deliveryCost = deliveryCost.add(BigDecimal.valueOf(520));
-            else if (count2020 <= 7) deliveryCost = deliveryCost.add(BigDecimal.valueOf(840));
-        }
-
-        if (isRemoteArea(request.getShippingAddress())) {
-            deliveryCost = deliveryCost.add(BigDecimal.valueOf(400));
-        }
 
         //  So sánh client gửi
         if (request.getDeliveryCost().compareTo(deliveryCost) != 0) {
@@ -119,7 +103,6 @@ public class OrderService {
                 .status(OrderStatus.PENDING)
                 .deliveryCost(deliveryCost)
                 .totalPaintingsPrice(totalPaintingsPrice)
-                .shippingAddress(request.getShippingAddress())
                 .note(request.getNote())
                 .paymentMethod(request.getPaymentMethod())
                 .receiverName(request.getReceiverName())
@@ -129,6 +112,11 @@ public class OrderService {
                 .postalCode(request.getPostalCode())
                 .user(user)
                 .totalPrice(deliveryCost.add(totalPaintingsPrice))
+                .zipCode(request.getZipCode())
+                .prefecture(request.getPrefecture())
+                .city(request.getCity())
+                .town(request.getTown())
+                .addressDetail(request.getAddressDetail())
                 .build();
 
         Order savedOrder = orderRepository.save(order);
@@ -166,5 +154,92 @@ public class OrderService {
 
         return response;
     }
+
+    private BigDecimal calculateShipping(List<CartItem> cartItems, String prefecture) {
+        boolean allAre20x20 = true;
+        int count2020 = 0;
+
+        int maxLength = 0;
+        int maxWidth = 0;
+        int totalThickness = 0;
+
+        for (CartItem item : cartItems) {
+            PaintingSize sizeEnum = item.getPainting().getSize();
+            SizeInfo size = getSize(sizeEnum);
+            int quantity = item.getQuantity();
+
+            if (sizeEnum != PaintingSize.SIZE_20x20) {
+                allAre20x20 = false;
+            } else {
+                count2020 += quantity;
+            }
+
+            maxLength = Math.max(maxLength, size.length());
+            maxWidth = Math.max(maxWidth, size.width());
+            totalThickness += size.thickness() * quantity;
+        }
+
+        int shipping;
+
+        if (allAre20x20) {
+            if (count2020 == 1) {
+                shipping = 430;
+            } else if (count2020 <= 3) {
+                shipping = 600;
+            } else {
+                // quá 3 tranh → tính theo tổng kích thước
+                int totalSize = maxLength + maxWidth + totalThickness;
+
+                if (totalSize <= 60) {
+                    shipping = 840;
+                } else if (totalSize <= 80) {
+                    shipping = 1200;
+                } else if (totalSize <= 100) {
+                    shipping = 1500;
+                } else {
+                    throw new BadRequestException("Tổng kích thước kiện hàng vượt quá giới hạn");
+                }
+            }
+        } else {
+            // Tranh hỗn hợp → tính kiện theo tổng size
+            int totalSize = maxLength + maxWidth + totalThickness;
+
+            if (totalSize <= 60) {
+                shipping = 840;
+            } else if (totalSize <= 80) {
+                shipping = 1200;
+            } else if (totalSize <= 100) {
+                shipping = 1500;
+            } else {
+                throw new BadRequestException("Tổng kích thước kiện hàng vượt quá giới hạn");
+            }
+        }
+
+        // Phụ phí vùng xa
+        if (isRemoteArea(prefecture)) {
+            shipping += 400;
+        }
+
+        return BigDecimal.valueOf(shipping);
+    }
+
+
+
+    private SizeInfo getSize(PaintingSize size) {
+        return switch (size) {
+            case SIZE_20x20 -> new SizeInfo(20, 20, 2);
+            case SIZE_30x40 -> new SizeInfo(40, 30, 2);
+            case SIZE_40x50 -> new SizeInfo(50, 40, 3);
+            default -> throw new BadRequestException("Kích thước tranh không hỗ trợ: " + size);
+        };
+    }
+
+    private boolean isRemoteArea(String prefecture) {
+        return prefecture.contains("沖縄") ||     // Okinawa
+                prefecture.contains("北海道") ||   // Hokkaido
+                prefecture.contains("長崎") ||     // Nagasaki
+                prefecture.contains("大分");       // Oita
+    }
+    private record SizeInfo(int length, int width, int thickness) {}
 
 }

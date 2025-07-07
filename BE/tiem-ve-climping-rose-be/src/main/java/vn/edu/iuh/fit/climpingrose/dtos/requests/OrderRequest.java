@@ -1,5 +1,6 @@
 package vn.edu.iuh.fit.climpingrose.dtos.requests;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -17,10 +18,10 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderRequest {
     String orderId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     Date orderDate;
     BigDecimal deliveryCost;
     BigDecimal totalPaintingsPrice;
-    String shippingAddress;
     String note;
     String paymentMethod;
     String receiverName;
@@ -30,4 +31,9 @@ public class OrderRequest {
     String contact;
     List<String> cartItemIds;
     String couponCode;
+    String zipCode;
+    String prefecture; // tỉnh/thành phố
+    String city; //thành phố hoặc quận
+    String town; //thị trấn
+    String addressDetail;
 }

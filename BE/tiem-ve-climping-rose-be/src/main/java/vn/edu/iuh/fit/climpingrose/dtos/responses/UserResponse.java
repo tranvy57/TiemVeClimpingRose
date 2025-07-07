@@ -21,6 +21,8 @@ public class UserResponse extends BaseResponse{
     String avatar;
     LocalDate dob;
     UserStatus status;
+    String zipcode;
+    String addressDetail;
 
     Role role;
 }

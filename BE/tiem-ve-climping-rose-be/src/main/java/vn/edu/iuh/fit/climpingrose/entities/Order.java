@@ -27,7 +27,11 @@ public class Order {
     BigDecimal deliveryCost;
     BigDecimal totalPaintingsPrice;
     BigDecimal totalPrice;
-    String shippingAddress;
+    String zipCode;
+    String prefecture; // tỉnh/thành phố
+    String city; //thành phố hoặc quận
+    String town; //thị trấn
+    String addressDetail;
     String note;
     String imagePayment;
     String paymentMethod;
@@ -47,4 +51,5 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
+
 }
