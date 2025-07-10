@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/collapsible";
 import { ChevronDown } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import OrderList from "@/components/orders/OrderList";
 
 export default function UserAccountPage() {
   const [selected, setSelected] = useState<"profile" | "orders" | null>(
@@ -81,10 +82,7 @@ export default function UserAccountPage() {
             {selected === "orders" && (
               <section>
                 <h2 className="text-xl font-semibold mb-4">Đơn hàng đã đặt</h2>
-                <ul className="space-y-2">
-                  <li>✅ Đơn hàng #001 - Giao thành công</li>
-                  <li>🚚 Đơn hàng #002 - Đang giao</li>
-                </ul>
+                <OrderList />
               </section>
             )}
           </div>
@@ -115,10 +113,7 @@ export default function UserAccountPage() {
                 <ChevronDown className="h-4 w-4" />
               </CollapsibleTrigger>
               <CollapsibleContent className="mt-2 px-4">
-                <ul className="space-y-2">
-                  <li>✅ Đơn hàng #001 - Giao thành công</li>
-                  <li>🚚 Đơn hàng #002 - Đang giao</li>
-                </ul>
+                <OrderList />
               </CollapsibleContent>
             </Collapsible>
           </div>

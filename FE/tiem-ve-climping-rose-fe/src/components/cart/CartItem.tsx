@@ -7,8 +7,6 @@ import { Button } from "@/components/ui/button";
 import { IPainting } from "@/types/implements/painting";
 import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
-import { deleteCartItem } from "@/api/cartApi";
-import { on } from "events";
 
 interface CartItemProps {
   cartItemId: string;
@@ -56,7 +54,7 @@ const CartItem = ({
         await handleUpdateQuantity(cartItemId, newCount);
       } catch (err) {
         // đã showError bên trong rồi, không cần xử lý nữa
-        setCount(count); 
+        setCount(count);
       }
     }
   };

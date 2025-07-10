@@ -242,4 +242,12 @@ public class OrderService {
     }
     private record SizeInfo(int length, int width, int thickness) {}
 
+
+    public List<OrderResponse> getMyOrders(){
+        User user = userUtils.getUserLogin();
+
+        List<Order> orders = orderRepository.findOrdersByUser(user);
+
+        return orderMapper.toListOrderResponse(orders);
+    }
 }

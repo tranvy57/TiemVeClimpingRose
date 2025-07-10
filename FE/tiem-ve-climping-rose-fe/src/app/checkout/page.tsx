@@ -17,7 +17,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/store-hook";
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { showError } from "@/libs/toast";
-import OrderItem from "./OrderItem";
+import OrderItem from "../../components/orders/OrderItem";
 import { setCheckoutData } from "@/store/slice/checkout-slice";
 import { calculateDeliveryCost } from "@/utils/orderUltils";
 
