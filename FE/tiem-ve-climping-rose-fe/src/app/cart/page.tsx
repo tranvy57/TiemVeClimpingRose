@@ -19,20 +19,35 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ChevronRight, Ticket } from "lucide-react";
-import { CouponList } from "@/components/home";
+import { CouponItem, CouponList } from "@/components/home";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { setCheckoutData } from "@/store/slice/checkout-slice";
 import axios from "axios";
 import { calculateDeliveryCost } from "@/utils/orderUltils";
+import { ICoupon } from "@/types/implements/coupon";
+import { getCoupons } from "@/api/couponAPi";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState<ICartItem[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [coupons, setCoupons] = useState<ICoupon[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const dispatch = useAppDispatch();
   const router = useRouter();
+
+  const fetchCoupons = async () => {
+    try {
+      const response = await getCoupons();
+      setCoupons(response.data || []);
+    } catch (error) {
+      console.error("Error fetching Coupons:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchCartItems = async () => {
     try {
@@ -157,6 +172,10 @@ const Cart = () => {
     fetchCartItems();
   }, []);
 
+  useEffect(() => {
+    fetchCoupons();
+  });
+
   return (
     <div className=" pb-[90px]  ">
       {cartItems ? (
@@ -183,6 +202,34 @@ const Cart = () => {
                 <p className="text-red-500 text-xl font-semibold">
                   Thông tin đơn hàng:
                 </p>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <div className="flex items-center gap-2 cursor-pointer justify-between">
+                      <p> Xem mã giảm giá</p>
+                      <ChevronRight />
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>
+                        <div className="flex gap-4 flex-col h-full justify-center items-center">
+                          {coupons.map((c) => {
+                            return (
+                              <CouponItem
+                                key={c.couponId}
+                                imageUrl="/coupons/couponfreeship.png"
+                                code={c.code}
+                                discountPercentage={c.discountPercentage}
+                                condition={c.condition}
+                                description={c.description}
+                              />
+                            );
+                          })}
+                        </div>
+                      </DialogTitle>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
                 <p>
                   Tổng tiền tranh:{" "}
                   <span className="font-semibold">
@@ -215,20 +262,37 @@ const Cart = () => {
 
               {/* mobile */}
               <div className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t z-50 px-4 py-3 shadow-md gap-2 flex flex-col">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Ticket className="text-red-400" />
-                    <p>Mã giảm giá:</p>
-                  </div>
+                <div className="flex items-center justify-between h-full">
                   <Dialog>
-                    <DialogTrigger>
-                      <div className="flex items-center gap-2 cursor-pointer">
-                        Xem mã giảm giá <ChevronRight />
+                    <DialogTrigger asChild>
+                      <div className="flex w-full justify-between">
+                        <div className="flex items-center gap-2">
+                          <Ticket className="text-red-400" />
+                          <p>Mã giảm giá:</p>
+                        </div>
+                        <div className="flex items-center gap-2 cursor-pointer float-end">
+                          <ChevronRight />
+                        </div>
                       </div>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>Chưa làm</DialogTitle>
+                        <DialogTitle>
+                          <div className="flex gap-4 flex-col py-4 items-center justify-center">
+                            {coupons.map((c) => {
+                              return (
+                                <CouponItem
+                                  key={c.couponId}
+                                  imageUrl="/coupons/couponfreeship.png"
+                                  code={c.code}
+                                  discountPercentage={c.discountPercentage}
+                                  condition={c.condition}
+                                  description={c.description}
+                                />
+                              );
+                            })}
+                          </div>
+                        </DialogTitle>
                       </DialogHeader>
                     </DialogContent>
                   </Dialog>

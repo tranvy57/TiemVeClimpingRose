@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CouponItem } from "./CouponItem";
 import { getCoupons } from "@/api/couponAPi";
 import { useTranslations } from "next-intl";
@@ -23,7 +23,7 @@ export function CouponList() {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchCoupons();
   }, []);
   return (

@@ -1,25 +1,29 @@
 "use client";
 
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAppDispatch, useAppSelector } from "@/hooks/store-hook";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { showError } from "@/libs/toast";
 import OrderItem from "../../components/orders/OrderItem";
 import { setCheckoutData } from "@/store/slice/checkout-slice";
 import { calculateDeliveryCost } from "@/utils/orderUltils";
+import { ICoupon } from "@/types/implements/coupon";
+import { getCoupons } from "@/api/couponAPi";
+import { ChevronRight, Ticket } from "lucide-react";
+import { CouponItem } from "@/components/home";
 
 export default function ChekoutPage() {
   const { selectedCartItems, totalPaintingsPrice, totalPrice, deliveryCost } =
@@ -36,6 +40,9 @@ export default function ChekoutPage() {
   const [receiverName, setReceiverName] = useState("");
   const [note, setNote] = useState("");
   const [contact, setContact] = useState("");
+  const [couponCode, setCouponCode] = useState("");
+
+  const [coupons, setCoupons] = useState<ICoupon[]>([]);
 
   const handleReceiverNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setReceiverName(e.target.value);
@@ -53,6 +60,10 @@ export default function ChekoutPage() {
 
   const handleContactChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setContact(e.target.value);
+  };
+
+  const handleCouponCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCouponCode(e.target.value);
   };
 
   const handleZipcodeChange = async (
@@ -115,8 +126,21 @@ export default function ChekoutPage() {
     }
   };
 
+  const fetchCoupons = async () => {
+    try {
+      const response = await getCoupons();
+      setCoupons(response.data || []);
+    } catch (error) {
+      console.error("Error fetching Coupons:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCoupons();
+  });
+
   return (
-    <div className="flex flex-col justify-between md:flex-row-reverse gap-4">
+    <div className="flex flex-col justify-between md:flex-row-reverse gap-4 mb-[250px]">
       {/* Danh sách OrderItem */}
       <div className="md:w-[35%]">
         {selectedCartItems.map((item) => (
@@ -132,14 +156,59 @@ export default function ChekoutPage() {
         ))}
         {/* Tính tiền ở máy tính */}
         <div className="space-y-2 hidden md:block">
-          <p>
-            Tổng tiền tranh:{" "}
-            <span className="font-semibold">
-              {totalPaintingsPrice.toLocaleString("ja-JP")}
-            </span>
-          </p>
+          <div className="flex justify-between">
+            <p>Tổng tiền tranh: </p>
+            <p className="">¥{totalPaintingsPrice.toLocaleString("ja-JP")}</p>
+          </div>
 
-          <p>Phí vận chuyển: ¥{deliveryCost.toLocaleString("ja-JP")}</p>
+          <div className="flex justify-between">
+            <p>Phí vận chuyển: </p>
+            <p>¥{deliveryCost.toLocaleString("ja-JP")}</p>
+          </div>
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <div className="flex w-full justify-between">
+                <div className="flex items-center gap-2">
+                  <Ticket className="text-red-400" />
+                  <p>Mã giảm giá:</p>
+                </div>
+                <div className="flex items-center gap-2 cursor-pointer float-end">
+                  <ChevronRight />
+                </div>
+              </div>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>
+                  <div className="flex gap-4 flex-col py-4 items-center justify-center">
+                    {coupons.map((c) => {
+                      return (
+                        <CouponItem
+                          key={c.couponId}
+                          imageUrl="/coupons/couponfreeship.png"
+                          code={c.code}
+                          discountPercentage={c.discountPercentage}
+                          condition={c.condition}
+                          description={c.description}
+                        />
+                      );
+                    })}
+                  </div>
+                </DialogTitle>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+
+          <div className="space-y-2 ">
+            <Input
+              id="coupon"
+              value={couponCode}
+              onChange={handleCouponCodeChange}
+              type="text"
+              placeholder="Nhập mã giảm giá"
+            />
+          </div>
 
           <p className="text-gray-800 font-semibold">
             Tổng: ¥
@@ -159,6 +228,50 @@ export default function ChekoutPage() {
           <div className="flex justify-between">
             <p>Phí vận chuyển: </p>
             <p>¥{deliveryCost.toLocaleString("ja-JP")}</p>
+          </div>
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <div className="flex w-full justify-between">
+                <div className="flex items-center gap-2">
+                  <Ticket className="text-red-400" />
+                  <p>Mã giảm giá:</p>
+                </div>
+                <div className="flex items-center gap-2 cursor-pointer float-end">
+                  <ChevronRight />
+                </div>
+              </div>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>
+                  <div className="flex gap-4 flex-col py-4 items-center justify-center">
+                    {coupons.map((c) => {
+                      return (
+                        <CouponItem
+                          key={c.couponId}
+                          imageUrl="/coupons/couponfreeship.png"
+                          code={c.code}
+                          discountPercentage={c.discountPercentage}
+                          condition={c.condition}
+                          description={c.description}
+                        />
+                      );
+                    })}
+                  </div>
+                </DialogTitle>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+
+          <div className="space-y-2 ">
+            <Input
+              id="coupon"
+              value={couponCode}
+              onChange={handleCouponCodeChange}
+              type="text"
+              placeholder="Nhập mã giảm giá"
+            />
           </div>
 
           <div className="flex justify-between">
@@ -242,6 +355,10 @@ export default function ChekoutPage() {
             <Label className="text-md" htmlFor="pref">
               Tỉnh/TP
             </Label>
+
+            <p className="font-light italic text-sm">
+              ("沖縄", "北海道", "長崎", "大分" cộng phí ship 400¥)
+            </p>
             <Input
               id="pref"
               value={address.prefecture}
