@@ -6,4 +6,5 @@ import vn.edu.iuh.fit.climpingrose.entities.Coupon;
 import java.util.List;
 
 public interface CouponRepository extends JpaRepository<Coupon, String> {
+    Coupon getByCode(String code);
 }

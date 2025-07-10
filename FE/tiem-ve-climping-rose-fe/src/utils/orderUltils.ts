@@ -45,14 +45,14 @@ export const calculateDeliveryCost = (
       if (totalSize <= 60) shipping = 840;
       else if (totalSize <= 80) shipping = 1200;
       else if (totalSize <= 100) shipping = 1500;
-      else throw new Error("Tổng kích thước kiện hàng vượt quá giới hạn");
+      else return 0;
     }
   } else {
     const totalSize = maxLength + maxWidth + totalThickness;
     if (totalSize <= 60) shipping = 840;
     else if (totalSize <= 80) shipping = 1200;
     else if (totalSize <= 100) shipping = 1500;
-    else throw new Error("Tổng kích thước kiện hàng vượt quá giới hạn");
+    else return 0;
   }
 
   const remotePrefectures = ["沖縄", "北海道", "長崎", "大分"];
@@ -76,4 +76,50 @@ const getSize = (
     default:
       throw new Error(`Kích thước không hỗ trợ: ${size}`);
   }
+};
+
+export const checkCouponValid = (
+  couponCode: string,
+  orderItems: { paintingId: string; quantity: number }[],
+  paintingMap: Record<string, { size: string; quantity: number; price: number }>
+): boolean => {
+  let totalPrice = 0;
+  let has30x40 = false;
+  let has40x50 = false;
+  let total20x20 = 0;
+
+  for (const item of orderItems) {
+    const painting = paintingMap[item.paintingId];
+    if (!painting) continue;
+
+    totalPrice += painting.price * item.quantity;
+
+    if (painting.size === "SIZE_30x40" && item.quantity >= 1) {
+      has30x40 = true;
+    }
+
+    if (painting.size === "SIZE_40x50" && item.quantity >= 1) {
+      has40x50 = true;
+    }
+
+    if (painting.size === "SIZE_20x20") {
+      total20x20 += item.quantity;
+    }
+  }
+
+  // Kiểm tra từng loại mã giảm giá
+  if (couponCode === "CPR300") {
+    return has30x40;
+  }
+
+  if (couponCode === "CPR500") {
+    return has40x50;
+  }
+
+  if (couponCode === "CPRFREESHIP") {
+    return total20x20 > 10 || totalPrice >= 9000;
+  }
+
+  // Nếu chưa định nghĩa điều kiện, coi như không hợp lệ
+  return false;
 };

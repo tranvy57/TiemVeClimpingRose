@@ -32,5 +32,5 @@ public class OrderResponse {
     String postalCode;
     String contact;
     private List<OrderItemResponse> orderItems;
-    Coupon coupon;
+    BigDecimal discount;
 }

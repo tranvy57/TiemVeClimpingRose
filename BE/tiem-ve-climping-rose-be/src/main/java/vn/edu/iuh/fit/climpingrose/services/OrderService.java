@@ -14,10 +14,7 @@ import vn.edu.iuh.fit.climpingrose.exceptions.BadRequestException;
 import vn.edu.iuh.fit.climpingrose.exceptions.NotFoundException;
 import vn.edu.iuh.fit.climpingrose.mappers.OrderItemMapper;
 import vn.edu.iuh.fit.climpingrose.mappers.OrderMapper;
-import vn.edu.iuh.fit.climpingrose.repositories.CartItemRepository;
-import vn.edu.iuh.fit.climpingrose.repositories.OrderItemRepository;
-import vn.edu.iuh.fit.climpingrose.repositories.OrderRepository;
-import vn.edu.iuh.fit.climpingrose.repositories.PaintingRepository;
+import vn.edu.iuh.fit.climpingrose.repositories.*;
 import vn.edu.iuh.fit.climpingrose.utils.UserUtils;
 
 import java.math.BigDecimal;
@@ -30,6 +27,7 @@ public class OrderService {
     private PaintingRepository paintingRepository;
     private CartItemRepository cartItemRepository;
     private OrderItemRepository orderItemRepository;
+    private CouponRepository couponRepository;
     private UserUtils userUtils;
     private OrderMapper orderMapper;
     private OrderItemMapper orderItemMapper;
@@ -44,13 +42,13 @@ public class OrderService {
         List<CartItem> cartItems = cartItemRepository.findAllById(cartItemIds);
 
         if (cartItems.size() != cartItemIds.size()) {
-            throw new NotFoundException("One or more cart items not found");
+            throw new NotFoundException("Một hoặc nhiều cart Item không tồn tại");
         }
 
         //Kiểm tra cartItem thuộc user hiện tại
         for (CartItem item : cartItems) {
             if (!item.getUser().getUserId().equals(user.getUserId())) {
-                throw new BadRequestException("Unauthorized cart item access");
+                throw new BadRequestException("Bạn không có quyền truy cập vào cartItem này");
             }
         }
 
@@ -72,7 +70,7 @@ public class OrderService {
             int quantity = item.getQuantity();
 
             if (quantity <= 0 || quantity > painting.getQuantity()) {
-                throw new BadRequestException("Invalid quantity for painting: " + painting.getName());
+                throw new BadRequestException("Số lượng trong kho không đủ: " + painting.getName());
             }
 
             BigDecimal itemTotal = painting.getPrice().multiply(BigDecimal.valueOf(quantity));
@@ -97,12 +95,21 @@ public class OrderService {
             throw new BadRequestException("Total painting price mismatch");
         }
 
+        String couponCode = request.getCouponCode();
+
+        Coupon coupon = couponRepository.getByCode(couponCode);
+        if (coupon == null || !isCouponValid(couponCode, cartItems, totalPaintingsPrice)) {
+            throw new BadRequestException("Mã giảm giá không hợp lệ");
+        }
+
         //  Lưu đơn hàng
         Order order = Order.builder()
                 .orderDate(request.getOrderDate())
                 .status(OrderStatus.PENDING)
                 .deliveryCost(deliveryCost)
                 .totalPaintingsPrice(totalPaintingsPrice)
+                .discount(coupon.getDiscountPercentage())
+                .totalPrice(deliveryCost.add(totalPaintingsPrice).subtract(coupon.getDiscountPercentage()))
                 .note(request.getNote())
                 .paymentMethod(request.getPaymentMethod())
                 .receiverName(request.getReceiverName())
@@ -111,7 +118,6 @@ public class OrderService {
                 .contact(request.getContact())
                 .postalCode(request.getPostalCode())
                 .user(user)
-                .totalPrice(deliveryCost.add(totalPaintingsPrice))
                 .zipCode(request.getZipCode())
                 .prefecture(request.getPrefecture())
                 .city(request.getCity())
@@ -233,6 +239,39 @@ public class OrderService {
             default -> throw new BadRequestException("Kích thước tranh không hỗ trợ: " + size);
         };
     }
+
+    private boolean isCouponValid(String couponCode, List<CartItem> cartItems, BigDecimal totalPaintingsPrice) {
+        if (couponCode == null || couponCode.isBlank()) return false;
+
+        switch (couponCode.trim()) {
+            case "CPR300":
+                // Hợp lệ nếu có ít nhất 1 tranh size 30x40
+                return cartItems.stream().anyMatch(item ->
+                        item.getPainting().getSize() == PaintingSize.SIZE_30x40
+                );
+
+            case "CPR500":
+                // Hợp lệ nếu có ít nhất 1 tranh size 40X50
+                return cartItems.stream().anyMatch(item ->
+                        item.getPainting().getSize() == PaintingSize.SIZE_40x50
+                );
+
+            case "CPRFREESHIP":
+                // Hợp lệ nếu có > 10 tranh size 20x20 hoặc tổng giá ≥ 9000
+                int count2020 = cartItems.stream()
+                        .filter(item -> item.getPainting().getSize() == PaintingSize.SIZE_20x20)
+                        .mapToInt(CartItem::getQuantity)
+                        .sum();
+
+                return count2020 > 10 || totalPaintingsPrice.compareTo(new BigDecimal("9000")) >= 0;
+
+            default:
+                return false;
+        }
+    }
+
+
+
 
     private boolean isRemoteArea(String prefecture) {
         return prefecture.contains("沖縄") ||     // Okinawa

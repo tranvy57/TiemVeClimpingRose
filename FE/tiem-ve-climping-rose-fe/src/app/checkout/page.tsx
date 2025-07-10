@@ -19,7 +19,7 @@ import { Label } from "@/components/ui/label";
 import { showError } from "@/libs/toast";
 import OrderItem from "../../components/orders/OrderItem";
 import { setCheckoutData } from "@/store/slice/checkout-slice";
-import { calculateDeliveryCost } from "@/utils/orderUltils";
+import { calculateDeliveryCost, checkCouponValid } from "@/utils/orderUltils";
 import { ICoupon } from "@/types/implements/coupon";
 import { getCoupons } from "@/api/couponAPi";
 import { ChevronRight, Ticket } from "lucide-react";
@@ -137,7 +137,7 @@ export default function ChekoutPage() {
 
   useEffect(() => {
     fetchCoupons();
-  });
+  }, []);
 
   return (
     <div className="flex flex-col justify-between md:flex-row-reverse gap-4 mb-[250px]">
@@ -183,15 +183,46 @@ export default function ChekoutPage() {
                 <DialogTitle>
                   <div className="flex gap-4 flex-col py-4 items-center justify-center">
                     {coupons.map((c) => {
+                      const isValid = checkCouponValid(
+                        c.code,
+                        selectedCartItems.map((item) => ({
+                          paintingId: item.painting.paintingId,
+                          quantity: item.quantity,
+                        })),
+                        Object.fromEntries(
+                          selectedCartItems.map((item) => [
+                            item.painting.paintingId,
+                            {
+                              size: item.painting.size,
+                              quantity: item.painting.quantity,
+                              price: item.painting.price,
+                            },
+                          ])
+                        )
+                      );
+
                       return (
-                        <CouponItem
+                        <div
                           key={c.couponId}
-                          imageUrl="/coupons/couponfreeship.png"
-                          code={c.code}
-                          discountPercentage={c.discountPercentage}
-                          condition={c.condition}
-                          description={c.description}
-                        />
+                          className={`w-full p-2 rounded-md ${
+                            isValid
+                              ? "cursor-pointer hover:bg-muted"
+                              : "opacity-50 pointer-events-none"
+                          }`}
+                          onClick={() => {
+                            if (isValid) {
+                              setCouponCode(c.code);
+                            }
+                          }}
+                        >
+                          <CouponItem
+                            imageUrl={c.imageUrl}
+                            code={c.code}
+                            discountPercentage={c.discountPercentage}
+                            condition={c.condition}
+                            description={c.description}
+                          />
+                        </div>
                       );
                     })}
                   </div>
@@ -247,15 +278,46 @@ export default function ChekoutPage() {
                 <DialogTitle>
                   <div className="flex gap-4 flex-col py-4 items-center justify-center">
                     {coupons.map((c) => {
+                      const isValid = checkCouponValid(
+                        c.code,
+                        selectedCartItems.map((item) => ({
+                          paintingId: item.painting.paintingId,
+                          quantity: item.quantity,
+                        })),
+                        Object.fromEntries(
+                          selectedCartItems.map((item) => [
+                            item.painting.paintingId,
+                            {
+                              size: item.painting.size,
+                              quantity: item.painting.quantity,
+                              price: item.painting.price,
+                            },
+                          ])
+                        )
+                      );
+
                       return (
-                        <CouponItem
+                        <div
                           key={c.couponId}
-                          imageUrl="/coupons/couponfreeship.png"
-                          code={c.code}
-                          discountPercentage={c.discountPercentage}
-                          condition={c.condition}
-                          description={c.description}
-                        />
+                          className={`w-full p-2 rounded-md ${
+                            isValid
+                              ? "cursor-pointer hover:bg-muted"
+                              : "opacity-50 pointer-events-none"
+                          }`}
+                          onClick={() => {
+                            if (isValid) {
+                              setCouponCode(c.code);
+                            }
+                          }}
+                        >
+                          <CouponItem
+                            imageUrl={c.imageUrl}
+                            code={c.code}
+                            discountPercentage={c.discountPercentage}
+                            condition={c.condition}
+                            description={c.description}
+                          />
+                        </div>
                       );
                     })}
                   </div>

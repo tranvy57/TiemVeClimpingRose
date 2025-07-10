@@ -40,13 +40,10 @@ public class Order {
     String email;
     String postalCode;
     String contact;
+    BigDecimal discount;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
     private List<OrderItem> orderItems;
-
-    @OneToOne
-    @JoinColumn(name = "coupon_id", nullable = true)
-    Coupon coupon;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
