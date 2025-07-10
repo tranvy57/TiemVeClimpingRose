@@ -130,8 +130,8 @@ export default function ChekoutPage() {
             imageUrl={item.painting.imageUrl}
           />
         ))}
-
-        <div className="space-y-2">
+        {/* Tính tiền ở máy tính */}
+        <div className="space-y-2 hidden md:block">
           <p>
             Tổng tiền tranh:{" "}
             <span className="font-semibold">
@@ -145,6 +145,28 @@ export default function ChekoutPage() {
             Tổng: ¥
             {(totalPaintingsPrice + deliveryCost).toLocaleString("ja-JP")}
           </p>
+
+          <Button className="w-full">Đặt hàng</Button>
+        </div>
+
+        {/* Tính tiền ở mobile */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white shadow-md p-4 block md:hidden z-50 space-y-2">
+          <div className="flex justify-between">
+            <p>Tổng tiền tranh: </p>
+            <p className="">¥{totalPaintingsPrice.toLocaleString("ja-JP")}</p>
+          </div>
+
+          <div className="flex justify-between">
+            <p>Phí vận chuyển: </p>
+            <p>¥{deliveryCost.toLocaleString("ja-JP")}</p>
+          </div>
+
+          <div className="flex justify-between">
+            <p className="text-gray-800 font-semibold">Tổng:</p>
+            <p className="font-semibold text-red-500">
+              ¥{(totalPaintingsPrice + deliveryCost).toLocaleString("ja-JP")}
+            </p>
+          </div>
 
           <Button className="w-full">Đặt hàng</Button>
         </div>

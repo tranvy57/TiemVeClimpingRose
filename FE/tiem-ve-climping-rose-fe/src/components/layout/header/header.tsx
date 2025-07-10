@@ -72,7 +72,7 @@ const Header = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-1">
+        <div className="md:hidden flex items-center gap-1">
           <Link href="/cart">
             <ShoppingCart className="icon-button" />
           </Link>
