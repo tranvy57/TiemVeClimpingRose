@@ -72,35 +72,41 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Nút menu mobile */}
-        <Sheet>
-          <SheetTrigger className="md:hidden text-primary">
-            <Menu />
-          </SheetTrigger>
-          <SheetContent>
-            <SheetHeader>
-              <Link className="menu-link" href="/">
-                {t("menu.home")}
-              </Link>
-              <Link className="menu-link" href="/paintings">
-                {t("menu.products")}
-              </Link>
-              <Link className="menu-link" href="#">
-                {t("menu.feedbacks")}
-              </Link>
-              <Link className="menu-link" href="#">
-                {t("menu.blog")}
-              </Link>
-              <div className="flex gap-4 text-gray-700">
-                <Link href="/cart">
-                  <ShoppingCart className="icon-button" />
+        <div className="flex items-center gap-1">
+          <Link href="/cart">
+            <ShoppingCart className="icon-button" />
+          </Link>
+
+          {/* Nút menu mobile */}
+          <Sheet>
+            <SheetTrigger className="md:hidden text-primary">
+              <Menu className="icon-button" />
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <Link className="menu-link" href="/">
+                  {t("menu.home")}
                 </Link>
-                <UserIcon />
-                {/* <LanguageSwitcher /> */}
-              </div>
-            </SheetHeader>
-          </SheetContent>
-        </Sheet>
+                <Link className="menu-link" href="/paintings">
+                  {t("menu.products")}
+                </Link>
+                <Link className="menu-link" href="#">
+                  {t("menu.feedbacks")}
+                </Link>
+                <Link className="menu-link" href="#">
+                  {t("menu.blog")}
+                </Link>
+                <div className="flex gap-4 text-gray-700">
+                  <Link href="/cart">
+                    <ShoppingCart className="icon-button" />
+                  </Link>
+                  <UserIcon />
+                  {/* <LanguageSwitcher /> */}
+                </div>
+              </SheetHeader>
+            </SheetContent>
+          </Sheet>
+        </div>
 
         {/* Menu desktop */}
         <div className="hidden md:flex gap-4 ">

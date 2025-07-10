@@ -112,7 +112,7 @@ export default function UserAccountPage() {
                 <span>Đơn hàng đã đặt</span>
                 <ChevronDown className="h-4 w-4" />
               </CollapsibleTrigger>
-              <CollapsibleContent className="mt-2 px-4">
+              <CollapsibleContent className="mt-2">
                 <OrderList />
               </CollapsibleContent>
             </Collapsible>

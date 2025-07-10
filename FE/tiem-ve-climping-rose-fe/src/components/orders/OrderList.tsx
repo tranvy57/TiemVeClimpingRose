@@ -30,7 +30,7 @@ const OrderList = () => {
       {orders.length > 0 ? (
         <div>
           {orders.length > 0 ? (
-            <div className="space-y-3">
+            <div className="space-y-">
               {orders.map((o) => {
                 return <Order key={o.orderId} order={o} />;
               })}
