@@ -36,5 +36,5 @@ cloudinary:
 
 jwt:
   signerKey: ${JWT_SIGNER_KEY}
-  valid-duration: ${JWT_VALID_DURATION:3600}
+  valid-duration: ${JWT_VALID_DURATION}
   refreshable-duration: ${JWT_REFRESHABLE_DURATION:36000}

@@ -16,7 +16,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAppDispatch, useAppSelector } from "@/hooks/store-hook";
 import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
-import { showError } from "@/libs/toast";
+import { showError, showSuccess } from "@/libs/toast";
 import OrderItem from "../../components/orders/OrderItem";
 import { setCheckoutData } from "@/store/slice/checkout-slice";
 import { calculateDeliveryCost, checkCouponValid } from "@/utils/orderUltils";
@@ -24,10 +24,14 @@ import { ICoupon } from "@/types/implements/coupon";
 import { getCoupons } from "@/api/couponAPi";
 import { ChevronRight, Ticket } from "lucide-react";
 import { CouponItem } from "@/components/home";
+import { createOrder, OrderRequest } from "@/api/orderApi";
+import { useRouter } from "next/navigation";
 
 export default function ChekoutPage() {
   const { selectedCartItems, totalPaintingsPrice, totalPrice, deliveryCost } =
     useAppSelector((state) => state.checkout);
+
+  const router = useRouter();
 
   const dispatch = useAppDispatch();
   const [zipcode, setZipcode] = useState("");
@@ -139,6 +143,52 @@ export default function ChekoutPage() {
     fetchCoupons();
   }, []);
 
+  const handleSubmitOrder = async () => {
+    if (
+      !receiverName ||
+      !zipcode ||
+      !address.prefecture ||
+      !address.city ||
+      !address.town ||
+      !addressDetail ||
+      !contact
+    ) {
+      showError("Vui lòng nhập đầy đủ thông tin giao hàng.");
+      return;
+    }
+
+    const cartItemIds = selectedCartItems.map((item) => item.cartItemId);
+
+    const orderPayload: OrderRequest = {
+      orderDate: new Date(),
+      deliveryCost,
+      totalPaintingsPrice,
+      note,
+      paymentMethod: "COD",
+      receiverName,
+      contact,
+      zipCode: zipcode,
+      prefecture: address.prefecture,
+      city: address.city,
+      town: address.town,
+      addressDetail,
+      cartItemIds,
+      couponCode: couponCode || undefined,
+      phone: contact,
+      email: "",
+      postalCode: zipcode,
+    };
+
+    try {
+      const response = await createOrder(orderPayload);
+      showSuccess("Đặt hàng thành công");
+      router.push("/user?tab=orders");
+    } catch (err) {
+      console.error(err);
+      showError("Đặt hàng thất bại. Vui lòng thử lại.");
+    }
+  };
+
   return (
     <div className="flex flex-col justify-between md:flex-row-reverse gap-4 mb-[250px]">
       {/* Danh sách OrderItem */}
@@ -246,7 +296,9 @@ export default function ChekoutPage() {
             {(totalPaintingsPrice + deliveryCost).toLocaleString("ja-JP")}
           </p>
 
-          <Button className="w-full">Đặt hàng</Button>
+          <Button className="w-full" onClick={handleSubmitOrder}>
+            Đặt hàng
+          </Button>
         </div>
 
         {/* Tính tiền ở mobile */}
@@ -343,7 +395,9 @@ export default function ChekoutPage() {
             </p>
           </div>
 
-          <Button className="w-full">Đặt hàng</Button>
+          <Button className="w-full" onClick={handleSubmitOrder}>
+            Đặt hàng
+          </Button>
         </div>
       </div>
       <div className="md:flex-1 flex flex-col md:flex-row gap-4">

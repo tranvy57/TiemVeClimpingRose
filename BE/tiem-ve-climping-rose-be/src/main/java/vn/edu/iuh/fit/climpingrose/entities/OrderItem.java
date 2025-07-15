@@ -23,7 +23,7 @@ public class OrderItem {
     BigDecimal currentPrice;
     Integer quantity;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "painting_id", nullable = false)
     Painting painting;
 

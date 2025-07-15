@@ -11,9 +11,12 @@ const Order = ({ order }: OrderProps) => {
     if (order.status == "PENDING") return "Đang chờ thanh toán";
   };
   return (
-    <div className="rounded-md shadow-sm p-2 md:p-4 space-y-2">
-      <div className="flex justify-start items-center">
+    <div className="rounded-md shadow-sm p-2 md:px-4 space-y-2">
+      <div className="flex justify-between items-center">
         <p className="bg-red-200 rounded-sm text-sm px-1">{getStatus()}</p>
+        <p className="text-sm text-gray-700">
+          {new Date(order.orderDate).toLocaleDateString("vi-VN")}
+        </p>
       </div>
       {order.orderItems.map((o) => {
         return (

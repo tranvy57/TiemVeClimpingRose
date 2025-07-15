@@ -3,6 +3,7 @@ package vn.edu.iuh.fit.climpingrose.services;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.climpingrose.dtos.requests.CartItemRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.requests.OrderRequest;
@@ -97,10 +98,16 @@ public class OrderService {
 
         String couponCode = request.getCouponCode();
 
+
+        BigDecimal discountPercentage = BigDecimal.ZERO;
         Coupon coupon = couponRepository.getByCode(couponCode);
-        if (coupon == null || !isCouponValid(couponCode, cartItems, totalPaintingsPrice)) {
-            throw new BadRequestException("Mã giảm giá không hợp lệ");
+        if(coupon !=null )
+        {
+            if ( !isCouponValid(couponCode, cartItems, totalPaintingsPrice)) {
+                throw new BadRequestException("Mã giảm giá không hợp lệ");
+            } else discountPercentage = discountPercentage.add(coupon.getDiscountPercentage());
         }
+
 
         //  Lưu đơn hàng
         Order order = Order.builder()
@@ -108,8 +115,8 @@ public class OrderService {
                 .status(OrderStatus.PENDING)
                 .deliveryCost(deliveryCost)
                 .totalPaintingsPrice(totalPaintingsPrice)
-                .discount(coupon.getDiscountPercentage())
-                .totalPrice(deliveryCost.add(totalPaintingsPrice).subtract(coupon.getDiscountPercentage()))
+                .discount(discountPercentage)
+                .totalPrice(deliveryCost.add(totalPaintingsPrice).subtract(discountPercentage))
                 .note(request.getNote())
                 .paymentMethod(request.getPaymentMethod())
                 .receiverName(request.getReceiverName())
@@ -285,7 +292,8 @@ public class OrderService {
     public List<OrderResponse> getMyOrders(){
         User user = userUtils.getUserLogin();
 
-        List<Order> orders = orderRepository.findOrdersByUser(user);
+
+        List<Order> orders = orderRepository.findOrdersByUserOrderByOrderDateAsc(user);
 
         return orderMapper.toListOrderResponse(orders);
     }

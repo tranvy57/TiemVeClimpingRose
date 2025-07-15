@@ -42,7 +42,7 @@ const NewPaintings = () => {
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 lg:gap-4 gap-2 md:px-4">
         {paintings.map((p) => {
-          console.log("paintingId:", p.paintingId);
+          // console.log("paintingId:", p.paintingId);
           return (
             <PaitingItem
               key={p.paintingId}

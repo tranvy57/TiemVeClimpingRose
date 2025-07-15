@@ -47,11 +47,15 @@ api.interceptors.request.use(async (config) => {
 
   // Nếu token gần hết hạn → refresh trước
   if (shouldRefresh(token)) {
+    console.log("Gọi refresh");
+
     const newToken = await tryRefreshToken(token);
     if (newToken) {
       config.headers.Authorization = `Bearer ${newToken}`;
       return config;
     } else {
+      console.log("Không refreshtoken đc");
+
       // Không refresh được → remove token luôn
       localStorage.removeItem("accessToken");
     }
