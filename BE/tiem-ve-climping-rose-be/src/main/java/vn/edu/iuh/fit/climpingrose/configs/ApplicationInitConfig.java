@@ -21,11 +21,6 @@ public class ApplicationInitConfig {
 //            // tạo một user admin
 //            if (userRepository.findByUsername("admin").isEmpty()) {
 //
-//                User user = User.builder()
-//                        .username("admin")
-//                        .password(passwordEncoder.encode("admin"))
-//                        .role(Role.ADMIN)
-//                        .build();
 //
 //                userRepository.save(user);
 //            }

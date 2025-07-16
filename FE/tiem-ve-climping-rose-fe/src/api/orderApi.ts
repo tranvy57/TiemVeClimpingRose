@@ -43,3 +43,12 @@ export const createOrder = async (body: OrderRequest) => {
     throw error;
   }
 };
+
+export const getOrderById = async (orderId: string) => {
+  try {
+    const response = await api.get<ApiResponse<IOrder>>(`/orders/${orderId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

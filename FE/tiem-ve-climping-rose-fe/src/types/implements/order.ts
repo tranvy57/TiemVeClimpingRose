@@ -21,6 +21,7 @@ export interface IOrder {
   postalCode: string;
   contact: string;
   orderItems: IOrderItem[];
+  discount: number;
 }
 
 export interface IOrderItem {

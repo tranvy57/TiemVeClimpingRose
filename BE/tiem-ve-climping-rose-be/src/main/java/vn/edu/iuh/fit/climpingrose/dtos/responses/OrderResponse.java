@@ -33,4 +33,8 @@ public class OrderResponse {
     String contact;
     private List<OrderItemResponse> orderItems;
     BigDecimal discount;
+    String prefecture; // tỉnh/thành phố
+    String city; //thành phố hoặc quận
+    String town; //thị trấn
+    String addressDetail;
 }

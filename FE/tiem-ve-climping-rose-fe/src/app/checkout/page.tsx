@@ -182,7 +182,7 @@ export default function ChekoutPage() {
     try {
       const response = await createOrder(orderPayload);
       showSuccess("Đặt hàng thành công");
-      router.push("/user?tab=orders");
+      router.push(`/payment?orderId=${response.data?.orderId}`);
     } catch (err) {
       console.error(err);
       showError("Đặt hàng thất bại. Vui lòng thử lại.");

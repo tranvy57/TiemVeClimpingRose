@@ -31,6 +31,14 @@ public class OrderController {
                 .build();
     }
 
+    @GetMapping("/{orderId}")
+    public ApiResponse<OrderResponse> getOrder(@PathVariable String orderId) {
+        return ApiResponse.<OrderResponse>builder()
+                .message("Tạo đơn hàng thành công")
+                .data(orderService.getOrderById(orderId))
+                .build();
+    }
+
 
 
 

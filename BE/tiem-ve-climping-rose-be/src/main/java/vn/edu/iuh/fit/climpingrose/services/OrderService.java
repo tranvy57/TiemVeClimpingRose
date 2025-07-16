@@ -293,8 +293,18 @@ public class OrderService {
         User user = userUtils.getUserLogin();
 
 
-        List<Order> orders = orderRepository.findOrdersByUserOrderByOrderDateAsc(user);
+        List<Order> orders = orderRepository.findOrdersByUserOrderByOrderDateDesc(user);
 
         return orderMapper.toListOrderResponse(orders);
+    }
+
+    public OrderResponse getOrderById(String orderId){
+        User user = userUtils.getUserLogin();
+
+        Order order = orderRepository.getByUserAndOrderId(user, orderId);
+        if (order == null) {
+            throw new BadRequestException("Đơn hàng không tồn tại hoặc bạn không có quyền truy cập vo đơn hàng này");
+        }
+        return orderMapper.toResponse(order);
     }
 }

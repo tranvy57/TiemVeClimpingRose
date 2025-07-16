@@ -90,11 +90,14 @@ const Header = () => {
                 <Link className="menu-link" href="/paintings">
                   {t("menu.products")}
                 </Link>
-                <Link className="menu-link" href="#">
+                {/* <Link className="menu-link" href="#">
                   {t("menu.feedbacks")}
                 </Link>
                 <Link className="menu-link" href="#">
                   {t("menu.blog")}
+                </Link> */}
+                <Link className="menu-link" href="/payment">
+                  Hướng dẫn thanh toán
                 </Link>
                 <div className="flex gap-4 text-gray-700">
                   <Link href="/cart">
@@ -116,11 +119,14 @@ const Header = () => {
           <Link className="menu-link" href="/paintings">
             {t("menu.products")}
           </Link>
-          <Link className="menu-link" href="#">
+          {/* <Link className="menu-link" href="#">
             {t("menu.feedbacks")}
           </Link>
           <Link className="menu-link" href="#">
             {t("menu.blog")}
+          </Link> */}
+          <Link className="menu-link" href="/payment">
+            Hướng dẫn thanh toán
           </Link>
 
           <div className="flex gap-4 text-gray-700">
