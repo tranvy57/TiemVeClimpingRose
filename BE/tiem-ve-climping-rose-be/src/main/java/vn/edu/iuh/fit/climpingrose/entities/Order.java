@@ -23,6 +23,7 @@ public class Order {
     String orderId;
 
     Date orderDate;
+    @Enumerated(EnumType.STRING)
     OrderStatus status;
     BigDecimal deliveryCost;
     BigDecimal totalPaintingsPrice;

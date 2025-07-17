@@ -3,6 +3,7 @@ package vn.edu.iuh.fit.climpingrose.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.climpingrose.dtos.requests.OrderRequest;
+import vn.edu.iuh.fit.climpingrose.dtos.requests.OrderUpdateRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.ApiResponse;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.OrderResponse;
 import vn.edu.iuh.fit.climpingrose.services.OrderService;
@@ -36,6 +37,14 @@ public class OrderController {
         return ApiResponse.<OrderResponse>builder()
                 .message("Tạo đơn hàng thành công")
                 .data(orderService.getOrderById(orderId))
+                .build();
+    }
+
+    @PutMapping("/{orderId}")
+    public ApiResponse<OrderResponse> updateOrder(@PathVariable String orderId, @RequestBody OrderUpdateRequest request) {
+        return ApiResponse.<OrderResponse>builder()
+                .message("Tạo đơn hàng thành công")
+                .data(orderService.updateOrder(orderId, request))
                 .build();
     }
 
