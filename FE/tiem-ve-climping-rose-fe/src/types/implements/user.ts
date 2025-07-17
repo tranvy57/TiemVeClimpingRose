@@ -5,9 +5,11 @@ export interface IUser extends BaseEntity {
   email: string;
   phone: string;
   username: string;
-  fullName: string;
+  displayName: string;
   avatar?: string;
   birthday: Date;
   gender: boolean;
+  zipcode: string;
+  addressDetail: string;
   role: "ADMIN" | "USER";
 }

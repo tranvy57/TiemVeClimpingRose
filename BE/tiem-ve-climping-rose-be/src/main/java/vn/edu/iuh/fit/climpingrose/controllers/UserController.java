@@ -31,7 +31,7 @@ public class UserController {
                 .build();
     }
 
-    @GetMapping("/myInfo")
+    @GetMapping("/my-info")
     public ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
                 .message("Lấy thông tin cá nhân thành công")

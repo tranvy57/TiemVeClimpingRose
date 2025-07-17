@@ -16,7 +16,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: null,
-  accessToken: Cookies.get("accessToken") || null,
+  accessToken: getToken() || null,
   authenticated: false,
   loading: false,
   error: null,
