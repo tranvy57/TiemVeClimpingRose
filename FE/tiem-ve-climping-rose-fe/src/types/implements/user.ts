@@ -10,6 +10,7 @@ export interface IUser extends BaseEntity {
   birthday: Date;
   gender: boolean;
   zipcode: string;
+  contact: string;
   addressDetail: string;
   role: "ADMIN" | "USER";
 }

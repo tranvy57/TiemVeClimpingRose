@@ -11,4 +11,18 @@ export const getMyInfo = async () => {
   }
 };
 
+interface UserUpdateRequest {
+  displayName: string;
+  zipcode: string;
+  addressDetail: string;
+  contact: string;
+}
 
+export const updateMe = async (body: UserUpdateRequest) => {
+  try {
+    const response = await api.put<ApiResponse<IUser>>(`/users/me`, body);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

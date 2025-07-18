@@ -41,6 +41,7 @@ public class User extends BaseEntity{
 
     String zipcode;
     String addressDetail;
+    String contact;
 
 }
 

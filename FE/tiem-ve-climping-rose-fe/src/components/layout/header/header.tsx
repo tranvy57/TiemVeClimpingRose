@@ -96,14 +96,14 @@ const Header = () => {
                 <Link className="menu-link" href="#">
                   {t("menu.blog")}
                 </Link> */}
-                <Link className="menu-link" href="/payment">
+                <Link className="menu-link" href="/payment-instruction">
                   Hướng dẫn thanh toán
                 </Link>
                 <div className="flex gap-4 text-gray-700">
                   <Link href="/cart">
                     <ShoppingCart className="icon-button" />
                   </Link>
-                  <UserIcon />
+                  <UserIcon />DDDRRF
                   {/* <LanguageSwitcher /> */}
                 </div>
               </SheetHeader>
@@ -125,7 +125,7 @@ const Header = () => {
           <Link className="menu-link" href="#">
             {t("menu.blog")}
           </Link> */}
-          <Link className="menu-link" href="/payment">
+          <Link className="menu-link" href="/payment-instruction">
             Hướng dẫn thanh toán
           </Link>
 

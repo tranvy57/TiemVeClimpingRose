@@ -23,6 +23,7 @@ public class UserResponse extends BaseResponse{
     UserStatus status;
     String zipcode;
     String addressDetail;
+    String contact;
 
     Role role;
 }

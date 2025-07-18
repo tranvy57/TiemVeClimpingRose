@@ -10,8 +10,8 @@ import { ChevronDown } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import OrderList from "@/components/orders/OrderList";
 import { IUser } from "@/types/implements";
-import { showError } from "@/libs/toast";
-import { getMyInfo } from "@/api/userApi";
+import { showError, showSuccess } from "@/libs/toast";
+import { getMyInfo, updateMe } from "@/api/userApi";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -30,8 +30,6 @@ export default function UserAccountPage() {
     town: "",
   });
   const [addressDetail, setAddressDetail] = useState("");
-  const [receiverName, setReceiverName] = useState("");
-  const [note, setNote] = useState("");
   const [contact, setContact] = useState("");
 
   const handleZipcodeChange = async (
@@ -76,6 +74,7 @@ export default function UserAccountPage() {
         setDisplayName(response.data?.displayName);
         setAddressDetail(response.data.addressDetail);
         setZipcode(response.data.zipcode);
+        setContact(response.data.contact);
         try {
           const res = await fetch(
             `https://zipcloud.ibsnet.co.jp/api/search?zipcode=${response.data.zipcode}`
@@ -123,6 +122,22 @@ export default function UserAccountPage() {
     router.push(url.toString());
   };
 
+  const handleClickButtonSaveUser = async () => {
+    const user = {
+      displayName,
+      zipcode,
+      addressDetail,
+      contact: "", // Thay đổi giá trị này nếu bạn có trường liên hệ (contact) từ dữ liệu người dùng
+    };
+
+    try {
+      const response = await updateMe(user);
+      if (response.data) showSuccess("Cập nhật thông tin thành công.!");
+    } catch (error) {
+      showError("Lỗi khi cập nhật thông tin");
+    }
+  };
+
   return (
     <div className="w-full md:px-6">
       <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row gap-6">
@@ -168,7 +183,7 @@ export default function UserAccountPage() {
                     <Input
                       id="displayName"
                       type="text"
-                      value={displayName}
+                      value={displayName ?? ""}
                       maxLength={7}
                       placeholder="Nhập tên của bạn"
                       onChange={(e) => setDisplayName(e.target.value)}
@@ -186,7 +201,7 @@ export default function UserAccountPage() {
                     <Input
                       id="zipcode"
                       type="text"
-                      value={zipcode}
+                      value={zipcode ?? ""}
                       onChange={handleZipcodeChange}
                       maxLength={7}
                       placeholder="Ví dụ: 1000001"
@@ -239,11 +254,29 @@ export default function UserAccountPage() {
                     </Label>
                     <Input
                       id="detail"
-                      value={addressDetail}
+                      value={addressDetail ?? ""}
                       placeholder="Ví dụ: 1-2-3 サンプルビル 301号室"
+                      onChange={(e) => setAddressDetail(e.target.value)}
                     />
                   </div>
-                  <Button className="float-right">Lưu</Button>
+
+                  <div className="space-y-2">
+                    <Label className="text-md" htmlFor="detail">
+                      Liên hệ
+                    </Label>
+                    <Input
+                      id="contact"
+                      value={contact ?? ""}
+                      placeholder="https://www.facebook.com/tiemveclimpingrose"
+                      onChange={(e) => setContact(e.target.value)}
+                    />
+                  </div>
+                  <Button
+                    className="float-right"
+                    onClick={handleClickButtonSaveUser}
+                  >
+                    Lưu
+                  </Button>
                 </div>
               </section>
             )}
@@ -276,7 +309,7 @@ export default function UserAccountPage() {
                     <Input
                       id="displayName"
                       type="text"
-                      value={displayName}
+                      value={displayName ?? ""}
                       maxLength={7}
                       placeholder="Nhập tên của bạn"
                       onChange={(e) => setDisplayName(e.target.value)}
@@ -294,7 +327,7 @@ export default function UserAccountPage() {
                     <Input
                       id="zipcode"
                       type="text"
-                      value={zipcode}
+                      value={zipcode ?? ""}
                       onChange={handleZipcodeChange}
                       maxLength={7}
                       placeholder="Ví dụ: 1000001"
@@ -347,11 +380,29 @@ export default function UserAccountPage() {
                     </Label>
                     <Input
                       id="detail"
-                      value={addressDetail}
+                      value={addressDetail ?? ""}
                       placeholder="Ví dụ: 1-2-3 サンプルビル 301号室"
+                      onChange={(e) => setAddressDetail(e.target.value)}
                     />
                   </div>
-                  <Button className="float-right">Lưu</Button>
+
+                  <div className="space-y-2">
+                    <Label className="text-md" htmlFor="detail">
+                      Liên hệ
+                    </Label>
+                    <Input
+                      id="contact"
+                      value={contact ?? ""}
+                      placeholder="https://www.facebook.com/tiemveclimpingrose"
+                      onChange={(e) => setContact(e.target.value)}
+                    />
+                  </div>
+                  <Button
+                    className="float-right"
+                    onClick={handleClickButtonSaveUser}
+                  >
+                    Lưu
+                  </Button>
                 </div>
               </CollapsibleContent>
             </Collapsible>

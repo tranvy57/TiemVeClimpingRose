@@ -10,8 +10,13 @@ export const clearAuth = () => {
   localStorage.removeItem("user");
 };
 
-export const getToken = () => localStorage.getItem("accessToken");
+export const getToken = () => {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("accessToken");
+};
+
 export const getUser = (): IUser | null => {
+  if (typeof window === "undefined") return null;
   const user = localStorage.getItem("user");
   return user ? JSON.parse(user) : null;
 };

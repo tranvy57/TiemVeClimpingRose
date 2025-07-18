@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.climpingrose.dtos.requests.UserRegisterRequest;
+import vn.edu.iuh.fit.climpingrose.dtos.requests.UserUpdateRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.UserResponse;
 import vn.edu.iuh.fit.climpingrose.entities.User;
 import vn.edu.iuh.fit.climpingrose.exceptions.InternalServerErrorException;
@@ -49,6 +50,19 @@ public class UserService {
         User user = userRepository.findByUsername(name)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng này"));
 
+        return userMapper.toUserResponse(user);
+    }
+
+    public UserResponse updateUser(String userId, UserUpdateRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng này!"));
+
+        user.setDisplayName(request.getDisplayName());
+        user.setZipcode(request.getZipcode());
+        user.setAddressDetail(request.getAddressDetail());
+        user.setContact(request.getContact());
+
+        userRepository.save(user);
         return userMapper.toUserResponse(user);
     }
 
