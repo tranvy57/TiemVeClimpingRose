@@ -107,11 +107,13 @@ public class OrderService {
         Coupon coupon = couponRepository.getByCode(couponCode);
         if(coupon !=null )
         {
-            if ( !isCouponValid(couponCode, cartItems, totalPaintingsPrice)) {
+            if (coupon.getIsPublic()) {
+                discountPercentage = discountPercentage.add(coupon.getDiscountPercentage());
+            }
+            else if ( !isCouponValid(couponCode, cartItems, totalPaintingsPrice)) {
                 throw new BadRequestException("Mã giảm giá không hợp lệ");
             } else discountPercentage = discountPercentage.add(coupon.getDiscountPercentage());
         }
-
 
         //  Lưu đơn hàng
         Order order = Order.builder()
@@ -214,7 +216,7 @@ public class OrderService {
                 } else if (totalSize <= 100) {
                     shipping = 1500;
                 } else {
-                    throw new BadRequestException("Tổng kích thước kiện hàng vượt quá giới hạn");
+                    return BigDecimal.ZERO;
                 }
             }
         } else {
@@ -228,7 +230,7 @@ public class OrderService {
             } else if (totalSize <= 100) {
                 shipping = 1500;
             } else {
-                throw new BadRequestException("Tổng kích thước kiện hàng vượt quá giới hạn");
+                return BigDecimal.ZERO;
             }
         }
 
@@ -342,7 +344,7 @@ public class OrderService {
                         .mapToInt(CartItem::getQuantity)
                         .sum();
 
-                return count2020 > 10 || totalPaintingsPrice.compareTo(new BigDecimal("9000")) >= 0;
+                return count2020 >= 10 || totalPaintingsPrice.compareTo(new BigDecimal("9000")) >= 0;
 
             default:
                 return false;

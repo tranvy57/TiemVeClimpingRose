@@ -25,7 +25,7 @@ public class Coupon extends BaseEntity {
     String condition;
     @Column(name = "discount_percentage")
     BigDecimal discountPercentage;
-
+    Boolean isPublic;
     Date startDate;
     Date endDate;
 

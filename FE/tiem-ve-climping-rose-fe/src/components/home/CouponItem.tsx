@@ -57,18 +57,18 @@ export function CouponItem({
   };
 
   return (
-    <div className="flex items-start min-w-[320px] max-w-[400px] max-h-fit ">
-      <Image src={imageUrl} height={50} width={110} alt="coupon" />
+    <div className="flex items-start w-[280px] md:w-[350px] border border-l-0 h-fit">
+      <Image src={imageUrl} height={50} width={100} alt="coupon" />
 
-      <div className="flex-1 space-y-2 border h-full p-2 justify-between flex flex-col">
-        <p className="text-red400 font-bold">
+      <div className="flex-1 p-2 space-y-[4px] justify-between flex flex-col">
+        <p className="text-[13px] font-bold">
           {t("coupon.enterCode", { code })}
         </p>
-        <p className="text-sm text-gray-700">{description}</p>
+        <p className="text-[12px] text-gray-700">{description}</p>
 
-        <div className="flex items-end justify-between">
+        <div className="flex items-end justify-end">
           <Button
-            className="bg-red-300 hover:bg-red-400 text-white px-3 py-1 text-sm"
+            className="bg-red-300 hover:bg-red-400 text-white px- py-0 text-sm"
             onClick={handleCopy}
           >
             {copied ? (
@@ -77,13 +77,13 @@ export function CouponItem({
               </div>
             ) : (
               <div className="flex items-center gap-1">
-                <Copy /> {t("coupon.copy")}
+                <Copy /> Sao chép
               </div>
             )}
           </Button>
 
           {/* Modal điều kiện */}
-          <Dialog>
+          {/* <Dialog>
             <DialogTrigger asChild>
               <button className="text-gray-700 text-sm underline hover:text-red-500 p-1">
                 {t("coupon.conditionLink")}
@@ -95,7 +95,7 @@ export function CouponItem({
                 <DialogDescription>Để sử dụng mã giảm giá:</DialogDescription>
               </DialogHeader>
 
-              {condition}
+              {description}
 
               <DialogFooter className="mt-4">
                 <Button
@@ -106,7 +106,7 @@ export function CouponItem({
                 </Button>
               </DialogFooter>
             </DialogContent>
-          </Dialog>
+          </Dialog> */}
         </div>
       </div>
     </div>

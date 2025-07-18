@@ -117,7 +117,7 @@ export const checkCouponValid = (
   }
 
   if (couponCode === "CPRFREESHIP") {
-    return total20x20 > 10 || totalPrice >= 9000;
+    return total20x20 >= 10 || totalPrice >= 9000;
   }
 
   // Nếu chưa định nghĩa điều kiện, coi như không hợp lệ

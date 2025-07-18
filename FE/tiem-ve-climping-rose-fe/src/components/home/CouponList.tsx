@@ -27,19 +27,21 @@ export function CouponList() {
     fetchCoupons();
   }, []);
   return (
-    <div className="flex gap-4 my-4 overflow-x-auto scrollbar-hidden md:justify-center">
-      {coupons.map((c) => {
-        return (
-          <CouponItem
-            key={c.couponId}
-            imageUrl="/coupons/couponfreeship.png"
-            code={c.code}
-            discountPercentage={c.discountPercentage}
-            condition={c.condition}
-            description={c.description}
-          />
-        );
-      })}
+    <div className="flex my-2  md:justify-center overflow-x-auto scrollbar-hidden">
+      <div className="flex gap-4 ">
+        {coupons.map((c) => {
+          return (
+            <CouponItem
+              key={c.couponId}
+              imageUrl={c.imageUrl}
+              code={c.code}
+              discountPercentage={c.discountPercentage}
+              condition={c.condition}
+              description={c.description}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }

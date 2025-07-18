@@ -21,4 +21,6 @@ public class CouponDTO {
     Date startDate;
     Date endDate;
 
+    Boolean isPublic;
+
 }
