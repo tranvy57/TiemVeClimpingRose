@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface CouponRepository extends JpaRepository<Coupon, String> {
     Coupon getByCode(String code);
+
+    Coupon findByCode(String code);
 }

@@ -31,4 +31,13 @@ public class CouponController {
                 .message("Lấy danh sách coupon thành công")
                 .build();
     }
+
+    @GetMapping("/{code}")
+    public ApiResponse<CouponDTO> findAll(@PathVariable String code) {
+        return ApiResponse.<CouponDTO>builder()
+                .statusCode(200)
+                .data(couponService.getByCode(code))
+                .message("Lấy danh sách coupon thành công")
+                .build();
+    }
 }

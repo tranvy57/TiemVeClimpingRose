@@ -26,7 +26,8 @@ import { setCheckoutData } from "@/store/slice/checkout-slice";
 import axios from "axios";
 import { calculateDeliveryCost, checkCouponValid } from "@/utils/orderUltils";
 import { ICoupon } from "@/types/implements/coupon";
-import { getCoupons } from "@/api/couponAPi";
+import { getCouponByCode, getCoupons } from "@/api/couponAPi";
+import { Input } from "@/components/ui/input";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState<ICartItem[]>();
@@ -34,9 +35,16 @@ const Cart = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [coupons, setCoupons] = useState<ICoupon[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [couponCode, setCouponCode] = useState("");
+  const [discount, setDiscount] = useState(0);
+  const [open, setOpen] = useState(false);
 
   const dispatch = useAppDispatch();
   const router = useRouter();
+
+  const handleCouponCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCouponCode(e.target.value);
+  };
 
   const fetchCoupons = async () => {
     try {
@@ -64,11 +72,18 @@ const Cart = () => {
   };
 
   const handleToggleItem = (cartItemId: string) => {
-    setSelectedItems((prev) =>
-      prev.includes(cartItemId)
+    setSelectedItems((prev) => {
+      const newSelected = prev.includes(cartItemId)
         ? prev.filter((id) => id !== cartItemId)
-        : [...prev, cartItemId]
-    );
+        : [...prev, cartItemId];
+
+      if (newSelected.length === 0) {
+        setDiscount(0);
+        setCouponCode("");
+      }
+
+      return newSelected;
+    });
   };
 
   const handleUpdateQuantity = async (cartItemId: string, quantity: number) => {
@@ -133,7 +148,9 @@ const Cart = () => {
         selectedCartItems,
         totalPaintingsPrice,
         deliveryCost,
-        totalPrice: totalPaintingsPrice + deliveryCost,
+        couponCode,
+        discount,
+        totalPrice: totalPaintingsPrice + deliveryCost - discount,
       })
     );
 
@@ -162,6 +179,45 @@ const Cart = () => {
     );
     return calculateDeliveryCost(orderItems, paintingMap, "tokyo");
   })();
+
+  const handleApplyCoupon = async () => {
+    const isValid = checkCouponValid(
+      couponCode,
+      selectedCartItems.map((item) => ({
+        paintingId: item.painting.paintingId,
+        quantity: item.quantity,
+      })),
+      Object.fromEntries(
+        selectedCartItems.map((item) => [
+          item.painting.paintingId,
+          {
+            size: item.painting.size,
+            quantity: item.painting.quantity,
+            price: item.painting.price,
+          },
+        ])
+      )
+    );
+
+    if (isValid) {
+      const discountValue = await fetchCoupon(couponCode);
+      if (typeof discountValue === "number") {
+        setDiscount(discountValue);
+      }
+    } else {
+      showError("Mã này không được áp dụng cho đơn hàng này.");
+    }
+  };
+
+  const fetchCoupon = async (code: string) => {
+    try {
+      const response = await getCouponByCode(code);
+      setOpen(false);
+      return response.data?.discountPercentage;
+    } catch (error) {
+      showError("Không lấy được mã giảm giá");
+    }
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -205,7 +261,7 @@ const Cart = () => {
                 <p className="text-red-500 text-xl font-semibold">
                   Thông tin đơn hàng:
                 </p>
-                <Dialog>
+                <Dialog open={open} onOpenChange={setOpen}>
                   <DialogTrigger asChild>
                     <div className="flex items-center gap-2 cursor-pointer justify-between">
                       <p> Xem mã giảm giá</p>
@@ -215,50 +271,63 @@ const Cart = () => {
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle>
-                        <div className="flex gap-4 flex-col py-4 items-center justify-center">
-                          {coupons.map((c) => {
-                            const isValid = checkCouponValid(
-                              c.code,
-                              selectedCartItems.map((item) => ({
-                                paintingId: item.painting.paintingId,
-                                quantity: item.quantity,
-                              })),
-                              Object.fromEntries(
-                                selectedCartItems.map((item) => [
-                                  item.painting.paintingId,
-                                  {
-                                    size: item.painting.size,
-                                    quantity: item.painting.quantity,
-                                    price: item.painting.price,
-                                  },
-                                ])
-                              )
-                            );
+                        <div className="flex gap-4 flex-col py-4 items-center justify-start">
+                          <div className="space-y-2 flex gap-2 ">
+                            <Input
+                              id="coupon"
+                              value={couponCode}
+                              onChange={handleCouponCodeChange}
+                              type="text"
+                              placeholder="Nhập mã giảm giá"
+                            />
+                            <Button onClick={handleApplyCoupon}>Áp dụng</Button>
+                          </div>
+                          <div className="">
+                            {coupons.map((c) => {
+                              const isValid = checkCouponValid(
+                                c.code,
+                                selectedCartItems.map((item) => ({
+                                  paintingId: item.painting.paintingId,
+                                  quantity: item.quantity,
+                                })),
+                                Object.fromEntries(
+                                  selectedCartItems.map((item) => [
+                                    item.painting.paintingId,
+                                    {
+                                      size: item.painting.size,
+                                      quantity: item.painting.quantity,
+                                      price: item.painting.price,
+                                    },
+                                  ])
+                                )
+                              );
 
-                            return (
-                              <div
-                                key={c.couponId}
-                                className={`w-full p-2 rounded-md ${
-                                  isValid
-                                    ? "cursor-pointer hover:bg-muted"
-                                    : "opacity-50 pointer-events-none"
-                                }`}
-                              >
-                                <CouponItem
-                                  imageUrl={c.imageUrl}
-                                  code={c.code}
-                                  discountPercentage={c.discountPercentage}
-                                  condition={c.condition}
-                                  description={c.description}
-                                />
-                              </div>
-                            );
-                          })}
+                              return (
+                                <div
+                                  key={c.couponId}
+                                  className={`w-full p-2 rounded-md ${
+                                    isValid
+                                      ? "cursor-pointer hover:bg-muted"
+                                      : "opacity-50 pointer-events-none"
+                                  }`}
+                                >
+                                  <CouponItem
+                                    imageUrl={c.imageUrl}
+                                    code={c.code}
+                                    discountPercentage={c.discountPercentage}
+                                    condition={c.condition}
+                                    description={c.description}
+                                  />
+                                </div>
+                              );
+                            })}
+                          </div>
                         </div>
                       </DialogTitle>
                     </DialogHeader>
                   </DialogContent>
                 </Dialog>
+
                 <p>
                   Tổng tiền tranh:{" "}
                   <span className="font-semibold">
@@ -271,9 +340,15 @@ const Cart = () => {
                   {estimatedDeliveryCost.toLocaleString("ja-JP")}
                 </p>
 
+                <p>Giá được giảm: ¥{discount.toLocaleString("ja-JP")}</p>
+
                 <p className="text-gray-800 font-semibold">
                   Tổng: ¥
-                  {(totalPrice + estimatedDeliveryCost).toLocaleString("ja-JP")}
+                  {(
+                    totalPrice +
+                    estimatedDeliveryCost -
+                    discount
+                  ).toLocaleString("ja-JP")}
                 </p>
 
                 <Button

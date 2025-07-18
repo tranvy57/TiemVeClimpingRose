@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.climpingrose.dtos.dtos.CouponDTO;
 import vn.edu.iuh.fit.climpingrose.entities.Coupon;
+import vn.edu.iuh.fit.climpingrose.exceptions.NotFoundException;
 import vn.edu.iuh.fit.climpingrose.mappers.CouponMapper;
 import vn.edu.iuh.fit.climpingrose.repositories.CouponRepository;
 
@@ -26,4 +27,14 @@ public class CouponService {
         Coupon coupon = couponMapper.toEntity(couponDTO);
         return couponMapper.toDto(couponRepository.save(coupon));
     }
+
+    public CouponDTO getByCode(String code){
+        Coupon coupon = couponRepository.findByCode(code);
+        if(coupon == null){
+            throw new NotFoundException("Coupon không tồn tại");
+        }
+        return couponMapper.toDto(coupon);
+    }
+
+
 }

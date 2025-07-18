@@ -8,6 +8,8 @@ interface CheckoutState {
   totalPaintingsPrice: number;
   deliveryCost: number;
   totalPrice: number;
+  couponCode?: string;
+  discount?: number;
 }
 
 const initialState: CheckoutState = {
@@ -15,6 +17,8 @@ const initialState: CheckoutState = {
   totalPaintingsPrice: 0,
   deliveryCost: 0,
   totalPrice: 0,
+  couponCode: "",
+  discount: 0,
 };
 
 const checkoutSlice = createSlice({
@@ -24,9 +28,17 @@ const checkoutSlice = createSlice({
     setCheckoutData: (state, action: PayloadAction<CheckoutState>) => {
       return action.payload;
     },
+    setSelectedCoupon: (
+      state,
+      action: PayloadAction<{ couponCode: string; discount: number }>
+    ) => {
+      state.couponCode = action.payload.couponCode;
+      state.discount = action.payload.discount;
+    },
     clearCheckoutData: () => initialState,
   },
 });
 
-export const { setCheckoutData, clearCheckoutData } = checkoutSlice.actions;
+export const { setCheckoutData, clearCheckoutData, setSelectedCoupon } =
+  checkoutSlice.actions;
 export default checkoutSlice.reducer;

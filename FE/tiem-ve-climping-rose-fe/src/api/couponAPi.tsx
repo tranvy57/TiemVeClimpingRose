@@ -11,3 +11,12 @@ export const getCoupons = async () => {
     throw error;
   }
 };
+
+export const getCouponByCode = async (code: string) => {
+  try {
+    const response = await api.get<ApiResponse<ICoupon>>(`/coupons/${code}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
