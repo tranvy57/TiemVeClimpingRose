@@ -442,6 +442,7 @@ public class OrderService {
         if (request.getPrefecture() != null) order.setPrefecture(request.getPrefecture());
         if (request.getCity() != null) order.setCity(request.getCity());
         if (request.getTown() != null) order.setTown(request.getTown());
+        if (request.getImagePayment() != null) order.setImagePayment(request.getImagePayment());
         if (request.getAddressDetail() != null) order.setAddressDetail(request.getAddressDetail());
 
         orderRepository.save(order);

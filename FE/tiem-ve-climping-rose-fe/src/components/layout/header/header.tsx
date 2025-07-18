@@ -103,7 +103,7 @@ const Header = () => {
                   <Link href="/cart">
                     <ShoppingCart className="icon-button" />
                   </Link>
-                  <UserIcon />DDDRRF
+                  <UserIcon />
                   {/* <LanguageSwitcher /> */}
                 </div>
               </SheetHeader>

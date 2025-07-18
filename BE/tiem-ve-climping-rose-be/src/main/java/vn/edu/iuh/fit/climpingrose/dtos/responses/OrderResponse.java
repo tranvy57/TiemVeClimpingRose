@@ -20,6 +20,7 @@ public class OrderResponse {
     Date orderDate;
     OrderStatus status;
     BigDecimal deliveryCost;
+    BigDecimal totalPaintingsPrice;
     BigDecimal totalPrice;
     String shippingAddress;
     String note;

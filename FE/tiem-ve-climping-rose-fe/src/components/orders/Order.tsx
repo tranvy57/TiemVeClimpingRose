@@ -8,12 +8,46 @@ interface OrderProps {
 }
 const Order = ({ order }: OrderProps) => {
   const getStatus = () => {
-    if (order.status == "PENDING") return "Đang chờ thanh toán";
+    if (order.status == "PENDING")
+      return (
+        <div className="bg-red-300 rounded-sm px-1">
+          {" "}
+          <p> Đang chờ thanh toán</p>
+        </div>
+      );
+    else if (order.status == "PAYED")
+      return (
+        <div className="bg-blue-200 rounded-sm px-1">
+          {" "}
+          <p>Đã thanh toán</p>
+        </div>
+      );
+    else if (order.status == "APPROVED")
+      return (
+        <div className="bg-green-200 rounded-sm px-1">
+          {" "}
+          <p>Đã xác nhận</p>
+        </div>
+      );
+    else if (order.status == "CANCELED")
+      return (
+        <div className="bg-red-200 rounded-sm px-1">
+          {" "}
+          <p>Đã hủy</p>
+        </div>
+      );
+    else if (order.status == "REJECTED")
+      return (
+        <div className="bg-red-200 rounded-sm px-1">
+          {" "}
+          <p>Bị từ chối</p>
+        </div>
+      );
   };
   return (
     <div className="rounded-md shadow-sm p-2 md:px-4 space-y-2">
       <div className="flex justify-between items-center">
-        <p className="bg-red-200 rounded-sm text-sm px-1">{getStatus()}</p>
+        {getStatus()}
         <p className="text-sm text-gray-700">
           {new Date(order.orderDate).toLocaleDateString("vi-VN")}
         </p>
@@ -40,7 +74,15 @@ const Order = ({ order }: OrderProps) => {
           </span>
         </p>
 
-        {order.status == "PENDING" && <Button>Thanh toán</Button>}
+        {order.status == "PENDING" && (
+          <Button
+            onClick={() => {
+              window.location.href = `/payment?orderId=${order.orderId}`;
+            }}
+          >
+            Thanh toán
+          </Button>
+        )}
       </div>
 
       <div className="flex justify-end"></div>

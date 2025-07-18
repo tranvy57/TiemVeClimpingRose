@@ -36,17 +36,23 @@ const PaymentInstructionPage = () => {
         <p className="font-semibold">
           Thanh toán chuyển tài khoản Nhật hoặc Việt Nam
         </p>
-        <p>Tài khoản Việt Nam:</p>
-        <p>Sacombank</p>
-        <p>060296156232</p>
-        <p>TRAN THI THUY VY</p>
-        <Image src="/payment/qr.png" alt="QR" width={300} height={100} />
-        <br />
-        <p>Tài khoản Yucho Nhật Bản:</p>
-        <p>Sacombank</p>
-        <p>060296156232</p>
-        <p>TRAN THI THUY VY</p>
-        <Image src="/payment/qr.png" alt="QR" width={300} height={100} />
+        <div className="md:flex gap-4">
+          <div>
+            <p>Tài khoản Việt Nam:</p>
+            <p>Sacombank</p>
+            <p>060296156232</p>
+            <p>TRAN THI THUY VY</p>
+            <Image src="/payment/qr.png" alt="QR" width={300} height={100} />
+            <br />
+          </div>
+          <div>
+            <p>Tài khoản Yucho Nhật Bản:</p>
+            <p>Sacombank</p>
+            <p>060296156232</p>
+            <p>TRAN THI THUY VY</p>
+            <Image src="/payment/qr.png" alt="QR" width={300} height={100} />
+          </div>
+        </div>
 
         <p>
           <span className="font-semibold">Bước 3: </span> Sau khi thanh toán

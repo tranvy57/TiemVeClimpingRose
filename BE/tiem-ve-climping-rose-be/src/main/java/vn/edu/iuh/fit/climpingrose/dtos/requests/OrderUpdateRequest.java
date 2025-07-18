@@ -20,6 +20,7 @@ public class OrderUpdateRequest {
     OrderStatus status;
     String note;
     String paymentMethod;
+    String imagePayment;
     String receiverName;
     String phone;
     String email;

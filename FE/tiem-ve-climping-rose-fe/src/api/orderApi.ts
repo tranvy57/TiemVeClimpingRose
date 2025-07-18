@@ -52,3 +52,37 @@ export const getOrderById = async (orderId: string) => {
     throw error;
   }
 };
+
+export interface OrderUpdateRequest {
+  deliveryCost: number;
+  totalPaintingsPrice: number;
+  status: string;
+  note: string;
+  paymentMethod: string;
+  receiverName: string;
+  phone: string;
+  email: string;
+  postalCode: string;
+  contact: string;
+  zipCode: string;
+  prefecture: string;
+  city: string;
+  town: string;
+  addressDetail: string;
+  imagePayment: string;
+}
+
+export const updateOrder = async (
+  orderId: string,
+  body: OrderUpdateRequest
+) => {
+  try {
+    const response = await api.put<ApiResponse<IOrder>>(
+      `/orders/${orderId}`,
+      body
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

@@ -13,7 +13,7 @@ import vn.edu.iuh.fit.climpingrose.services.CloudinaryService;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("api/files")
+@RequestMapping("/api/files")
 public class FileUploadController {
     @Autowired
     private CloudinaryService cloudinaryService;
