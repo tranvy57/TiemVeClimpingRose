@@ -115,10 +115,13 @@ const PaymentPagePage = () => {
             </div>
             <div>
               <p>Tài khoản Yucho Nhật Bản:</p>
-              <p>Sacombank</p>
-              <p>060296156232</p>
-              <p>TRAN THI THUY VY</p>
-              <Image src="/payment/qr.png" alt="QR" width={300} height={100} />
+
+              <Image
+                src="/payment/yucho.jpg"
+                alt="QR"
+                width={300}
+                height={100}
+              />
             </div>
           </div>
 
