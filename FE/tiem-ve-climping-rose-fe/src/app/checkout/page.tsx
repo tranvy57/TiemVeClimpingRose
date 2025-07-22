@@ -18,18 +18,27 @@ import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { showError, showSuccess } from "@/libs/toast";
 import OrderItem from "../../components/orders/OrderItem";
-import { setCheckoutData } from "@/store/slice/checkout-slice";
+import {
+  setCheckoutData,
+  setSelectedCoupon,
+} from "@/store/slice/checkout-slice";
 import { calculateDeliveryCost, checkCouponValid } from "@/utils/orderUltils";
 import { ICoupon } from "@/types/implements/coupon";
-import { getCoupons } from "@/api/couponAPi";
+import { getCouponByCode, getCoupons } from "@/api/couponAPi";
 import { ChevronRight, Ticket } from "lucide-react";
 import { CouponItem } from "@/components/home";
 import { createOrder, OrderRequest } from "@/api/orderApi";
 import { useRouter } from "next/navigation";
 
 export default function ChekoutPage() {
-  const { selectedCartItems, totalPaintingsPrice, totalPrice, deliveryCost } =
-    useAppSelector((state) => state.checkout);
+  const {
+    selectedCartItems,
+    totalPaintingsPrice,
+    deliveryCost,
+    discount,
+    totalPrice,
+    couponCode, // ← thêm dòng này
+  } = useAppSelector((state) => state.checkout);
 
   const router = useRouter();
 
@@ -44,10 +53,22 @@ export default function ChekoutPage() {
   const [receiverName, setReceiverName] = useState("");
   const [note, setNote] = useState("");
   const [contact, setContact] = useState("");
-  const [couponCode, setCouponCode] = useState("");
-
   const [coupons, setCoupons] = useState<ICoupon[]>([]);
+  const [selectedCoupon, setSelectCoupon] = useState<string>("");
 
+  const [open, setOpen] = useState(false);
+
+  const fetchCoupon = async (code: string) => {
+    try {
+      const response = await getCouponByCode(code);
+      setOpen(false);
+      if (response.data?.code === "CPRFREESHIP") {
+        return deliveryCost;
+      } else return response.data?.discountPercentage;
+    } catch (error) {
+      showError("Không lấy được mã giảm giá");
+    }
+  };
   const handleReceiverNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setReceiverName(e.target.value);
   };
@@ -64,10 +85,6 @@ export default function ChekoutPage() {
 
   const handleContactChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setContact(e.target.value);
-  };
-
-  const handleCouponCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCouponCode(e.target.value);
   };
 
   const handleZipcodeChange = async (
@@ -107,12 +124,25 @@ export default function ChekoutPage() {
             result.address1 // prefecture
           );
 
+          let updatedDiscount = discount;
+
+          // Nếu coupon là freeship thì discount = deliveryCost mới
+          if (couponCode === "CPRFREESHIP") {
+            updatedDiscount = updatedDeliveryCost;
+          }
+
+          // Dispatch cập nhật lại tất cả
           dispatch(
             setCheckoutData({
               selectedCartItems,
               totalPaintingsPrice,
               deliveryCost: updatedDeliveryCost,
-              totalPrice: totalPaintingsPrice + updatedDeliveryCost,
+              totalPrice:
+                totalPaintingsPrice +
+                updatedDeliveryCost -
+                (updatedDiscount ?? 0),
+              couponCode,
+              discount: updatedDiscount,
             })
           );
         } else {
@@ -140,7 +170,14 @@ export default function ChekoutPage() {
   };
 
   useEffect(() => {
-    fetchCoupons();
+    const init = async () => {
+      await fetchCoupons();
+
+      if (couponCode) {
+        const discountValue = await fetchCoupon(couponCode);
+      }
+    };
+    init();
   }, []);
 
   const handleSubmitOrder = async () => {
@@ -189,6 +226,55 @@ export default function ChekoutPage() {
     }
   };
 
+  const handleApplyCoupon = async () => {
+    const isValid = checkCouponValid(
+      selectedCoupon || "",
+      selectedCartItems.map((item) => ({
+        paintingId: item.painting.paintingId,
+        quantity: item.quantity,
+      })),
+      Object.fromEntries(
+        selectedCartItems.map((item) => [
+          item.painting.paintingId,
+          {
+            size: item.painting.size,
+            quantity: item.painting.quantity,
+            price: item.painting.price,
+          },
+        ])
+      )
+    );
+
+    if (isValid) {
+      if (selectedCoupon) {
+        const discountValue = await fetchCoupon(selectedCoupon);
+        if (typeof discountValue === "number") {
+          dispatch(
+            setSelectedCoupon({
+              couponCode: selectedCoupon,
+              discount: discountValue,
+            })
+          ); // lưu vào Redux
+
+          dispatch(
+            setCheckoutData({
+              selectedCartItems,
+              totalPaintingsPrice,
+              deliveryCost,
+              totalPrice: totalPaintingsPrice + deliveryCost - discountValue,
+              couponCode: selectedCoupon,
+              discount: discountValue,
+            })
+          );
+          showSuccess("Áp dụng mã giảm giá thành công!");
+          setOpen(false); // đóng dialog
+        }
+      }
+    } else {
+      showError("Mã này không được áp dụng cho đơn hàng này.");
+    }
+  };
+
   return (
     <div className="flex flex-col justify-between md:flex-row-reverse gap-4 mb-[250px]">
       {/* Danh sách OrderItem */}
@@ -206,6 +292,72 @@ export default function ChekoutPage() {
         ))}
         {/* Tính tiền ở máy tính */}
         <div className="space-y-2 hidden md:block">
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <div className="flex items-center gap-2 cursor-pointer justify-between">
+                <p> Xem mã giảm giá</p>
+                <ChevronRight />
+              </div>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>
+                  <div className="flex gap-4 flex-col py-4 items-center justify-start">
+                    <div className="space-y-2 flex gap-2 ">
+                      <Input
+                        id="coupon"
+                        value={selectedCoupon}
+                        onChange={(e) => setSelectCoupon(e.target.value)}
+                        type="text"
+                        placeholder="Nhập mã giảm giá"
+                      />
+                      <Button onClick={handleApplyCoupon}>Áp dụng</Button>
+                    </div>
+                    <div className="">
+                      {coupons.map((c) => {
+                        const isValid = checkCouponValid(
+                          c.code,
+                          selectedCartItems.map((item) => ({
+                            paintingId: item.painting.paintingId,
+                            quantity: item.quantity,
+                          })),
+                          Object.fromEntries(
+                            selectedCartItems.map((item) => [
+                              item.painting.paintingId,
+                              {
+                                size: item.painting.size,
+                                quantity: item.painting.quantity,
+                                price: item.painting.price,
+                              },
+                            ])
+                          )
+                        );
+
+                        return (
+                          <div
+                            key={c.couponId}
+                            className={`w-full p-2 rounded-md ${
+                              isValid
+                                ? "cursor-pointer hover:bg-muted"
+                                : "opacity-50 pointer-events-none"
+                            }`}
+                          >
+                            <CouponItem
+                              imageUrl={c.imageUrl}
+                              code={c.code}
+                              discountPercentage={c.discountPercentage}
+                              condition={c.condition}
+                              description={c.description}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </DialogTitle>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
           <div className="flex justify-between">
             <p>Tổng tiền tranh: </p>
             <p className="">¥{totalPaintingsPrice.toLocaleString("ja-JP")}</p>
@@ -216,84 +368,16 @@ export default function ChekoutPage() {
             <p>¥{deliveryCost.toLocaleString("ja-JP")}</p>
           </div>
 
-          <Dialog>
-            <DialogTrigger asChild>
-              <div className="flex w-full justify-between">
-                <div className="flex items-center gap-2">
-                  <Ticket className="text-red-400" />
-                  <p>Mã giảm giá:</p>
-                </div>
-                <div className="flex items-center gap-2 cursor-pointer float-end">
-                  <ChevronRight />
-                </div>
-              </div>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>
-                  <div className="flex gap-4 flex-col py-4 items-center justify-center">
-                    {coupons.map((c) => {
-                      const isValid = checkCouponValid(
-                        c.code,
-                        selectedCartItems.map((item) => ({
-                          paintingId: item.painting.paintingId,
-                          quantity: item.quantity,
-                        })),
-                        Object.fromEntries(
-                          selectedCartItems.map((item) => [
-                            item.painting.paintingId,
-                            {
-                              size: item.painting.size,
-                              quantity: item.painting.quantity,
-                              price: item.painting.price,
-                            },
-                          ])
-                        )
-                      );
-
-                      return (
-                        <div
-                          key={c.couponId}
-                          className={`w-full p-2 rounded-md ${
-                            isValid
-                              ? "cursor-pointer hover:bg-muted"
-                              : "opacity-50 pointer-events-none"
-                          }`}
-                          onClick={() => {
-                            if (isValid) {
-                              setCouponCode(c.code);
-                            }
-                          }}
-                        >
-                          <CouponItem
-                            imageUrl={c.imageUrl}
-                            code={c.code}
-                            discountPercentage={c.discountPercentage}
-                            condition={c.condition}
-                            description={c.description}
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                </DialogTitle>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
-
-          <div className="space-y-2 ">
-            <Input
-              id="coupon"
-              value={couponCode}
-              onChange={handleCouponCodeChange}
-              type="text"
-              placeholder="Nhập mã giảm giá"
-            />
+          <div className="flex justify-between">
+            <p>Giá được giảm: </p>
+            <p>¥{discount.toLocaleString("ja-JP")}</p>
           </div>
 
           <p className="text-gray-800 font-semibold">
             Tổng: ¥
-            {(totalPaintingsPrice + deliveryCost).toLocaleString("ja-JP")}
+            {(totalPaintingsPrice + deliveryCost - discount).toLocaleString(
+              "ja-JP"
+            )}
           </p>
 
           <Button className="w-full" onClick={handleSubmitOrder}>
@@ -313,85 +397,85 @@ export default function ChekoutPage() {
             <p>¥{deliveryCost.toLocaleString("ja-JP")}</p>
           </div>
 
-          <Dialog>
+          <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <div className="flex w-full justify-between">
-                <div className="flex items-center gap-2">
-                  <Ticket className="text-red-400" />
-                  <p>Mã giảm giá:</p>
-                </div>
-                <div className="flex items-center gap-2 cursor-pointer float-end">
-                  <ChevronRight />
-                </div>
+              <div className="flex items-center gap-2 cursor-pointer justify-between">
+                <p> Xem mã giảm giá</p>
+                <ChevronRight />
               </div>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>
-                  <div className="flex gap-4 flex-col py-4 items-center justify-center">
-                    {coupons.map((c) => {
-                      const isValid = checkCouponValid(
-                        c.code,
-                        selectedCartItems.map((item) => ({
-                          paintingId: item.painting.paintingId,
-                          quantity: item.quantity,
-                        })),
-                        Object.fromEntries(
-                          selectedCartItems.map((item) => [
-                            item.painting.paintingId,
-                            {
-                              size: item.painting.size,
-                              quantity: item.painting.quantity,
-                              price: item.painting.price,
-                            },
-                          ])
-                        )
-                      );
+                  <div className="flex gap-4 flex-col py-4 items-center justify-start">
+                    <div className="space-y-2 flex gap-2 ">
+                      <Input
+                        id="coupon"
+                        value={selectedCoupon}
+                        onChange={(e) => setSelectCoupon(e.target.value)}
+                        type="text"
+                        placeholder="Nhập mã giảm giá"
+                      />
+                      <Button onClick={handleApplyCoupon}>Áp dụng</Button>
+                    </div>
+                    <div className="">
+                      {coupons.map((c) => {
+                        const isValid = checkCouponValid(
+                          c.code,
+                          selectedCartItems.map((item) => ({
+                            paintingId: item.painting.paintingId,
+                            quantity: item.quantity,
+                          })),
+                          Object.fromEntries(
+                            selectedCartItems.map((item) => [
+                              item.painting.paintingId,
+                              {
+                                size: item.painting.size,
+                                quantity: item.painting.quantity,
+                                price: item.painting.price,
+                              },
+                            ])
+                          )
+                        );
 
-                      return (
-                        <div
-                          key={c.couponId}
-                          className={`w-full p-2 rounded-md ${
-                            isValid
-                              ? "cursor-pointer hover:bg-muted"
-                              : "opacity-50 pointer-events-none"
-                          }`}
-                          onClick={() => {
-                            if (isValid) {
-                              setCouponCode(c.code);
-                            }
-                          }}
-                        >
-                          <CouponItem
-                            imageUrl={c.imageUrl}
-                            code={c.code}
-                            discountPercentage={c.discountPercentage}
-                            condition={c.condition}
-                            description={c.description}
-                          />
-                        </div>
-                      );
-                    })}
+                        return (
+                          <div
+                            key={c.couponId}
+                            className={`w-full p-2 rounded-md ${
+                              isValid
+                                ? "cursor-pointer hover:bg-muted"
+                                : "opacity-50 pointer-events-none"
+                            }`}
+                          >
+                            <CouponItem
+                              imageUrl={c.imageUrl}
+                              code={c.code}
+                              discountPercentage={c.discountPercentage}
+                              condition={c.condition}
+                              description={c.description}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 </DialogTitle>
               </DialogHeader>
             </DialogContent>
           </Dialog>
 
-          <div className="space-y-2 ">
-            <Input
-              id="coupon"
-              value={couponCode}
-              onChange={handleCouponCodeChange}
-              type="text"
-              placeholder="Nhập mã giảm giá"
-            />
+          <div className="flex justify-between">
+            <p>Giá được giảm: </p>
+            <p>¥{discount.toLocaleString("ja-JP")}</p>
           </div>
 
           <div className="flex justify-between">
             <p className="text-gray-800 font-semibold">Tổng:</p>
             <p className="font-semibold text-red-500">
-              ¥{(totalPaintingsPrice + deliveryCost).toLocaleString("ja-JP")}
+              ¥
+              {(totalPaintingsPrice + deliveryCost - discount).toLocaleString(
+                "ja-JP"
+              )}
             </p>
           </div>
 

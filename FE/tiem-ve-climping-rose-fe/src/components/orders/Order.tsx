@@ -45,7 +45,12 @@ const Order = ({ order }: OrderProps) => {
       );
   };
   return (
-    <div className="rounded-md shadow-sm p-2 md:px-4 space-y-2">
+    <div
+      className="rounded-md shadow-sm p-2 md:px-4 space-y-2"
+      onClick={() => {
+        window.location.href = `/user/order?orderId=${order.orderId}`;
+      }}
+    >
       <div className="flex justify-between items-center">
         {getStatus()}
         <p className="text-sm text-gray-700">

@@ -45,14 +45,14 @@ export const calculateDeliveryCost = (
       if (totalSize <= 60) shipping = 840;
       else if (totalSize <= 80) shipping = 1200;
       else if (totalSize <= 100) shipping = 1500;
-      else return 0;
+      else return 1500;
     }
   } else {
     const totalSize = maxLength + maxWidth + totalThickness;
     if (totalSize <= 60) shipping = 840;
     else if (totalSize <= 80) shipping = 1200;
     else if (totalSize <= 100) shipping = 1500;
-    else return 0;
+    else return 1500;
   }
 
   const remotePrefectures = ["沖縄", "北海道", "長崎", "大分"];

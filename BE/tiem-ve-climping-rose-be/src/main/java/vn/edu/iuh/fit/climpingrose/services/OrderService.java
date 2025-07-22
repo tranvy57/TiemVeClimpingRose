@@ -112,6 +112,8 @@ public class OrderService {
             }
             else if ( !isCouponValid(couponCode, cartItems, totalPaintingsPrice)) {
                 throw new BadRequestException("Mã giảm giá không hợp lệ");
+            } else if(coupon.getCode().equals("CPRFREESHIP")) {
+                discountPercentage = deliveryCost;
             } else discountPercentage = discountPercentage.add(coupon.getDiscountPercentage());
         }
 
@@ -216,7 +218,7 @@ public class OrderService {
                 } else if (totalSize <= 100) {
                     shipping = 1500;
                 } else {
-                    return BigDecimal.ZERO;
+                    shipping = 1500;
                 }
             }
         } else {
@@ -230,7 +232,7 @@ public class OrderService {
             } else if (totalSize <= 100) {
                 shipping = 1500;
             } else {
-                return BigDecimal.ZERO;
+                shipping = 1500;
             }
         }
 
@@ -284,7 +286,7 @@ public class OrderService {
                 } else if (totalSize <= 100) {
                     shipping = 1500;
                 } else {
-                    throw new BadRequestException("Tổng kích thước kiện hàng vượt quá giới hạn");
+                    shipping = 1500;
                 }
             }
         } else {
@@ -298,7 +300,7 @@ public class OrderService {
             } else if (totalSize <= 100) {
                 shipping = 1500;
             } else {
-                throw new BadRequestException("Tổng kích thước kiện hàng vượt quá giới hạn");
+                shipping = 1500;
             }
         }
 

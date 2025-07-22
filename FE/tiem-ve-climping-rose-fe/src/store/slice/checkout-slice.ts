@@ -8,8 +8,8 @@ interface CheckoutState {
   totalPaintingsPrice: number;
   deliveryCost: number;
   totalPrice: number;
-  couponCode?: string;
-  discount?: number;
+  couponCode: string;
+  discount: number;
 }
 
 const initialState: CheckoutState = {
