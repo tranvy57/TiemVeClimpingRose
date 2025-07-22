@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  backend:
+    container_name: tiemve-backend
+    build:
+      context: ./BE/tiem-ve-climping-rose-be
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./BE/tiem-ve-climping-rose-be/.env
+    networks:
+      - tiemve-network
+    restart: always
+
+  frontend:
+    container_name: tiemve-frontend
+    build:
+      context: ./FE/tiem-ve-climping-rose-fe
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./FE/tiem-ve-climping-rose-fe/.env.production
+    networks:
+      - tiemve-network
+    restart: always
+    depends_on:
+      - backend
+
+networks:
+  tiemve-network:
+    driver: bridge
