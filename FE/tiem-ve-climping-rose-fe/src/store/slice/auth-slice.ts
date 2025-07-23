@@ -1,4 +1,4 @@
-import { checkToken, login } from "@/api/authApi";
+import { checkToken, login, loginGoogle } from "@/api/authApi";
 import { clearAuth, getToken, saveAuth } from "@/libs/local-storage";
 import { IUser } from "@/types/implements";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -45,6 +45,35 @@ export const doLogin = createAsyncThunk<
     };
   } catch (error) {
     return rejectWithValue("Login failed. Please check your credentials.");
+  }
+});
+
+// login gg
+export const doLoginGoogle = createAsyncThunk<
+  { user: IUser; accessToken: string; authenticated: boolean },
+  { idToken: string },
+  { rejectValue: string }
+>("auth/loginGoogle", async ({ idToken }, { rejectWithValue }) => {
+  try {
+    const response = await loginGoogle({ idToken });
+
+    if (!response.data) {
+      return rejectWithValue(
+        "Google Login failed. Invalid response from server."
+      );
+    }
+
+    const { token, user } = response.data;
+
+    saveAuth(token, user);
+
+    return {
+      user,
+      accessToken: token,
+      authenticated: true,
+    };
+  } catch (error) {
+    return rejectWithValue("Google Login failed.");
   }
 });
 
@@ -119,6 +148,20 @@ const authSlice = createSlice({
         state.accessToken = null;
         state.user = null;
         state.authenticated = false;
+      })
+      .addCase(doLoginGoogle.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(doLoginGoogle.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.accessToken = action.payload.accessToken;
+        state.authenticated = action.payload.authenticated;
+      })
+      .addCase(doLoginGoogle.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Google login error";
       });
   },
 });

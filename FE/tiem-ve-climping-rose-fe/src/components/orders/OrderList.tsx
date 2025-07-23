@@ -18,6 +18,8 @@ const OrderList = () => {
       if (response.data) setOrders(response.data);
     } catch (error) {
       showError("Lỗi xảy ra khi lấy dữ liệu đơn hàng.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -27,20 +29,18 @@ const OrderList = () => {
 
   return (
     <div>
-      {orders.length > 0 ? (
-        <div>
-          {orders.length > 0 ? (
-            <div className="space-y-2">
-              {orders.map((o) => {
-                return <Order key={o.orderId} order={o} />;
-              })}
-            </div>
-          ) : (
-            <div>Oops!! Bạn chưa có đơn hàng nào!!</div>
-          )}
+      {loading ? (
+        <PinkSpinner />
+      ) : orders.length > 0 ? (
+        <div className="space-y-2">
+          {orders.map((o) => (
+            <Order key={o.orderId} order={o} />
+          ))}
         </div>
       ) : (
-        <PinkSpinner />
+        <div className="text-center text-gray-500 italic">
+          Oops!! Bạn chưa có đơn hàng nào!!
+        </div>
       )}
     </div>
   );

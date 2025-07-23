@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { Toaster } from "sonner";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export default function Providers({
   children,
@@ -21,26 +22,28 @@ export default function Providers({
   timeZone: string;
 }>) {
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <NextIntlClientProvider
-          locale={locale}
-          messages={messages}
-          timeZone={timeZone}
-        >
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              classNames: {
-                toast: "text-xs",
-                icon: "text-pink-500",
-              },
-            }}
-          />
-          <HideLayoutWrapper>{children}</HideLayoutWrapper>
-        </NextIntlClientProvider>
-      </PersistGate>
-    </Provider>
+    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <NextIntlClientProvider
+            locale={locale}
+            messages={messages}
+            timeZone={timeZone}
+          >
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                classNames: {
+                  toast: "text-xs",
+                  icon: "text-pink-500",
+                },
+              }}
+            />
+            <HideLayoutWrapper>{children}</HideLayoutWrapper>
+          </NextIntlClientProvider>
+        </PersistGate>
+      </Provider>
+    </GoogleOAuthProvider>
   );
 }
 
