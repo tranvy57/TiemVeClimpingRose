@@ -295,69 +295,78 @@ export default function ChekoutPage() {
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <div className="flex items-center gap-2 cursor-pointer justify-between">
-                <p> Xem mã giảm giá</p>
+                <p>Xem mã giảm giá</p>
                 <ChevronRight />
               </div>
             </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>
-                  <div className="flex gap-4 flex-col py-4 items-center justify-start">
-                    <div className="space-y-2 flex gap-2 ">
-                      <Input
-                        id="coupon"
-                        value={selectedCoupon}
-                        onChange={(e) => setSelectCoupon(e.target.value)}
-                        type="text"
-                        placeholder="Nhập mã giảm giá"
-                      />
-                      <Button onClick={handleApplyCoupon}>Áp dụng</Button>
-                    </div>
-                    <div className="">
-                      {coupons.map((c) => {
-                        const isValid = checkCouponValid(
-                          c.code,
-                          selectedCartItems.map((item) => ({
-                            paintingId: item.painting.paintingId,
-                            quantity: item.quantity,
-                          })),
-                          Object.fromEntries(
-                            selectedCartItems.map((item) => [
-                              item.painting.paintingId,
-                              {
-                                size: item.painting.size,
-                                quantity: item.painting.quantity,
-                                price: item.painting.price,
-                              },
-                            ])
-                          )
-                        );
 
-                        return (
-                          <div
-                            key={c.couponId}
-                            className={`w-full p-2 rounded-md ${
-                              isValid
-                                ? "cursor-pointer hover:bg-muted"
-                                : "opacity-50 pointer-events-none"
-                            }`}
-                          >
-                            <CouponItem
-                              imageUrl={c.imageUrl}
-                              code={c.code}
-                              discountPercentage={c.discountPercentage}
-                              condition={c.condition}
-                              description={c.description}
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
+            <DialogContent className="max-h-[90vh]">
+              <DialogHeader>
+                <DialogTitle className="text-center text-lg font-bold">
+                  Chọn mã giảm giá
                 </DialogTitle>
               </DialogHeader>
+
+              {/* WRAPPER căn giữa tất cả nội dung */}
+              <div className="flex flex-col items-center justify-start gap-4 py-4">
+                {/* Ô nhập mã và nút áp dụng */}
+                <div className="flex gap-2 w-full max-w-md">
+                  <Input
+                    id="coupon"
+                    value={selectedCoupon}
+                    onChange={(e) => setSelectCoupon(e.target.value)}
+                    type="text"
+                    placeholder="Nhập mã giảm giá"
+                    className="flex-1"
+                  />
+                  <Button onClick={handleApplyCoupon}>Áp dụng</Button>
+                </div>
+
+                {/* Danh sách coupon có cuộn */}
+                <div className="overflow-y-auto max-h-[50vh] flex flex-col gap-1  ">
+                  {coupons.map((c) => {
+                    const isValid = checkCouponValid(
+                      c.code,
+                      selectedCartItems.map((item) => ({
+                        paintingId: item.painting.paintingId,
+                        quantity: item.quantity,
+                      })),
+                      Object.fromEntries(
+                        selectedCartItems.map((item) => [
+                          item.painting.paintingId,
+                          {
+                            size: item.painting.size,
+                            quantity: item.painting.quantity,
+                            price: item.painting.price,
+                          },
+                        ])
+                      )
+                    );
+
+                    return (
+                      <div
+                        key={c.couponId}
+                        className={`w-full p-2 rounded-md ${
+                          isValid
+                            ? "cursor-pointer hover:bg-muted"
+                            : "opacity-50 pointer-events-none"
+                        }`}
+                      >
+                        <CouponItem
+                          imageUrl={c.imageUrl}
+                          code={c.code}
+                          discountPercentage={c.discountPercentage}
+                          condition={c.condition}
+                          description={c.description}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </DialogContent>
           </Dialog>
+
           <div className="flex justify-between">
             <p>Tổng tiền tranh: </p>
             <p className="">¥{totalPaintingsPrice.toLocaleString("ja-JP")}</p>
@@ -400,67 +409,75 @@ export default function ChekoutPage() {
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <div className="flex items-center gap-2 cursor-pointer justify-between">
-                <p> Xem mã giảm giá</p>
+                <p>Xem mã giảm giá</p>
                 <ChevronRight />
               </div>
             </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>
-                  <div className="flex gap-4 flex-col py-4 items-center justify-start">
-                    <div className="space-y-2 flex gap-2 ">
-                      <Input
-                        id="coupon"
-                        value={selectedCoupon}
-                        onChange={(e) => setSelectCoupon(e.target.value)}
-                        type="text"
-                        placeholder="Nhập mã giảm giá"
-                      />
-                      <Button onClick={handleApplyCoupon}>Áp dụng</Button>
-                    </div>
-                    <div className="">
-                      {coupons.map((c) => {
-                        const isValid = checkCouponValid(
-                          c.code,
-                          selectedCartItems.map((item) => ({
-                            paintingId: item.painting.paintingId,
-                            quantity: item.quantity,
-                          })),
-                          Object.fromEntries(
-                            selectedCartItems.map((item) => [
-                              item.painting.paintingId,
-                              {
-                                size: item.painting.size,
-                                quantity: item.painting.quantity,
-                                price: item.painting.price,
-                              },
-                            ])
-                          )
-                        );
 
-                        return (
-                          <div
-                            key={c.couponId}
-                            className={`w-full p-2 rounded-md ${
-                              isValid
-                                ? "cursor-pointer hover:bg-muted"
-                                : "opacity-50 pointer-events-none"
-                            }`}
-                          >
-                            <CouponItem
-                              imageUrl={c.imageUrl}
-                              code={c.code}
-                              discountPercentage={c.discountPercentage}
-                              condition={c.condition}
-                              description={c.description}
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
+            <DialogContent className="max-h-[90vh]">
+              <DialogHeader>
+                <DialogTitle className="text-center text-lg font-bold">
+                  Chọn mã giảm giá
                 </DialogTitle>
               </DialogHeader>
+
+              {/* WRAPPER căn giữa tất cả nội dung */}
+              <div className="flex flex-col items-center justify-start gap-4 py-4">
+                {/* Ô nhập mã và nút áp dụng */}
+                <div className="flex gap-2 w-full max-w-md">
+                  <Input
+                    id="coupon"
+                    value={selectedCoupon}
+                    onChange={(e) => setSelectCoupon(e.target.value)}
+                    type="text"
+                    placeholder="Nhập mã giảm giá"
+                    className="flex-1"
+                  />
+                  <Button onClick={handleApplyCoupon}>Áp dụng</Button>
+                </div>
+
+                {/* Danh sách coupon có cuộn */}
+                <div className="overflow-y-auto max-h-[50vh] flex flex-col gap-1  ">
+                  {coupons.map((c) => {
+                    const isValid = checkCouponValid(
+                      c.code,
+                      selectedCartItems.map((item) => ({
+                        paintingId: item.painting.paintingId,
+                        quantity: item.quantity,
+                      })),
+                      Object.fromEntries(
+                        selectedCartItems.map((item) => [
+                          item.painting.paintingId,
+                          {
+                            size: item.painting.size,
+                            quantity: item.painting.quantity,
+                            price: item.painting.price,
+                          },
+                        ])
+                      )
+                    );
+
+                    return (
+                      <div
+                        key={c.couponId}
+                        className={`w-full p-2 rounded-md ${
+                          isValid
+                            ? "cursor-pointer hover:bg-muted"
+                            : "opacity-50 pointer-events-none"
+                        }`}
+                      >
+                        <CouponItem
+                          imageUrl={c.imageUrl}
+                          code={c.code}
+                          discountPercentage={c.discountPercentage}
+                          condition={c.condition}
+                          description={c.description}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </DialogContent>
           </Dialog>
 
