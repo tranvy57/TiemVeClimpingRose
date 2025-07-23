@@ -293,7 +293,7 @@ const Cart = () => {
                             />
                             <Button onClick={handleApplyCoupon}>Áp dụng</Button>
                           </div>
-                          <div className="">
+                          <div className="overflow-y-auto max-h-[50vh] flex flex-col gap-1  ">
                             {coupons.map((c) => {
                               const isValid = checkCouponValid(
                                 c.code,
@@ -401,7 +401,7 @@ const Cart = () => {
                                 Áp dụng
                               </Button>
                             </div>
-                            <div className="">
+                            <div className="overflow-y-auto max-h-[50vh] flex flex-col gap-1  ">
                               {coupons.map((c) => {
                                 const isValid = checkCouponValid(
                                   c.code,

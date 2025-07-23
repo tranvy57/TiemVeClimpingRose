@@ -1,3 +1,5 @@
+import { showError } from "@/libs/toast";
+
 export const calculateDeliveryCost = (
   orderItems: { paintingId: string; quantity: number }[],
   paintingMap: Record<string, { size: string; quantity: number }>,
@@ -13,11 +15,11 @@ export const calculateDeliveryCost = (
   for (const item of orderItems) {
     const painting = paintingMap[item.paintingId];
     if (!painting) {
-      throw new Error(`Không tìm thấy paintingId: ${item.paintingId}`);
+      showError(`Không tìm thấy paintingId: ${item.paintingId}`);
     }
 
     if (item.quantity <= 0 || item.quantity > painting.quantity) {
-      throw new Error(`Số lượng không hợp lệ cho tranh ID: ${item.paintingId}`);
+      showError(`Số lượng không hợp lệ cho tranh ID: ${item.paintingId}`);
     }
 
     const sizeInfo = getSize(painting.size);
