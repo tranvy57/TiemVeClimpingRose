@@ -159,18 +159,9 @@ const PaymentPagePage = () => {
             )}
           </div>
 
-          <div className="flex gap-2">
-            <Button onClick={handleButtonSave}>Xong</Button>
-            <Button
-              onClick={() => {
-                window.location.href = "/payment-instruction";
-              }}
-            >
-              Thanh toán sau
-            </Button>
-          </div>
+          <Button onClick={handleButtonSave}>Xác nhận thanh toán</Button>
           <Link href="/payment-instruction">
-            <p className="underline">Xem hướng dẫn thanh toán sau tại đây</p>
+            <p className="underline">Tôi sẽ thanh toán sau</p>
           </Link>
 
           <div>{uploading && <PinkSpinner />}</div>
