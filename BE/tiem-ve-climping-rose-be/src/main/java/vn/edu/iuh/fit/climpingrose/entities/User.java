@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
+import vn.edu.iuh.fit.climpingrose.enums.AuthProvider;
 import vn.edu.iuh.fit.climpingrose.enums.Role;
 import vn.edu.iuh.fit.climpingrose.enums.UserStatus;
 
@@ -38,6 +39,10 @@ public class User extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     Role role;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_provider", length = 20)
+    private AuthProvider authProvider;
 
     String zipcode;
     String addressDetail;

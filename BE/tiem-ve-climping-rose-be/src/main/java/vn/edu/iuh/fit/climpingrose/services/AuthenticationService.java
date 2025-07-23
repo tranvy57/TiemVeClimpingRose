@@ -1,5 +1,9 @@
 package vn.edu.iuh.fit.climpingrose.services;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -20,16 +24,21 @@ import vn.edu.iuh.fit.climpingrose.dtos.responses.AuthenticationResponse;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.IntrospectResponse;
 import vn.edu.iuh.fit.climpingrose.entities.InvalidatedToken;
 import vn.edu.iuh.fit.climpingrose.entities.User;
+import vn.edu.iuh.fit.climpingrose.enums.AuthProvider;
+import vn.edu.iuh.fit.climpingrose.enums.Role;
+import vn.edu.iuh.fit.climpingrose.enums.UserStatus;
+import vn.edu.iuh.fit.climpingrose.exceptions.BadRequestException;
+import vn.edu.iuh.fit.climpingrose.exceptions.ConflicException;
 import vn.edu.iuh.fit.climpingrose.exceptions.UnauthorizedException;
 import vn.edu.iuh.fit.climpingrose.mappers.UserMapper;
 import vn.edu.iuh.fit.climpingrose.repositories.UserRepository;
 
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -39,6 +48,9 @@ public class AuthenticationService {
 
     @Autowired
     private RedisService redisService;
+
+    @Value("${google.googleClientId}")
+    private String googleClientId;
 
 
     @NonFinal
@@ -204,5 +216,59 @@ public class AuthenticationService {
         }
 
         return "ROLE_" + user.getRole().name();
+    }
+
+
+    public AuthenticationResponse loginWithGoogle(String idToken) {
+        try {
+            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance())
+                    .setAudience(Collections.singletonList(googleClientId))
+                    .build();
+
+            GoogleIdToken googleIdToken = verifier.verify(idToken);
+            if (googleIdToken == null) {
+                throw new UnauthorizedException("Invalid ID token");
+            }
+
+            // Lấy thông tin người dùng từ payload
+            GoogleIdToken.Payload payload = googleIdToken.getPayload();
+            String email = payload.getEmail();
+            String name = (String) payload.get("name");
+            String picture = (String) payload.get("picture");
+
+            // Kiểm tra hoặc tạo người dùng
+            User user = (User) userRepository.findByEmail(email)
+                    .orElseGet(() -> createGoogleUser(email, name, picture));
+
+            if (user.getAuthProvider() != AuthProvider.GOOGLE) {
+                throw new ConflicException("Email already exists with different provider");
+            }
+
+
+            var accessToken = generateToken(user);
+
+            return  AuthenticationResponse.builder()
+                    .token(accessToken)
+                    .authenticated(true)
+                    .user(userMapper.toUserResponse(user))
+                    .build();
+        } catch (Exception e) {
+            throw new BadRequestException("Lỗi xác thực token: " + e.getMessage());
+        }
+
+
+    }
+
+    private User createGoogleUser(String email, String name, String picture) {
+        User user = User.builder()
+                .email(email)
+                .username(email) // Dùng email làm username
+                .displayName(name)
+                .avatar(picture)
+                .authProvider(AuthProvider.GOOGLE)
+                .status(UserStatus.ACTIVE)
+                .role(Role.USER)
+                .build();
+        return userRepository.save(user);
     }
 }

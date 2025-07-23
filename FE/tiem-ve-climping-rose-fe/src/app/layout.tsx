@@ -5,6 +5,7 @@ import Providers from "@/provider/provider";
 import { Toaster } from "@/components/ui/sonner";
 import { getLocale, getMessages } from "next-intl/server";
 import AppInit from "@/components/AppInit";
+import ChatBot from "@/components/chatbot/ChatBot";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +41,7 @@ export default async function RootLayout({
         <Providers locale={locale} messages={messages} timeZone={timeZone}>
           <AppInit />
           {children}
+          <ChatBot />
         </Providers>
       </body>
     </html>

@@ -4,20 +4,15 @@ import com.nimbusds.jose.JOSEException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import vn.edu.iuh.fit.climpingrose.dtos.requests.*;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.ApiResponse;
-import vn.edu.iuh.fit.climpingrose.dtos.requests.AuthenticationRequest;
-import vn.edu.iuh.fit.climpingrose.dtos.requests.IntrospectRequest;
-import vn.edu.iuh.fit.climpingrose.dtos.requests.LogoutRequest;
-import vn.edu.iuh.fit.climpingrose.dtos.requests.RefreshRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.AuthenticationResponse;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.IntrospectResponse;
 import vn.edu.iuh.fit.climpingrose.services.AuthenticationService;
 
 import java.text.ParseException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -60,6 +55,16 @@ public class AuthController {
                 .message("Làm mới token thành công")
                 .data(result)
                 .build());
+    }
+
+    @PostMapping("/login/google")
+    public ApiResponse<AuthenticationResponse> googleLogin(@RequestBody LoginGoogleRequest request) {
+        String idToken = request.getIdToken();
+        AuthenticationResponse response = authenticationService.loginWithGoogle(idToken);
+        return ApiResponse.<AuthenticationResponse>builder()
+                .message("Đăng nhập thành công")
+                .data(response)
+                .build();
     }
 
 
