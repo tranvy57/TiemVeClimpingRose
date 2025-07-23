@@ -28,6 +28,18 @@ services:
     restart: always
     depends_on:
       - backend
+  # ai:
+  #   container_name: tiemve-ai
+  #   build:
+  #     context: ./AI/tiem-ve-climping-rose-ai
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "1210:1210"
+  #   env_file:
+  #     - ./AI/tiem-ve-climping-rose-ai/.env
+  #   networks:
+  #     - tiemve-network
+  #   restart: always
 
 networks:
   tiemve-network:
