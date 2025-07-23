@@ -12,6 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import FacebookLoginButton from "./LoginFacebookButton";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -118,7 +119,7 @@ export default function LoginForm() {
             </div>
 
             <div className="w-full flex justify-center">
-              <GoogleLogin
+              {/* <GoogleLogin
                 onSuccess={async (credentialResponse) => {
                   try {
                     const idToken = (credentialResponse as any).credential;
@@ -134,7 +135,9 @@ export default function LoginForm() {
                 onError={() => {
                   showError("Google Login thất bại");
                 }}
-              />
+              /> */}
+
+              <FacebookLoginButton />
             </div>
           </div>
 
