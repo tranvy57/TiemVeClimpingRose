@@ -117,23 +117,25 @@ export default function LoginForm() {
               </span>
             </div>
 
-            <GoogleLogin
-              onSuccess={async (credentialResponse) => {
-                try {
-                  const idToken = (credentialResponse as any).credential;
-                  if (!idToken) throw new Error("No credential received");
+            <div className="w-full flex justify-center">
+              <GoogleLogin
+                onSuccess={async (credentialResponse) => {
+                  try {
+                    const idToken = (credentialResponse as any).credential;
+                    if (!idToken) throw new Error("No credential received");
 
-                  dispatch(doLoginGoogle({ idToken }));
-                  router.push("/");
-                } catch (error) {
-                  console.error("Login error:", error);
-                  showError("Đăng nhập Google thất bại");
-                }
-              }}
-              onError={() => {
-                showError("Google Login thất bại");
-              }}
-            />
+                    dispatch(doLoginGoogle({ idToken }));
+                    router.push("/");
+                  } catch (error) {
+                    console.error("Login error:", error);
+                    showError("Đăng nhập Google thất bại");
+                  }
+                }}
+                onError={() => {
+                  showError("Google Login thất bại");
+                }}
+              />
+            </div>
           </div>
 
           <div className="text-center text-sm mt-4">

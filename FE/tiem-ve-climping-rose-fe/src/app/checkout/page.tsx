@@ -218,7 +218,6 @@ export default function ChekoutPage() {
 
     try {
       const response = await createOrder(orderPayload);
-      showSuccess("Đặt hàng thành công");
       router.push(`/payment?orderId=${response.data?.orderId}`);
     } catch (err) {
       console.error(err);
