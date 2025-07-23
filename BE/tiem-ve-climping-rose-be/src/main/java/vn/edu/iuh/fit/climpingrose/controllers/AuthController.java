@@ -67,5 +67,15 @@ public class AuthController {
                 .build();
     }
 
+    @PostMapping("/login/facebook")
+    public ApiResponse<AuthenticationResponse> facebookLogin(@RequestBody LoginFacebookRequest request) {
+        String accessToken = request.getAccessToken();
+        AuthenticationResponse response = authenticationService.loginWithFacebook(accessToken);
+        return ApiResponse.<AuthenticationResponse>builder()
+                .message("Đăng nhập thành công")
+                .data(response)
+                .build();
+    }
+
 
 }

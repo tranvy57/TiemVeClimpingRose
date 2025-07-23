@@ -13,15 +13,18 @@ import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import vn.edu.iuh.fit.climpingrose.dtos.requests.AuthenticationRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.requests.IntrospectRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.requests.LogoutRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.requests.RefreshRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.AuthenticationResponse;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.IntrospectResponse;
+import vn.edu.iuh.fit.climpingrose.dtos.responses.UserResponse;
 import vn.edu.iuh.fit.climpingrose.entities.InvalidatedToken;
 import vn.edu.iuh.fit.climpingrose.entities.User;
 import vn.edu.iuh.fit.climpingrose.enums.AuthProvider;
@@ -66,6 +69,15 @@ public class AuthenticationService {
     protected long REFRESHABLE_DURATION;
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Value("${facebook.client-id}")
+    private String facebookClientId;
+
+    @Value("${facebook.client-secret}")
+    private String facebookClientSecret;
 
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
@@ -266,6 +278,56 @@ public class AuthenticationService {
                 .displayName(name)
                 .avatar(picture)
                 .authProvider(AuthProvider.GOOGLE)
+                .status(UserStatus.ACTIVE)
+                .role(Role.USER)
+                .build();
+        return userRepository.save(user);
+
+
+    }
+
+    public AuthenticationResponse loginWithFacebook(String accessToken) {
+        try {
+            String url = "https://graph.facebook.com/me?fields=id,name,email,picture&access_token=" + accessToken;
+            ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
+
+            if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+                throw new UnauthorizedException("Token không hợp lệ");
+            }
+
+            // Lấy dữ liệu từ Facebook API
+            Map<String, Object> data = response.getBody();
+            String facebookId = (String) data.get("id");
+            String name = (String) data.get("name");
+            String email = (String) data.get("email");
+            String picture = (String) ((Map<String, Object>) ((Map<String, Object>) data.get("picture")).get("data")).get("url");
+
+            // Kiểm tra hoặc tạo người dùng mới
+            User user = (User) userRepository.findByEmail(email)
+                    .orElseGet(() -> createFacebookUser(email, name, picture, facebookId));
+
+
+
+            var accessTokenServerReturn = generateToken(user);
+
+            UserResponse userResponse = userMapper.toUserResponse(user);
+            return  AuthenticationResponse.builder()
+                    .token(accessTokenServerReturn)
+                    .authenticated(true)
+                    .user(userMapper.toUserResponse(user))
+                    .build();
+        } catch (Exception e) {
+            throw new BadRequestException("Lỗi xác thực Facebook");
+        }
+    }
+
+    private User createFacebookUser(String email, String name, String picture, String facebookId) {
+        User user = User.builder()
+                .email(email)
+                .username(email)
+                .displayName(name)
+                .avatar(picture)
+                .authProvider(AuthProvider.FACEBOOK)
                 .status(UserStatus.ACTIVE)
                 .role(Role.USER)
                 .build();

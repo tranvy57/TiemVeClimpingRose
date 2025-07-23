@@ -61,7 +61,7 @@ export default function LoginForm() {
           className="rounded-full md:mb-2"
         />
 
-        <form className="w-full">
+        <div className="w-full">
           <div className="flex flex-col items-center gap-2 text-center">
             <h1 className="text-2xl font-bold py-2">Tiệm vẽ Climping Rose</h1>
           </div>
@@ -157,7 +157,7 @@ export default function LoginForm() {
               back to homepage
             </Link>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
