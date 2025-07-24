@@ -102,7 +102,7 @@ export default function LoginForm() {
             </div>
 
             <Button
-              type="submit"
+              type="button"
               className="w-full"
               onClick={handleLogin}
               disabled={loading}
@@ -118,8 +118,8 @@ export default function LoginForm() {
               </span>
             </div>
 
-            <div className="w-full flex justify-center">
-              {/* <GoogleLogin
+            <div className="w-full flex flex-col gap-2 justify-center">
+              <GoogleLogin
                 onSuccess={async (credentialResponse) => {
                   try {
                     const idToken = (credentialResponse as any).credential;
@@ -135,7 +135,7 @@ export default function LoginForm() {
                 onError={() => {
                   showError("Google Login thất bại");
                 }}
-              /> */}
+              />
 
               <FacebookLoginButton />
             </div>

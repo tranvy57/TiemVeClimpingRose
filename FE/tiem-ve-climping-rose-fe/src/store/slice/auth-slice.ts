@@ -1,4 +1,4 @@
-import { checkToken, login, loginGoogle } from "@/api/authApi";
+import { checkToken, login, loginFacebook, loginGoogle } from "@/api/authApi";
 import { clearAuth, getToken, saveAuth } from "@/libs/local-storage";
 import { IUser } from "@/types/implements";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -60,6 +60,35 @@ export const doLoginGoogle = createAsyncThunk<
     if (!response.data) {
       return rejectWithValue(
         "Google Login failed. Invalid response from server."
+      );
+    }
+
+    const { token, user } = response.data;
+
+    saveAuth(token, user);
+
+    return {
+      user,
+      accessToken: token,
+      authenticated: true,
+    };
+  } catch (error) {
+    return rejectWithValue("Google Login failed.");
+  }
+});
+
+// login gg
+export const doLoginFacebook = createAsyncThunk<
+  { user: IUser; accessToken: string; authenticated: boolean },
+  { accessToken: string },
+  { rejectValue: string }
+>("auth/loginFacebook", async ({ accessToken }, { rejectWithValue }) => {
+  try {
+    const response = await loginFacebook({ accessToken });
+
+    if (!response.data) {
+      return rejectWithValue(
+        "Facebook Login failed. Invalid response from server."
       );
     }
 
@@ -162,6 +191,20 @@ const authSlice = createSlice({
       .addCase(doLoginGoogle.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Google login error";
+      })
+      .addCase(doLoginFacebook.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(doLoginFacebook.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.accessToken = action.payload.accessToken;
+        state.authenticated = action.payload.authenticated;
+      })
+      .addCase(doLoginFacebook.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Facebook login error";
       });
   },
 });

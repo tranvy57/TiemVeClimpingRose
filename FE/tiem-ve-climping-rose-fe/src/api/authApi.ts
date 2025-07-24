@@ -21,6 +21,10 @@ export interface LoginGoogleRequest {
   idToken: string;
 }
 
+export interface LoginFacebookRequest {
+  accessToken: string;
+}
+
 export const login = async (body: LoginRequest) => {
   try {
     const response = await api.post<
@@ -41,6 +45,21 @@ export const loginGoogle = async (body: LoginGoogleRequest) => {
     const response = await api.post<
       ApiResponse<{ token: string; user: IUser }>
     >(`/auth/login/google`, body);
+
+    console.log("Login response at api:", response);
+
+    return response.data;
+  } catch (error) {
+    // console.log("Login error at api:", error);
+    throw error;
+  }
+};
+
+export const loginFacebook = async (body: LoginFacebookRequest) => {
+  try {
+    const response = await api.post<
+      ApiResponse<{ token: string; user: IUser }>
+    >(`/auth/login/facbook`, body);
 
     console.log("Login response at api:", response);
 

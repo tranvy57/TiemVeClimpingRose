@@ -1,8 +1,12 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { useAppDispatch } from "@/hooks/store-hook";
+import { doLoginFacebook, doLoginGoogle } from "@/store/slice/auth-slice";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-// ✅ Khai báo mở rộng interface Window đúng cách
 declare global {
   interface Window {
     fbAsyncInit?: () => void;
@@ -11,6 +15,8 @@ declare global {
 }
 
 export default function FacebookLoginButton() {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   useEffect(() => {
     window.fbAsyncInit = function () {
       window.FB.init({
@@ -34,9 +40,10 @@ export default function FacebookLoginButton() {
       function (response: any) {
         if (response.authResponse) {
           const accessToken = response.authResponse.accessToken;
-          console.log("✅ Access Token:", accessToken);
+          dispatch(doLoginFacebook({ accessToken }));
+          router.push("/");
         } else {
-          console.warn("⛔ Người dùng từ chối hoặc đóng popup.");
+          console.warn(" Người dùng từ chối hoặc đóng popup.");
         }
       },
       {
@@ -47,11 +54,12 @@ export default function FacebookLoginButton() {
   };
 
   return (
-    <button
+    <div
       onClick={handleLogin}
-      className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      className="py-2 px-2 rounded bg-white border hover:bg-blue-50 flex justify-between text-black text-sm"
     >
-      Đăng nhập Facebook
-    </button>
+      <Image src="fb.svg" alt="Facebook Icon" width={24} height={24} />
+      <p className="flex-1 text-center">Đăng nhập bằng Facebook</p>
+    </div>
   );
 }
