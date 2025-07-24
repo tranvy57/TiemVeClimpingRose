@@ -280,6 +280,7 @@ public class AuthenticationService {
                 .authProvider(AuthProvider.GOOGLE)
                 .status(UserStatus.ACTIVE)
                 .role(Role.USER)
+                .contact(email)
                 .build();
         return userRepository.save(user);
 
@@ -288,7 +289,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse loginWithFacebook(String accessToken) {
         try {
-            String url = "https://graph.facebook.com/me?fields=id,name,email,picture&access_token=" + accessToken;
+            String url = "https://graph.facebook.com/me?fields=id,name,email,picture,link&access_token=" + accessToken;
             ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
 
             if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
@@ -300,11 +301,12 @@ public class AuthenticationService {
             String facebookId = (String) data.get("id");
             String name = (String) data.get("name");
             String email = (String) data.get("email");
+            String facebookLink = (String) data.get("link");
             String picture = (String) ((Map<String, Object>) ((Map<String, Object>) data.get("picture")).get("data")).get("url");
 
             // Kiểm tra hoặc tạo người dùng mới
             User user = (User) userRepository.findByEmail(email)
-                    .orElseGet(() -> createFacebookUser(email, name, picture, facebookId));
+                    .orElseGet(() -> createFacebookUser(email, name, picture, facebookLink));
 
 
 
@@ -321,7 +323,7 @@ public class AuthenticationService {
         }
     }
 
-    private User createFacebookUser(String email, String name, String picture, String facebookId) {
+    private User createFacebookUser(String email, String name, String picture, String facebookLink) {
         User user = User.builder()
                 .email(email)
                 .username(email)
@@ -330,6 +332,7 @@ public class AuthenticationService {
                 .authProvider(AuthProvider.FACEBOOK)
                 .status(UserStatus.ACTIVE)
                 .role(Role.USER)
+                .contact(facebookLink)
                 .build();
         return userRepository.save(user);
     }

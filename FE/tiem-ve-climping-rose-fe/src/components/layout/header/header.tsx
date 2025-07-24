@@ -90,10 +90,10 @@ const Header = () => {
                 <Link className="menu-link" href="/paintings">
                   {t("menu.products")}
                 </Link>
-                {/* <Link className="menu-link" href="#">
+                <Link className="menu-link" href="/feedbacks">
                   {t("menu.feedbacks")}
                 </Link>
-                <Link className="menu-link" href="#">
+                {/* <Link className="menu-link" href="#">
                   {t("menu.blog")}
                 </Link> */}
                 <Link className="menu-link" href="/payment-instruction">
@@ -119,10 +119,10 @@ const Header = () => {
           <Link className="menu-link" href="/paintings">
             {t("menu.products")}
           </Link>
-          {/* <Link className="menu-link" href="#">
+          <Link className="menu-link" href="/feedbacks">
             {t("menu.feedbacks")}
           </Link>
-          <Link className="menu-link" href="#">
+          {/* <Link className="menu-link" href="#">
             {t("menu.blog")}
           </Link> */}
           <Link className="menu-link" href="/payment-instruction">

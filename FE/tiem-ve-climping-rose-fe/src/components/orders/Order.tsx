@@ -81,7 +81,8 @@ const Order = ({ order }: OrderProps) => {
 
         {order.status == "PENDING" && (
           <Button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               window.location.href = `/payment?orderId=${order.orderId}`;
             }}
           >

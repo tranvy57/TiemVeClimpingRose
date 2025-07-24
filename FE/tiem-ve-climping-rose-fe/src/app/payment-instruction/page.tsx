@@ -19,7 +19,7 @@ const PaymentInstructionPage = () => {
             không thanh toán trong vòng 7 ngày{" "}
           </span>{" "}
           đơn hàng sẽ{" "}
-          <span className="font-semibold text-red-400">tự động bị hủy.</span>
+          <span className="font-semibold text-red-400">bị hủy.</span>
         </p>
         <p>Để thanh toán bạn vui lòng xem phần hướng dẫn dưới đây:</p>
         <p>
@@ -32,41 +32,24 @@ const PaymentInstructionPage = () => {
           chọn mục "Thanh toán"
         </p>
         <Image src="/payment/step2.png" alt="QR" width={300} height={100} />
-        <p>Bấm thanh toán và chuyển vào tài khoản bên dưới:</p>
-        <p className="font-semibold">
-          Thanh toán chuyển tài khoản Nhật hoặc Việt Nam
-        </p>
-        <div className="md:flex gap-4">
-          <div>
-            <p>Tài khoản Việt Nam:</p>
-            <p>Sacombank</p>
-            <p>060296156232</p>
-            <p>TRAN THI THUY VY</p>
-            <Image src="/payment/qr.png" alt="QR" width={300} height={100} />
-            <br />
-          </div>
-          <div>
-            <p>Tài khoản Yucho Nhật Bản:</p>
-            <p>Sacombank</p>
-            <p>060296156232</p>
-            <p>TRAN THI THUY VY</p>
-            <Image src="/payment/qr.png" alt="QR" width={300} height={100} />
-          </div>
-        </div>
+        <p>Bấm thanh toán và chuyển tiền vào tài khoản trên màn hình</p>
 
         <p>
           <span className="font-semibold">Bước 3: </span> Sau khi thanh toán
           xong, bạn{" "}
           <span className="font-semibold text-red-400">chụp màn hình</span> lại
           và <span className="font-semibold text-red-400">tải lên</span> sau đó
-          bấm "Lưu"
+          bấm "Xác nhận thanh toán"
         </p>
-
+        <Image src="/payment/step3.png" alt="QR" width={300} height={100} />
         <p>
           Sau khi tải ảnh lên xong bạn kiểm tra lại trạng thái đơn hàng, nếu đã
           tải lên thành công trạng thái sẽ chuyển thành{" "}
-          <span className="font-semibold text-red-400">ĐANG CHỜ XÁC NHẬN</span>
+          <span className="font-semibold text-red-400">ĐÃ THANH TOÁN</span>
         </p>
+        <Image src="/payment/step5.png" alt="QR" width={300} height={100} />
+
+        <br />
 
         <p>
           Khoảng{" "}
@@ -76,9 +59,10 @@ const PaymentInstructionPage = () => {
           </span>{" "}
           cho bạn
         </p>
+        <Image src="/payment/step4.png" alt="QR" width={300} height={100} />
         <p>Đơn hàng sẽ tới trong khoảng 2-5 ngày kể từ khi xác nhận.</p>
         <p>
-          Nếu bạn có thắc mắc gì vui lòng liên hệ fb của shop nhé, cảm ơn bạn.
+          Nếu bạn có thắc mắc gì vui lòng liên hệ fb của Tiệm nhé, cảm ơn bạn.
         </p>
       </div>
     </div>
