@@ -49,7 +49,7 @@ export default function Providers({
 
 function HideLayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const hideLayout = pathname === "/login";
+  const hideLayout = pathname === "/login" || pathname === "/register";
   const hideFooter = pathname === "/checkout";
 
   return (

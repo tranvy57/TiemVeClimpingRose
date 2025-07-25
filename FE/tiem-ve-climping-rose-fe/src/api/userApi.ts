@@ -26,3 +26,19 @@ export const updateMe = async (body: UserUpdateRequest) => {
     throw error;
   }
 };
+
+interface UserRegisterRequest {
+  username: string;
+  password: string;
+  displayName: string;
+  email: string;
+}
+
+export const register = async (body: UserRegisterRequest) => {
+  try {
+    const response = await api.post<ApiResponse<IUser>>(`/users`, body);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

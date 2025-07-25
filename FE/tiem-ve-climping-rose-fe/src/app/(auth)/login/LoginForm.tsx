@@ -142,9 +142,9 @@ export default function LoginForm() {
           </div>
 
           <div className="text-center text-sm mt-4">
-            Don&apos;t have an account?{" "}
-            <Link href="#" className="underline underline-offset-4">
-              Sign up
+            Bạn chưa có tài khoản?{" "}
+            <Link href="/register" className="underline underline-offset-4">
+              Đăng ký
             </Link>
           </div>
 

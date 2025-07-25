@@ -44,7 +44,9 @@ export const doLogin = createAsyncThunk<
       authenticated: true,
     };
   } catch (error) {
-    return rejectWithValue("Login failed. Please check your credentials.");
+    console.log("Gọi login");
+
+    return rejectWithValue("Đăng nhập thất bại, vui lòng kiểm tra lại.");
   }
 });
 

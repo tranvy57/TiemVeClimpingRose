@@ -37,6 +37,10 @@ public class UserService {
         if (userRepository.existsByUsername(username)) {
             throw new InternalServerErrorException("Tên đăng nhập đã tồn tại");
         }
+
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new InternalServerErrorException("Mail này đã được sử dụng");
+        }
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         return userMapper.toUserResponse(userRepository.save(user));

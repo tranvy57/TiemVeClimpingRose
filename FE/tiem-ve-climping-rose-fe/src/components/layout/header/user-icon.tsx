@@ -51,9 +51,14 @@ export default function UserIcon() {
 
       <DropdownMenuContent align="end">
         {!authenticated ? (
-          <DropdownMenuItem asChild>
-            <Link href="/login">Đăng nhập</Link>
-          </DropdownMenuItem>
+          <>
+            <DropdownMenuItem asChild>
+              <Link href="/login">Đăng nhập</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/register">Đăng ký</Link>
+            </DropdownMenuItem>
+          </>
         ) : (
           <>
             <DropdownMenuItem>

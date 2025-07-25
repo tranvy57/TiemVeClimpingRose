@@ -31,11 +31,9 @@ public class UserRegisterRequest {
     String zipcode;
     String addressDetail;
 
-    @NotBlank
-    private String phone;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    LocalDate dob;
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+//    @DateTimeFormat(pattern = "dd/MM/yyyy")
+//    LocalDate dob;
 
     String role;
 }
