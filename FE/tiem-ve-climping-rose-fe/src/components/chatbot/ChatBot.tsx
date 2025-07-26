@@ -1,9 +1,9 @@
-// app/components/ChatBot.tsx
 "use client";
 
 import React, { useState } from "react";
 import { Send } from "lucide-react";
 import { cn } from "@/utils/libs";
+import { chat } from "@/api/chatApi";
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,23 +16,27 @@ const ChatBot = () => {
 
   const sendMessage = async () => {
     if (!input.trim()) return;
+
     const userMsg = { from: "user", text: input } as const;
-    setMessages((prev) => [
-      ...prev,
-      { from: "bot", text: data.reply } as const,
-    ]);
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: chatId,
-        user_input: input,
-        user_id: userId,
-      }),
-    });
-    const data = await res.json();
-    setMessages((prev) => [...prev, { from: "bot", text: data.reply }]);
-    setInput("");
+    setMessages((prev) => [...prev, userMsg]);
+    setInput(""); // clear input
+
+    const body = {
+      chat_id: chatId,
+      user_input: input,
+      user_id: userId,
+    };
+
+    try {
+      const response = await chat(body);
+      const reply = response?.data?.resutl ?? "❓ Không có phản hồi từ bot.";
+      setMessages((prev) => [...prev, { from: "bot", text: reply }]);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        { from: "bot", text: "❌ Lỗi khi gửi tin nhắn." },
+      ]);
+    }
   };
 
   return (
