@@ -36,7 +36,7 @@ public class SecurityConfig {
     protected String SIGNER_KEY;
 
     private final String[] PUBLIC_ENDPOINTS = {
-            "/api/auth/login", "/api/auth/login/**", "/api/auth/introspect", "/api/auth/logout", "/api/auth/refresh", "/api/users", "/api/auth/forgot-password",
+            "/api/auth/login", "/api/auth/login/**", "/api/auth/introspect", "/api/auth/logout", "/api/auth/refresh", "/api/users", "/api/auth/forgot-password", "/api/auth/reset-password",
             "/api/paintings", "/api/paintings/search", "/api/categories", "/api/categories/search", "/api/paintings/{id}",
             "/api/coupons",
             "/swagger-ui/**", "/v3/api-docs/**"

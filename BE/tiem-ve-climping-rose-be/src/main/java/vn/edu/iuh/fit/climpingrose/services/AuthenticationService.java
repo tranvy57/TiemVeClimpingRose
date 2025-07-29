@@ -18,10 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import vn.edu.iuh.fit.climpingrose.dtos.requests.AuthenticationRequest;
-import vn.edu.iuh.fit.climpingrose.dtos.requests.IntrospectRequest;
-import vn.edu.iuh.fit.climpingrose.dtos.requests.LogoutRequest;
-import vn.edu.iuh.fit.climpingrose.dtos.requests.RefreshRequest;
+import vn.edu.iuh.fit.climpingrose.dtos.requests.*;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.AuthenticationResponse;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.IntrospectResponse;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.UserResponse;
@@ -365,5 +362,30 @@ public class AuthenticationService {
 
         // Đánh dấu thời điểm gửi OTP, key sẽ hết hạn sau 1 giờ
         redisService.setLong(otpRateLimitKey, now, 1, TimeUnit.HOURS);
+    }
+
+    public void resetPassword(ResetPasswordRequest otpRequest) throws Throwable {
+        String otp = otpRequest.getOtp();
+        String email = otpRequest.getEmail();
+        String newPassword = otpRequest.getNewPassword();
+
+        User user = (User) userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng với email: " + email));
+
+        String storedOtp = redisService.getOtp(email);
+        if (storedOtp == null) {
+            throw new NotFoundException("OTP đã hết hạn hoặc không tồn tại.");
+        }
+
+        if (!storedOtp.equals(otp)) {
+            throw new BadRequestException("OTP không hợp lệ. Vui lòng thử lại.");
+        }
+
+        // Cập nhật mật khẩu mới
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        redisService.deleteOtp(email);
+
     }
 }

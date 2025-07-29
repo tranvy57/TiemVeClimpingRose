@@ -86,5 +86,13 @@ public class AuthController {
                 .build();
     }
 
+    @PostMapping("/reset-password")
+    public ApiResponse<Void> verifyOtp(@RequestBody ResetPasswordRequest otpRequest) throws Throwable {
+        authenticationService.resetPassword(otpRequest);
+        return ApiResponse.<Void>builder()
+                .message("Reset mật khẩu thành công.")
+                .build();
+    }
+
 
 }
