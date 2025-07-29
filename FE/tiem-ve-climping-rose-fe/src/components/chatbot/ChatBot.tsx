@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Send } from "lucide-react";
 import { cn } from "@/utils/libs";
 import { chat } from "@/api/chatApi";
+import ReactMarkdown from "react-markdown";
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,6 +12,7 @@ const ChatBot = () => {
     { from: "user" | "bot"; text: string }[]
   >([]);
   const [input, setInput] = useState("");
+  const [isBotTyping, setIsBotTyping] = useState(false);
   const chatId = "chat-123";
   const userId = "user-abc";
 
@@ -19,7 +21,10 @@ const ChatBot = () => {
 
     const userMsg = { from: "user", text: input } as const;
     setMessages((prev) => [...prev, userMsg]);
-    setInput(""); // clear input
+    setInput("");
+
+    // Bắt đầu hiệu ứng typing
+    setIsBotTyping(true);
 
     const body = {
       chat_id: chatId,
@@ -29,13 +34,16 @@ const ChatBot = () => {
 
     try {
       const response = await chat(body);
-      const reply = response?.data?.resutl ?? "❓ Không có phản hồi từ bot.";
+      const reply = response?.data?.result ?? "❓ Không có phản hồi từ bot.";
+
       setMessages((prev) => [...prev, { from: "bot", text: reply }]);
     } catch (err) {
       setMessages((prev) => [
         ...prev,
         { from: "bot", text: "❌ Lỗi khi gửi tin nhắn." },
       ]);
+    } finally {
+      setIsBotTyping(false);
     }
   };
 
@@ -53,15 +61,21 @@ const ChatBot = () => {
               <div
                 key={i}
                 className={cn(
-                  "px-3 py-2 rounded-lg max-w-[80%] text-sm",
+                  "px-3 py-2 rounded-lg max-w-[80%] text-sm whitespace-pre-wrap",
                   msg.from === "user"
                     ? "bg-blue-100 self-end ml-auto"
                     : "bg-gray-100 self-start mr-auto"
                 )}
               >
-                {msg.text}
+                <ReactMarkdown>{msg.text}</ReactMarkdown>
               </div>
             ))}
+
+            {isBotTyping && (
+              <div className="px-3 py-2 rounded-lg bg-gray-100 text-sm animate-pulse w-fit">
+                Bot đang nhập...
+              </div>
+            )}
           </div>
 
           <div className="p-2 border-t flex items-center gap-2">

@@ -1,4 +1,4 @@
-package vn.edu.iuh.fit.olachatbackend.utils;
+package vn.edu.iuh.fit.climpingrose.utils;
 
 import java.util.Random;
 

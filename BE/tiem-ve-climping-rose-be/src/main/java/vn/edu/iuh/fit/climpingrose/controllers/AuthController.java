@@ -77,5 +77,14 @@ public class AuthController {
                 .build();
     }
 
+    @PostMapping("/forgot-password")
+    public ApiResponse<Void> sendOtp(@RequestParam String email) {
+        authenticationService.processForgotPassword(email);
+
+        return ApiResponse.<Void>builder()
+                .message("Đã gửi OPT về mail của bạn, vui lòng kiểm tra.")
+                .build();
+    }
+
 
 }

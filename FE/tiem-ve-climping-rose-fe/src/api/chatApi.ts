@@ -1,8 +1,9 @@
 import api from "@/libs/axios-config";
 import { ApiResponse } from "@/types";
+import axios from "axios";
 
 interface IMessage {
-  resutl: string;
+  result: string;
 }
 
 interface ChatRequest {
@@ -13,7 +14,11 @@ interface ChatRequest {
 
 export const chat = async (body: ChatRequest) => {
   try {
-    const response = await api.post<ApiResponse<IMessage>>(`/chat`, body);
+    const response = await axios.post<ApiResponse<IMessage>>(
+      "https://climpingrose.com/ai/chat",
+      body
+    );
+
     return response.data;
   } catch (error) {
     throw error;

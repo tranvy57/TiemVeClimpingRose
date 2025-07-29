@@ -32,9 +32,11 @@ import vn.edu.iuh.fit.climpingrose.enums.Role;
 import vn.edu.iuh.fit.climpingrose.enums.UserStatus;
 import vn.edu.iuh.fit.climpingrose.exceptions.BadRequestException;
 import vn.edu.iuh.fit.climpingrose.exceptions.ConflicException;
+import vn.edu.iuh.fit.climpingrose.exceptions.NotFoundException;
 import vn.edu.iuh.fit.climpingrose.exceptions.UnauthorizedException;
 import vn.edu.iuh.fit.climpingrose.mappers.UserMapper;
 import vn.edu.iuh.fit.climpingrose.repositories.UserRepository;
+import vn.edu.iuh.fit.climpingrose.utils.OtpUtils;
 
 import java.text.ParseException;
 import java.time.Instant;
@@ -51,6 +53,9 @@ public class AuthenticationService {
 
     @Autowired
     private RedisService redisService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Value("${google.googleClientId}")
     private String googleClientId;
@@ -78,6 +83,7 @@ public class AuthenticationService {
 
     @Value("${facebook.client-secret}")
     private String facebookClientSecret;
+
 
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
@@ -335,5 +341,29 @@ public class AuthenticationService {
                 .contact(facebookLink)
                 .build();
         return userRepository.save(user);
+    }
+
+
+    public void processForgotPassword(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
+            throw new NotFoundException("User không tồn tại");
+        }
+
+        String otpRateLimitKey = "OTP_LIMIT:" + email;
+        Long lastSentTime = redisService.getLong(otpRateLimitKey);
+        long now = System.currentTimeMillis();
+
+//        if (lastSentTime != null && (now - lastSentTime) < 3600_000) { // 1 giờ
+//            throw new BadRequestException("Bạn chỉ có thể yêu cầu gửi OTP mỗi 1 giờ. Vui lòng thử lại sau.");
+//        }
+
+        String otpCode = OtpUtils.generateOtp();
+
+        redisService.saveOtp(email, otpCode);
+        emailService.sendOtpEmail(email, otpCode);
+
+        // Đánh dấu thời điểm gửi OTP, key sẽ hết hạn sau 1 giờ
+        redisService.setLong(otpRateLimitKey, now, 1, TimeUnit.HOURS);
     }
 }

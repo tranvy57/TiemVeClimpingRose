@@ -57,7 +57,7 @@ export function CouponItem({
   };
 
   return (
-    <div className="flex items-start w-[280px] md:w-[350px] border border-l-0 h-fit">
+    <div className="flex items-start w-[280px] md:w-[300px] border border-l-0 h-fit">
       <Image src={imageUrl} height={50} width={100} alt="coupon" />
 
       <div className="flex-1 p-2 space-y-[4px] justify-between flex flex-col">

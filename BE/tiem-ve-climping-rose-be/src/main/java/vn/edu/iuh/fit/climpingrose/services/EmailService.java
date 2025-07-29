@@ -1,6 +1,5 @@
-package vn.edu.iuh.fit.olachatbackend.services;
+package vn.edu.iuh.fit.climpingrose.services;
 
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
