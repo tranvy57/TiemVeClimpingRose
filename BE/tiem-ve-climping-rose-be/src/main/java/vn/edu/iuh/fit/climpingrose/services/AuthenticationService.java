@@ -103,9 +103,9 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        var user = userRepository
-                .findByUsername(request.getUsername())
-                .orElseThrow(() -> new UnauthorizedException("Sai tên đăng nhập hoặc mật khẩu"));
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseGet(() -> userRepository.findByEmail(request.getUsername())
+                        .orElseThrow(() -> new UnauthorizedException("Không tìm thấy người dùng này!")));
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 

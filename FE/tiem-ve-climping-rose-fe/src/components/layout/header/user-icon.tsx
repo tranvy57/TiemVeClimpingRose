@@ -55,9 +55,9 @@ export default function UserIcon() {
             <DropdownMenuItem asChild>
               <Link href="/login">Đăng nhập</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
+            {/* <DropdownMenuItem asChild>
               <Link href="/register">Đăng ký</Link>
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
           </>
         ) : (
           <>
