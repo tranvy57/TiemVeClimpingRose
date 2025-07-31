@@ -25,6 +25,12 @@ export interface LoginFacebookRequest {
   accessToken: string;
 }
 
+export interface ResetPasswordRequest {
+  email: string;
+  newPassword: string;
+  otp: string;
+}
+
 export const login = async (body: LoginRequest) => {
   try {
     const response = await api.post<
@@ -108,6 +114,35 @@ export const refreshToken = async (token: string) => {
   } catch (error) {
     console.log("Refresh token error at api:", error);
     showError("Token refresh failed. Please log in again.");
+    throw error;
+  }
+};
+
+export const forgotPassword = async (email: string) => {
+  try {
+    const response = await api.post<ApiResponse<void>>(
+      `/auth/forgot-password?email=${email}`
+    );
+    console.log("Forgot password response at api:", response);
+    return response.data;
+  } catch (error) {
+    console.log("Forgot password error at api:", error);
+    showError("Failed to send reset password email. Please try again.");
+    throw error;
+  }
+};
+
+export const resetPassword = async (body: ResetPasswordRequest) => {
+  try {
+    const response = await api.post<ApiResponse<void>>(
+      `/auth/reset-password`,
+      body
+    );
+    console.log("Reset password response at api:", response);
+    return response.data;
+  } catch (error) {
+    console.log("Reset password error at api:", error);
+    showError("Failed to reset password. Please try again.");
     throw error;
   }
 };

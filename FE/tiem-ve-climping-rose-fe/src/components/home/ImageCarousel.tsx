@@ -11,7 +11,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const banners = [
   { src: "/banners/banner1.png", alt: "Banner 1" },
   { src: "/banners/banner2.png", alt: "Banner 2" },
-  { src: "/banners/banner3.png", alt: "Banner 3" },
+  // { src: "/banners/banner3.png", alt: "Banner 3" },
 ];
 
 export function ImageCarousel() {

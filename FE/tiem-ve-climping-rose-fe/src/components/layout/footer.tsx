@@ -75,7 +75,7 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                href="tiktok.com/@tiemtranhsohoatainhat"
+                href="https://www.tiktok.com/@tiemtranhsohoatainhatt"
                 className="text-blue-600 hover:underline flex gap-2 items-center"
               >
                 <Image src="tiktok.svg" width={16} height={16} alt="tiktok" />
