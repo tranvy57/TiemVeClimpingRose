@@ -50,7 +50,7 @@ const PaymentPagePage = () => {
     try {
       setUploading(true);
       const { url } = await uploadImage(imageFile, "payment");
-      console.log("Image upload", url);
+      // console.log("Image upload", url);
 
       await updateOrder(order.orderId, {
         ...order,

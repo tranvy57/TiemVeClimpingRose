@@ -37,7 +37,7 @@ export const login = async (body: LoginRequest) => {
       ApiResponse<{ token: string; user: IUser }>
     >(`/auth/login`, body);
 
-    console.log("Login response at api:", response);
+    // console.log("Login response at api:", response);
 
     return response.data;
   } catch (error) {
@@ -52,7 +52,7 @@ export const loginGoogle = async (body: LoginGoogleRequest) => {
       ApiResponse<{ token: string; user: IUser }>
     >(`/auth/login/google`, body);
 
-    console.log("Login response at api:", response);
+    // console.log("Login response at api:", response);
 
     return response.data;
   } catch (error) {
@@ -67,7 +67,7 @@ export const loginFacebook = async (body: LoginFacebookRequest) => {
       ApiResponse<{ token: string; user: IUser }>
     >(`/auth/login/facbook`, body);
 
-    console.log("Login response at api:", response);
+    // console.log("Login response at api:", response);
 
     return response.data;
   } catch (error) {
@@ -79,7 +79,7 @@ export const loginFacebook = async (body: LoginFacebookRequest) => {
 export const logout = async (body: LogoutRequest) => {
   try {
     const response = await api.post<ApiResponse<void>>(`/auth/logout`, body);
-    console.log("Logout response at api:", response);
+    // console.log("Logout response at api:", response);
     return response.data;
   } catch (error) {
     console.log("Logout error at api:", error);
@@ -94,7 +94,7 @@ export const checkToken = async (body: CheckTokenRequest) => {
       `/auth/introspect`,
       body
     );
-    console.log("Check token response at api:", response);
+    // console.log("Check token response at api:", response);
     return response.data;
   } catch (error) {
     console.log("Check token error at api:", error);
@@ -109,7 +109,7 @@ export const refreshToken = async (token: string) => {
       `/auth/refresh`,
       { token }
     );
-    console.log("Refresh token response at api:", response);
+    // console.log("Refresh token response at api:", response);
     return response.data;
   } catch (error) {
     console.log("Refresh token error at api:", error);
@@ -123,7 +123,7 @@ export const forgotPassword = async (email: string) => {
     const response = await api.post<ApiResponse<void>>(
       `/auth/forgot-password?email=${email}`
     );
-    console.log("Forgot password response at api:", response);
+    // console.log("Forgot password response at api:", response);
     return response.data;
   } catch (error) {
     console.log("Forgot password error at api:", error);
@@ -138,7 +138,7 @@ export const resetPassword = async (body: ResetPasswordRequest) => {
       `/auth/reset-password`,
       body
     );
-    console.log("Reset password response at api:", response);
+    // console.log("Reset password response at api:", response);
     return response.data;
   } catch (error) {
     console.log("Reset password error at api:", error);

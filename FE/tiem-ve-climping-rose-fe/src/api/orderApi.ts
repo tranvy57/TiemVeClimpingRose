@@ -86,3 +86,14 @@ export const updateOrder = async (
     throw error;
   }
 };
+
+export const cancelOrder = async (orderId: string) => {
+  try {
+    const response = await api.put<ApiResponse<void>>(
+      `/orders/cancel/${orderId}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

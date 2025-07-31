@@ -6,6 +6,7 @@ import vn.edu.iuh.fit.climpingrose.dtos.requests.OrderRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.requests.OrderUpdateRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.ApiResponse;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.OrderResponse;
+import vn.edu.iuh.fit.climpingrose.enums.OrderStatus;
 import vn.edu.iuh.fit.climpingrose.services.OrderService;
 
 import java.util.List;
@@ -45,6 +46,22 @@ public class OrderController {
         return ApiResponse.<OrderResponse>builder()
                 .message("Tạo đơn hàng thành công")
                 .data(orderService.updateOrder(orderId, request))
+                .build();
+    }
+
+    @PutMapping("/cancel/{orderId}")
+    public ApiResponse<OrderResponse> cancelOrder(@PathVariable String orderId) {
+        return ApiResponse.<OrderResponse>builder()
+                .message("Hủy đơn hàng thành công")
+                .data(orderService.cancelOrder(orderId))
+                .build();
+    }
+
+    @PutMapping("/admin/update-status")
+    public ApiResponse<OrderResponse> updateStatus(@RequestParam String orderId, @RequestParam("status") OrderStatus status) {
+        return ApiResponse.<OrderResponse>builder()
+                .message("Câp nhật trạng thái đơn hàng thành công")
+                .data(orderService.approveOrder(orderId, status))
                 .build();
     }
 

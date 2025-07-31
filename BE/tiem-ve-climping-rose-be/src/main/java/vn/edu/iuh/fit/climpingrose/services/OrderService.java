@@ -453,4 +453,45 @@ public class OrderService {
         return orderMapper.toResponse(order);
     }
 
+    public OrderResponse cancelOrder(String orderId) {
+        User user = userUtils.getUserLogin();
+
+        Order order = orderRepository.getByUserAndOrderId(user, orderId);
+        if (order == null) {
+            throw new BadRequestException("Đơn hàng không tồn tại hoặc bạn không có quyền truy cập vào đơn hàng này");
+        }
+
+        if(user.getRole().equals(Role.ADMIN)) {
+            order.setStatus(OrderStatus.CANCELED);
+        }
+        else if (!order.getStatus().equals(OrderStatus.PENDING)) {
+            throw new BadRequestException("Không thể huỷ đơn hàng đã xác nhận.");
+        }
+        else order.setStatus(OrderStatus.CANCELED);
+        orderRepository.save(order);
+        return orderMapper.toResponse(order);
+    }
+
+    public OrderResponse approveOrder(String orderId, OrderStatus status) {
+        User user = userUtils.getUserLogin();
+
+        if (!user.getRole().equals(Role.ADMIN)) {
+            throw new UnauthorizedException("Bạn không có quyền phê duyệt đơn hàng");
+        }
+
+        Order order = orderRepository.getById(orderId);
+        if (order == null) {
+            throw new NotFoundException("Đơn hàng không tồn tại");
+        }
+
+        if (!order.getStatus().equals(OrderStatus.PAYED)) {
+            throw new BadRequestException("Chỉ có thể phê duyệt đơn hàng khi đã thanh toán xong.");
+        }
+
+        order.setStatus(status);
+        orderRepository.save(order);
+
+        return orderMapper.toResponse(order);
+    }
+
 }

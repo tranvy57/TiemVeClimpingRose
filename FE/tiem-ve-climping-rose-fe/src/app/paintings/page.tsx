@@ -153,7 +153,7 @@ const PaintingsPage = () => {
     setList(
       list.includes(value) ? list.filter((v) => v !== value) : [...list, value]
     );
-    console.log("List: ", list);
+    // console.log("List: ", list);
   };
 
   // const handleSearch = () => {

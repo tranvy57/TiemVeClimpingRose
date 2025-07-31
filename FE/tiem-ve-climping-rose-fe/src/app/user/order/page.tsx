@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { IOrder } from "@/types/implements/order";
-import { showError } from "@/libs/toast";
-import { getOrderById } from "@/api/orderApi";
+import { showError, showSuccess } from "@/libs/toast";
+import { cancelOrder, getOrderById } from "@/api/orderApi";
 import OrderItem from "@/components/orders/OrderItem";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import Image from "next/image";
@@ -67,6 +67,25 @@ const OrderDetailPage = () => {
     }
   };
 
+  const handleCancelOrder = async () => {
+    try {
+      if (!order) {
+        showError("Không có đơn hàng để hủy.");
+        return;
+      }
+
+      const response = await cancelOrder(order.orderId);
+
+      showSuccess("Đơn hàng đã được hủy.");
+      window.location.href = "/user?tab=orders";
+    } catch (error: any) {
+      showError(
+        error?.response?.data?.message ||
+          "Có lỗi xảy ra, không thể hủy đơn hàng."
+      );
+    }
+  };
+
   useEffect(() => {
     fetchOrder();
   }, []);
@@ -122,16 +141,20 @@ const OrderDetailPage = () => {
           ) : (
             <div>
               <p>Bạn vẫn chưa thanh toán đơn hàng này.</p>
-              <Button
-                onClick={() => {
-                  window.location.href = `/payment?orderId=${order.orderId}`;
-                }}
-              >
-                Thanh toán ngay
-              </Button>
+              {order.status != "CANCELED" && (
+                <Button
+                  onClick={() => {
+                    window.location.href = `/payment?orderId=${order.orderId}`;
+                  }}
+                >
+                  Thanh toán ngay
+                </Button>
+              )}
             </div>
           )}
-          <Button>Hủy đơn hàng</Button>
+          {order.status != "CANCELED" && (
+            <Button onClick={handleCancelOrder}>Hủy đơn hàng</Button>
+          )}
         </div>
       )}
     </div>
