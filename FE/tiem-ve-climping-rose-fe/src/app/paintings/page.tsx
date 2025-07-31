@@ -36,7 +36,7 @@ import { log } from "console";
 import { Button } from "@/components/ui/button";
 import { useSearchParams, useRouter } from "next/navigation";
 
-const sizeOptions = ["20x20", "30x40", "40x50"];
+const sizeOptions = ["20x20", "30x40", "40x50", "ART_SUPPLIES"];
 const PaintingsPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();

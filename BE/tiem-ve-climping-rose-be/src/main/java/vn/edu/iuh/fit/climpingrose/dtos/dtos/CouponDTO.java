@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Date;
 
 @Data
@@ -18,8 +19,8 @@ public class CouponDTO {
     String condition;
     BigDecimal discountPercentage;
 
-    Date startDate;
-    Date endDate;
+    Instant startDate;
+    Instant endDate;
 
     Boolean isPublic;
 

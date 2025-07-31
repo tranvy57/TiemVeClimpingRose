@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
@@ -15,17 +16,17 @@ public class BaseEntity {
     protected boolean isActive = true;
 
     @Column(updatable = false)
-    LocalDateTime createdAt;
+    Instant createdAt;
 
-    LocalDateTime updatedAt;
+    Instant  updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+        createdAt = Instant.now();;
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+        updatedAt = Instant.now();;
     }
 }

@@ -12,7 +12,6 @@ export const getMyOrders = async () => {
 };
 
 export interface OrderRequest {
-  orderDate: Date;
   deliveryCost: number;
   totalPaintingsPrice: number;
   note?: string;

@@ -119,7 +119,6 @@ public class OrderService {
 
         //  Lưu đơn hàng
         Order order = Order.builder()
-                .orderDate(request.getOrderDate())
                 .status(OrderStatus.PENDING)
                 .deliveryCost(deliveryCost)
                 .totalPaintingsPrice(totalPaintingsPrice)
@@ -183,6 +182,7 @@ public class OrderService {
         int maxLength = 0;
         int maxWidth = 0;
         int totalThickness = 0;
+
 
         for (CartItem item : cartItems) {
             PaintingSize sizeEnum = item.getPainting().getSize();

@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import vn.edu.iuh.fit.climpingrose.enums.OrderStatus;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -21,8 +22,8 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String orderId;
-
-    Date orderDate;
+    @Column(nullable = false, updatable = false)
+    private Instant orderDate;
     @Enumerated(EnumType.STRING)
     OrderStatus status;
     BigDecimal deliveryCost;
@@ -50,4 +51,9 @@ public class Order {
     @JoinColumn(name = "user_id")
     User user;
 
+
+    @PrePersist
+    public void prePersist() {
+        this.orderDate = Instant.now();
+    }
 }

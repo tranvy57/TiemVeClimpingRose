@@ -7,6 +7,8 @@ server:
       max-request-size: 10MB
 
 spring:
+  jackson:
+    time-zone: UTC
   mail:
     host: smtp.gmail.com
     port: 465
@@ -28,6 +30,7 @@ spring:
       ddl-auto: update
     properties:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+      hibernate.jdbc.time_zone: UTC
     show-sql: true
 
   data:

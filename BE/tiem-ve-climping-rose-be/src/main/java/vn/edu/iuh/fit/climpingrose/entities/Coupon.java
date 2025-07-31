@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Date;
 
 @Entity
@@ -26,7 +27,7 @@ public class Coupon extends BaseEntity {
     @Column(name = "discount_percentage")
     BigDecimal discountPercentage;
     Boolean isPublic;
-    Date startDate;
-    Date endDate;
+    Instant startDate;
+    Instant endDate;
 
 }

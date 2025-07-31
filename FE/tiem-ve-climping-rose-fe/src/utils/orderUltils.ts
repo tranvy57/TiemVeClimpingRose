@@ -75,6 +75,8 @@ const getSize = (
       return { length: 40, width: 30, thickness: 2 };
     case "SIZE_40x50":
       return { length: 50, width: 40, thickness: 3 };
+    case "SIZE_ART_SUPPLIES":
+      return { length: 50, width: 40, thickness: 3 };
     default:
       throw new Error(`Kích thước không hỗ trợ: ${size}`);
   }

@@ -4,6 +4,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -29,6 +30,8 @@ import { ChevronRight, Ticket } from "lucide-react";
 import { CouponItem } from "@/components/home";
 import { createOrder, OrderRequest } from "@/api/orderApi";
 import { useRouter } from "next/navigation";
+import { getMyInfo, updateMe } from "@/api/userApi";
+import { IUser } from "@/types/implements";
 
 export default function ChekoutPage() {
   const {
@@ -37,7 +40,7 @@ export default function ChekoutPage() {
     deliveryCost,
     discount,
     totalPrice,
-    couponCode, // ← thêm dòng này
+    couponCode,
   } = useAppSelector((state) => state.checkout);
 
   const router = useRouter();
@@ -55,6 +58,9 @@ export default function ChekoutPage() {
   const [contact, setContact] = useState("");
   const [coupons, setCoupons] = useState<ICoupon[]>([]);
   const [selectedCoupon, setSelectCoupon] = useState<string>("");
+  const [openSaveAddress, setOpenSaveAdress] = useState(false);
+  const [user, setUser] = useState<IUser | null>(null);
+  const [orderId, setOrderId] = useState<string | null>(null);
 
   const [open, setOpen] = useState(false);
 
@@ -67,6 +73,46 @@ export default function ChekoutPage() {
       } else return response.data?.discountPercentage;
     } catch (error) {
       showError("Không lấy được mã giảm giá");
+    }
+  };
+
+  useEffect(() => {
+    featchUser();
+  }, []);
+
+  const featchUser = async () => {
+    try {
+      const response = await getMyInfo();
+      if (response.data) {
+        setUser(response.data);
+        setReceiverName(response.data?.displayName);
+        setAddressDetail(response.data.addressDetail);
+        setZipcode(response.data.zipcode);
+        setContact(response.data.contact);
+        if (response.data.zipcode) {
+          try {
+            const res = await fetch(
+              `https://zipcloud.ibsnet.co.jp/api/search?zipcode=${response.data.zipcode}`
+            );
+            const data = await res.json();
+
+            if (data.results) {
+              const result = data.results[0];
+              setAddress({
+                prefecture: result.address1,
+                city: result.address2,
+                town: result.address3,
+              });
+            } else {
+              showError("Không tìm thấy địa chỉ cho mã bưu điện này.");
+            }
+          } catch {
+            showError("Lỗi kết nối đến ZipCloud API.");
+          }
+        }
+      }
+    } catch (error) {
+      showError("Lỗi khi lấy thông tin user");
     }
   };
   const handleReceiverNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,6 +131,33 @@ export default function ChekoutPage() {
 
   const handleContactChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setContact(e.target.value);
+  };
+
+  const handleYesSaveAddress = async () => {
+    if (!user) {
+      showError("Bạn cần đăng nhập để lưu địa chỉ");
+      return;
+    }
+
+    try {
+      await getMyInfo(); // Lấy lại thông tin user mới nhất
+      await updateMe({
+        ...user,
+        zipcode,
+        addressDetail,
+        contact,
+      });
+      showSuccess("Đã lưu địa chỉ thành công!");
+      setOpenSaveAdress(false);
+      router.push(`/payment?orderId=${orderId}`);
+    } catch (error) {
+      showError("Lỗi khi lưu địa chỉ");
+    }
+  };
+
+  const handleNoSaveAddress = () => {
+    setOpenSaveAdress(false);
+    router.push(`/payment?orderId=${orderId}`);
   };
 
   const handleZipcodeChange = async (
@@ -197,7 +270,6 @@ export default function ChekoutPage() {
     const cartItemIds = selectedCartItems.map((item) => item.cartItemId);
 
     const orderPayload: OrderRequest = {
-      orderDate: new Date(),
       deliveryCost,
       totalPaintingsPrice,
       note,
@@ -218,7 +290,15 @@ export default function ChekoutPage() {
 
     try {
       const response = await createOrder(orderPayload);
-      router.push(`/payment?orderId=${response.data?.orderId}`);
+      setOrderId(response.data?.orderId || null);
+      if (
+        !user?.zipcode ||
+        user?.zipcode !== zipcode ||
+        user?.addressDetail !== addressDetail ||
+        user?.zipcode == ""
+      ) {
+        setOpenSaveAdress(true);
+      } else router.push(`/payment?orderId=${response.data?.orderId}`);
     } catch (err) {
       console.error(err);
       showError("Đặt hàng thất bại. Vui lòng thử lại.");
@@ -528,7 +608,7 @@ export default function ChekoutPage() {
 
             <Input
               id="contact"
-              value={contact}
+              value={contact ?? ""}
               onChange={handleContactChange}
               type="text"
               placeholder="Ví dụ: https://www.facebook.com/tiemveclimpingrose"
@@ -560,7 +640,7 @@ export default function ChekoutPage() {
             <Input
               id="zipcode"
               type="text"
-              value={zipcode}
+              value={zipcode ?? ""}
               onChange={handleZipcodeChange}
               maxLength={7}
               placeholder="Ví dụ: 1000001"
@@ -577,7 +657,7 @@ export default function ChekoutPage() {
             </p>
             <Input
               id="pref"
-              value={address.prefecture}
+              value={address.prefecture ?? ""}
               readOnly
               className="bg-muted"
             />
@@ -589,7 +669,7 @@ export default function ChekoutPage() {
             </Label>
             <Input
               id="city"
-              value={address.city}
+              value={address.city ?? ""}
               readOnly
               className="bg-muted"
             />
@@ -601,7 +681,7 @@ export default function ChekoutPage() {
             </Label>
             <Input
               id="town"
-              value={address.town}
+              value={address.town ?? ""}
               readOnly
               className="bg-muted"
             />
@@ -613,13 +693,31 @@ export default function ChekoutPage() {
             </Label>
             <Input
               id="detail"
-              value={addressDetail}
+              value={addressDetail ?? ""}
               onChange={handleAddressDetailChange}
               placeholder="Ví dụ: 1-2-3 サンプルビル 301号室"
             />
           </div>
         </div>
       </div>
+
+      <Dialog open={openSaveAddress} onOpenChange={setOpenSaveAdress}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>
+              <p>
+                Bạn có muốn lưu lại địa chỉ này cho những lần tiếp theo không?
+              </p>
+            </DialogTitle>
+          </DialogHeader>
+          <DialogFooter className="flex justify-end gap-2 pt-4">
+            <Button variant="outline" onClick={handleNoSaveAddress}>
+              Không
+            </Button>
+            <Button onClick={handleYesSaveAddress}>Có</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

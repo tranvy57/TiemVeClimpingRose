@@ -10,6 +10,7 @@ import vn.edu.iuh.fit.climpingrose.entities.User;
 import vn.edu.iuh.fit.climpingrose.enums.OrderStatus;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderResponse {
     String orderId;
-    Date orderDate;
+    Instant orderDate;
     OrderStatus status;
     BigDecimal deliveryCost;
     BigDecimal totalPaintingsPrice;
