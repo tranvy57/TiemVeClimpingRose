@@ -12,6 +12,10 @@ export const calculateDeliveryCost = (
   let maxWidth = 0;
   let totalThickness = 0;
 
+  let totalItems = 0;
+  let artSuppliesCount = 0;
+  let nonArtSuppliesCount = 0;
+
   for (const item of orderItems) {
     const painting = paintingMap[item.paintingId];
     if (!painting) {
@@ -21,6 +25,15 @@ export const calculateDeliveryCost = (
     if (item.quantity <= 0 || item.quantity > painting.quantity) {
       showError(`Số lượng không hợp lệ cho tranh ID: ${item.paintingId}`);
     }
+
+    totalItems += item.quantity;
+
+    if (painting.size === "SIZE_ART_SUPPLIES") {
+      artSuppliesCount += item.quantity;
+      continue; // không cộng kích thước hay gì cả
+    }
+
+    nonArtSuppliesCount += item.quantity;
 
     const sizeInfo = getSize(painting.size);
 
@@ -37,11 +50,23 @@ export const calculateDeliveryCost = (
 
   let shipping = 0;
 
-  if (allAre2020) {
-    if (count2020 === 1) {
-      shipping = 430;
-    } else if (count2020 <= 3) {
-      shipping = 600;
+  // ✅ Trường hợp chỉ có art supplies → ship 430
+  if (nonArtSuppliesCount === 0 && artSuppliesCount > 0) {
+    shipping = 430;
+  } else {
+    // ✅ Tính ship như bình thường nếu có tranh
+    if (allAre2020) {
+      if (count2020 === 1) {
+        shipping = 430;
+      } else if (count2020 <= 3) {
+        shipping = 600;
+      } else {
+        const totalSize = maxLength + maxWidth + totalThickness;
+        if (totalSize <= 60) shipping = 840;
+        else if (totalSize <= 80) shipping = 1200;
+        else if (totalSize <= 100) shipping = 1500;
+        else return 1500;
+      }
     } else {
       const totalSize = maxLength + maxWidth + totalThickness;
       if (totalSize <= 60) shipping = 840;
@@ -49,14 +74,9 @@ export const calculateDeliveryCost = (
       else if (totalSize <= 100) shipping = 1500;
       else return 1500;
     }
-  } else {
-    const totalSize = maxLength + maxWidth + totalThickness;
-    if (totalSize <= 60) shipping = 840;
-    else if (totalSize <= 80) shipping = 1200;
-    else if (totalSize <= 100) shipping = 1500;
-    else return 1500;
   }
 
+  // ✅ Nếu địa chỉ ở vùng xa → cộng thêm 400
   const remotePrefectures = ["沖縄", "北海道", "長崎", "大分"];
   if (remotePrefectures.some((keyword) => prefecture.includes(keyword))) {
     shipping += 400;
@@ -76,7 +96,7 @@ const getSize = (
     case "SIZE_40x50":
       return { length: 50, width: 40, thickness: 3 };
     case "SIZE_ART_SUPPLIES":
-      return { length: 50, width: 40, thickness: 3 };
+      return { length: 0, width: 0, thickness: 0 };
     default:
       throw new Error(`Kích thước không hỗ trợ: ${size}`);
   }

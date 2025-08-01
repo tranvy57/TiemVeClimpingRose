@@ -11,13 +11,13 @@ export const OptionItem = React.forwardRef<HTMLDivElement, OptionItemProps>(
     <div
       ref={ref}
       {...rest}
-      className={`group w-[120px] md:w-[180px] flex-shrink-0 lg:mx-10 md:mx-3 cursor-pointer ${
+      className={`group w-[120px] md:w-[160px] flex-shrink-0 lg:mx-2 md:mx-2 cursor-pointer ${
         rest.className || ""
       }`}
       tabIndex={0}
       role="button"
     >
-      <div className="relative aspect-square w-full min-w-[100px]">
+      <div className="relative aspect-square w-full min-w-[100px] flex flex-col justify-between">
         <Image
           src={image_url}
           fill

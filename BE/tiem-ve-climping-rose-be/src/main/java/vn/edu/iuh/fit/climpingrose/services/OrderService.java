@@ -183,11 +183,23 @@ public class OrderService {
         int maxWidth = 0;
         int totalThickness = 0;
 
+        int totalItems = 0;
+        int artSuppliesCount = 0;
+        int nonArtSuppliesCount = 0;
 
         for (CartItem item : cartItems) {
             PaintingSize sizeEnum = item.getPainting().getSize();
             SizeInfo size = getSize(sizeEnum);
             int quantity = item.getQuantity();
+
+            totalItems += quantity;
+
+            if (sizeEnum.equals(PaintingSize.SIZE_ART_SUPPLIES)) {
+                artSuppliesCount += quantity;
+                continue; // bỏ qua, không tính kích thước
+            }
+
+            nonArtSuppliesCount += quantity;
 
             if (sizeEnum != PaintingSize.SIZE_20x20) {
                 allAre20x20 = false;
@@ -200,17 +212,32 @@ public class OrderService {
             totalThickness += size.thickness() * quantity;
         }
 
-        int shipping;
+        int shipping = 0;
 
-        if (allAre20x20) {
-            if (count2020 == 1) {
-                shipping = 430;
-            } else if (count2020 <= 3) {
-                shipping = 600;
+        //  Trường hợp chỉ có art supplies → ship 430
+        if (nonArtSuppliesCount == 0 && artSuppliesCount > 0) {
+            shipping = 430;
+        } else {
+            // Trường hợp có tranh → tính theo tranh thôi, bỏ art supplies
+            if (allAre20x20) {
+                if (count2020 == 1) {
+                    shipping = 430;
+                } else if (count2020 <= 3) {
+                    shipping = 600;
+                } else {
+                    int totalSize = maxLength + maxWidth + totalThickness;
+                    if (totalSize <= 60) {
+                        shipping = 840;
+                    } else if (totalSize <= 80) {
+                        shipping = 1200;
+                    } else if (totalSize <= 100) {
+                        shipping = 1500;
+                    } else {
+                        shipping = 1500;
+                    }
+                }
             } else {
-                // quá 3 tranh → tính theo tổng kích thước
                 int totalSize = maxLength + maxWidth + totalThickness;
-
                 if (totalSize <= 60) {
                     shipping = 840;
                 } else if (totalSize <= 80) {
@@ -221,28 +248,16 @@ public class OrderService {
                     shipping = 1500;
                 }
             }
-        } else {
-            // Tranh hỗn hợp → tính kiện theo tổng size
-            int totalSize = maxLength + maxWidth + totalThickness;
-
-            if (totalSize <= 60) {
-                shipping = 840;
-            } else if (totalSize <= 80) {
-                shipping = 1200;
-            } else if (totalSize <= 100) {
-                shipping = 1500;
-            } else {
-                shipping = 1500;
-            }
         }
 
-        // Phụ phí vùng xa
+        //  Phụ phí vùng xa
         if (isRemoteArea(prefecture)) {
             shipping += 400;
         }
 
         return BigDecimal.valueOf(shipping);
     }
+
 
     private BigDecimal calculateShippingByOrderItem(List<OrderItem> orderItems, String prefecture) {
         boolean allAre20x20 = true;
@@ -252,10 +267,23 @@ public class OrderService {
         int maxWidth = 0;
         int totalThickness = 0;
 
+        int totalItems = 0;
+        int artSuppliesCount = 0;
+        int nonArtSuppliesCount = 0;
+
         for (OrderItem item : orderItems) {
             PaintingSize sizeEnum = item.getPainting().getSize();
             SizeInfo size = getSize(sizeEnum);
             int quantity = item.getQuantity();
+
+            totalItems += quantity;
+
+            if (sizeEnum.equals(PaintingSize.SIZE_ART_SUPPLIES)) {
+                artSuppliesCount += quantity;
+                continue;
+            }
+
+            nonArtSuppliesCount += quantity;
 
             if (sizeEnum != PaintingSize.SIZE_20x20) {
                 allAre20x20 = false;
@@ -270,15 +298,30 @@ public class OrderService {
 
         int shipping;
 
-        if (allAre20x20) {
-            if (count2020 == 1) {
-                shipping = 430;
-            } else if (count2020 <= 3) {
-                shipping = 600;
+        // Trường hợp chỉ có art supplies → ship 430
+        if (nonArtSuppliesCount == 0 && artSuppliesCount > 0) {
+            shipping = 430;
+        } else {
+            // Có tranh → tính phí bình thường (art supplies bị bỏ qua)
+            if (allAre20x20) {
+                if (count2020 == 1) {
+                    shipping = 430;
+                } else if (count2020 <= 3) {
+                    shipping = 600;
+                } else {
+                    int totalSize = maxLength + maxWidth + totalThickness;
+                    if (totalSize <= 60) {
+                        shipping = 840;
+                    } else if (totalSize <= 80) {
+                        shipping = 1200;
+                    } else if (totalSize <= 100) {
+                        shipping = 1500;
+                    } else {
+                        shipping = 1500;
+                    }
+                }
             } else {
-                // quá 3 tranh → tính theo tổng kích thước
                 int totalSize = maxLength + maxWidth + totalThickness;
-
                 if (totalSize <= 60) {
                     shipping = 840;
                 } else if (totalSize <= 80) {
@@ -288,19 +331,6 @@ public class OrderService {
                 } else {
                     shipping = 1500;
                 }
-            }
-        } else {
-            // Tranh hỗn hợp → tính kiện theo tổng size
-            int totalSize = maxLength + maxWidth + totalThickness;
-
-            if (totalSize <= 60) {
-                shipping = 840;
-            } else if (totalSize <= 80) {
-                shipping = 1200;
-            } else if (totalSize <= 100) {
-                shipping = 1500;
-            } else {
-                shipping = 1500;
             }
         }
 
@@ -314,11 +344,13 @@ public class OrderService {
 
 
 
+
     private SizeInfo getSize(PaintingSize size) {
         return switch (size) {
             case SIZE_20x20 -> new SizeInfo(20, 20, 2);
             case SIZE_30x40 -> new SizeInfo(40, 30, 2);
             case SIZE_40x50 -> new SizeInfo(50, 40, 3);
+            case SIZE_ART_SUPPLIES -> new SizeInfo(0, 0, 0); // Không tính kích thước cho art supplies
             default -> throw new BadRequestException("Kích thước tranh không hỗ trợ: " + size);
         };
     }
@@ -352,8 +384,6 @@ public class OrderService {
                 return false;
         }
     }
-
-
 
 
     private boolean isRemoteArea(String prefecture) {

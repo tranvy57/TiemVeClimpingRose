@@ -83,7 +83,7 @@ export function OptionList() {
         </Dialog>
         <div
           onClick={() => handleClick("SIZE_20x20")}
-          className="cursor-pointer md:w-full"
+          className="cursor-pointer"
         >
           <OptionItem
             name={t("options.size2020")}
@@ -93,7 +93,7 @@ export function OptionList() {
 
         <div
           onClick={() => handleClick("SIZE_30x40")}
-          className="cursor-pointer md:w-full"
+          className="cursor-pointer"
         >
           <OptionItem
             name={t("options.size3040")}
@@ -103,11 +103,21 @@ export function OptionList() {
 
         <div
           onClick={() => handleClick("SIZE_40x50")}
-          className="cursor-pointer md:w-w-full"
+          className="cursor-pointer"
         >
           <OptionItem
             name={t("options.size4050")}
             image_url="https://res.cloudinary.com/dztelvbah/image/upload/v1751348216/4050_ytizz6.jpg"
+          />
+        </div>
+
+        <div
+          onClick={() => handleClick("SIZE_ART_SUPPLIES")}
+          className="cursor-pointer"
+        >
+          <OptionItem
+            name="Họa cụ"
+            image_url="https://res.cloudinary.com/dztelvbah/image/upload/v1754020594/hoacu_utxny8.jpg"
           />
         </div>
       </div>
