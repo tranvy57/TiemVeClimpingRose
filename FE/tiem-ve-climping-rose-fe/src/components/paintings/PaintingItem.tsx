@@ -59,12 +59,12 @@ export function PaitingItem({
             {name}
           </p>
 
-          <div className="font-light w-fit rounded-xl border text-sm p-1">
+          <div className="my-1 w-fit text-[12px] border text-sm px-1 rounded-sm">
             {size}
           </div>
         </div>
 
-        <div className="text-md text-red-500 font-bold flex justify-between">
+        <div className="text-md text-red-400 font-bold flex justify-between">
           <div className="flex items-center">
             {/* <BadgeJapaneseYen
               className="size-4"

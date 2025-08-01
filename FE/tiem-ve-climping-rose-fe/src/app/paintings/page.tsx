@@ -31,7 +31,7 @@ import { getPaintings } from "@/api/paintingApi";
 import { ICategory, IPainting } from "@/types/implements/painting";
 import { getVisiblePages } from "@/utils/helper";
 import React, { useEffect, useState } from "react";
-import { Funnel, Search } from "lucide-react";
+import { Funnel, Search, X } from "lucide-react";
 import { log } from "console";
 import { Button } from "@/components/ui/button";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -161,6 +161,16 @@ const PaintingsPage = () => {
   //   fetchPaintings();
   // };
 
+  const handleDeleteFilter = () => {
+    setSelectedCategoryIds([]);
+    setSelectedSizes([]);
+    setSort("created-desc");
+    setPage(1);
+
+    // Cập nhật URL để xóa filter khỏi query
+    router.push("/paintings");
+  };
+
   return (
     <div className=" relative flex flex-col md:flex-row gap-4">
       {/* Filters */}
@@ -176,7 +186,7 @@ const PaintingsPage = () => {
             <Search />
           </Button>
         </div> */}
-        <div className="w-full">
+        <div className="w-full flex justify-between items-center">
           <Select value={sort} onValueChange={setSort}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Sắp xếp" />
@@ -189,6 +199,15 @@ const PaintingsPage = () => {
             </SelectContent>
           </Select>
         </div>
+
+        <Button
+          className="w-full flex justify-center items-center border gap-2 p-1 rounded-md"
+          onClick={handleDeleteFilter}
+        >
+          <X size={14} />
+          <p>Xóa bộ lọc</p>
+          <p>({selectedSizes.length + selectedCategoryIds.length})</p>
+        </Button>
 
         <div>
           <p className="text-lg font-semibold mb-2 text-red-500">Kích thước</p>
@@ -242,7 +261,7 @@ const PaintingsPage = () => {
 
       <div className="flex-1 flex flex-col justify-start gap">
         <div className="flex justify-between pb-2 md:hidden gap-4">
-          <div className="flex-1">
+          <div className="flex-1 flex justify-between items-center gap-2">
             <Select value={sort} onValueChange={setSort}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Sắp xếp" />
@@ -254,6 +273,15 @@ const PaintingsPage = () => {
                 <SelectItem value="price-desc">Giá giảm dần</SelectItem>
               </SelectContent>
             </Select>
+
+            <Button
+              className="flex justify-center items-center border gap-2 p-1 rounded-md"
+              onClick={handleDeleteFilter}
+            >
+              <X size={14} />
+              <p>Xóa bộ lọc</p>
+              <p>({selectedSizes.length + selectedCategoryIds.length})</p>
+            </Button>
           </div>
           <Sheet>
             <SheetTrigger>
@@ -274,6 +302,15 @@ const PaintingsPage = () => {
                       <Search />
                     </Button>
                   </div> */}
+
+                  <Button
+                    className="flex justify-center items-center border gap-2 p-1 rounded-md"
+                    onClick={handleDeleteFilter}
+                  >
+                    <X size={14} />
+                    <p>Xóa bộ lọc</p>
+                    <p>({selectedSizes.length + selectedCategoryIds.length})</p>
+                  </Button>
 
                   <div>
                     <h2 className=" font-semibold mb-2 text-red-500">

@@ -15,7 +15,7 @@ const NewPaintings = () => {
   const fetchPaintings = async () => {
     try {
       setLoading(true);
-      const response = await getPaintings(1, 4, [], [], true, "", "");
+      const response = await getPaintings(1, 12, [], [], true, "", "");
       if (response.data) {
         setPaintings(response.data.items);
       }
