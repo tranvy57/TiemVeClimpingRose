@@ -50,4 +50,24 @@ public class RedisService {
         String value = redisTemplate.opsForValue().get(key);
         return value != null ? Long.parseLong(value) : null;
     }
+
+//    ------------------------
+
+    private static final String CATEGORY_CACHE_KEY = "product_categories";
+
+    // Lưu danh mục (không cần TTL)
+    public void saveCategories(String jsonCategories) {
+        redisTemplate.opsForValue().set(CATEGORY_CACHE_KEY, jsonCategories);
+    }
+
+    // Lấy danh mục
+    public String getCategories() {
+        return redisTemplate.opsForValue().get(CATEGORY_CACHE_KEY);
+    }
+
+    // Xoá danh mục khi có thay đổi
+    public void deleteCategories() {
+        redisTemplate.delete(CATEGORY_CACHE_KEY);
+    }
+
 }
