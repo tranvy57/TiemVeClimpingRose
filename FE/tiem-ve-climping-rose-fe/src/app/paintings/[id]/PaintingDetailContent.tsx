@@ -50,21 +50,24 @@ export default async function PaintingDetailContent({
           </p>
 
           <div className="flex items-center">
-            <p className="mt-2 text-red-400 font-bold text-2xl lg:text-2xl mb-4">
+            <p className="mt-2 text-red-400 font-bold text-2xl lg:text-2xl mb-2">
               ¥{painting.price.toLocaleString("ja-JP")}
             </p>
           </div>
-
+          <div className="font-light w-fit rounded-xl border text-sm p-1 mb-3">
+            {painting.size}
+          </div>
           <div className="flex gap-4">
             {categories.map((c) => (
               <p
                 key={c.categoryId}
-                className="bg-red-300 font-semibold p-1 rounded-sm"
+                className="bg-red-400 font-semibold px-2 py-1 text-white rounded-xl"
               >
                 {c.name}
               </p>
             ))}
           </div>
+
           <p className="mt-2">Số lượng sẵn có: {painting.quantity}</p>
 
           <AddToCartSection
@@ -81,15 +84,17 @@ export default async function PaintingDetailContent({
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Bảng giá vận chuyển?</DialogTitle>
+                <DialogTitle>Bảng giá vận chuyển</DialogTitle>
                 <DialogDescription>
-                  <Image
-                    src={"/ship.jpg"}
-                    alt="Shipping"
-                    width={300}
-                    height={200}
-                    className="rounded"
-                  />
+                  <div className="w-full flex justify-center">
+                    <Image
+                      src={"/ship.jpg"}
+                      alt="Shipping"
+                      width={300}
+                      height={200}
+                      className="rounded"
+                    />
+                  </div>
                 </DialogDescription>
               </DialogHeader>
             </DialogContent>

@@ -59,7 +59,9 @@ export function PaitingItem({
             {name}
           </p>
 
-          <p className="font-light text-[10px]">{size}</p>
+          <div className="font-light w-fit rounded-xl border text-sm p-1">
+            {size}
+          </div>
         </div>
 
         <div className="text-md text-red-500 font-bold flex justify-between">
