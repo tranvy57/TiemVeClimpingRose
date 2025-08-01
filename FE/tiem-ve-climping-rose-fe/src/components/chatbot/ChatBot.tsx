@@ -48,11 +48,11 @@ const ChatBot = () => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-20 right-4 z-50">
       {isOpen ? (
         <div className="w-80 h-96 bg-white border rounded-xl shadow-lg flex flex-col">
           <div className="p-3 border-b flex justify-between items-center">
-            <span className="font-semibold">🤖 ChatBot</span>
+            <span className="font-semibold">🤖 Trợ lý Ảo Climping Rose</span>
             <button onClick={() => setIsOpen(false)}>✕</button>
           </div>
 
@@ -96,7 +96,7 @@ const ChatBot = () => {
           className="bg-blue-500 text-white p-3 rounded-full shadow-lg"
           onClick={() => setIsOpen(true)}
         >
-          💬
+          🤖
         </button>
       )}
     </div>

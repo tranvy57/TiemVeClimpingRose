@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { getLocale, getMessages } from "next-intl/server";
 import AppInit from "@/components/AppInit";
 import ChatBot from "@/components/chatbot/ChatBot";
+import MessengerButton from "@/components/layout/MessageButton";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,6 +43,7 @@ export default async function RootLayout({
           <AppInit />
           {children}
           <ChatBot />
+          <MessengerButton />
         </Providers>
       </body>
     </html>

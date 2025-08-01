@@ -10,13 +10,13 @@ const Footer = () => {
           <div className="flex items-center gap-2 mb-3">
             <Image
               src="/avt.jpg"
-              alt="Tiệm vẽ Climping Rose"
+              alt="Tiệm Vẽ Climping Rose"
               width={40}
               height={40}
               className="rounded-full"
             />
             <span className="font-bold text-lg text-red-500">
-              Tiệm vẽ Climping Rose
+              Tiệm Vẽ Climping Rose
             </span>
           </div>
           <p className="text-gray-600 leading-relaxed">

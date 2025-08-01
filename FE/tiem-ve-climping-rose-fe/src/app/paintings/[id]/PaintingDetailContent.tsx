@@ -76,7 +76,7 @@ export default async function PaintingDetailContent({
             stock={painting.quantity}
           />
           <Separator className="my-4" />
-          <div className="flex gap-3">
+          <div className="flex gap-3 m-2">
             <Dialog>
               <DialogTrigger>
                 <div className="flex items-center gap-2 text-sm cursor-pointer underline">
