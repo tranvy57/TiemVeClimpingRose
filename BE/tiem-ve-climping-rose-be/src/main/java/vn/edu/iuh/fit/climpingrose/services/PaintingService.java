@@ -88,6 +88,11 @@ public class PaintingService {
 
         Painting painting = paintingMapper.toEntity(request);
         painting.setPaintingId(paintingId);
+
+        if (paintingRepository.existsById(paintingId)) {
+            throw new IllegalArgumentException("Tranh với ID này đã tồn tại: " + paintingId);
+        }
+
         Painting savedPainting = paintingRepository.save(painting);
 
 
