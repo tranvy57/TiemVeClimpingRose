@@ -3,8 +3,16 @@ import AddToCartSection from "@/components/paintings/AddToCartSection";
 import PaintingInstruction from "@/components/paintings/PaintingInstruction";
 import { Separator } from "@/components/ui/separator";
 import { ICategory, IPainting } from "@/types/implements/painting";
-import { BadgeJapaneseYen } from "lucide-react";
+import { BadgeJapaneseYen, Truck } from "lucide-react";
 import Image from "next/image";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface PaintingDetailContentProps {
   id: string;
@@ -33,15 +41,17 @@ export default async function PaintingDetailContent({
           />
         </div>
 
-        <div className="py-4 md:px-8">
+        <div className="py-4 md:px-8 w-full md:w-1/2">
           <h1 className="text-xl lg:text-2xl font-bold text-red-500">
             {painting.name}
           </h1>
-          <p className=" md:mt-4 text-gray-700">{painting.paintingId}</p>
+          <p className=" md:mt-4 text-gray-700">
+            Mã sản phẩm: {painting.paintingId}
+          </p>
 
           <div className="flex items-center">
-            <p className="mt-2 text-red-400 font-bold text-2xl lg:text-3xl">
-              ¥{painting.price}
+            <p className="mt-2 text-red-400 font-bold text-2xl lg:text-2xl mb-4">
+              ¥{painting.price.toLocaleString("ja-JP")}
             </p>
           </div>
 
@@ -61,6 +71,30 @@ export default async function PaintingDetailContent({
             paintingId={painting.paintingId}
             stock={painting.quantity}
           />
+          <Separator className="my-4" />
+          <Dialog>
+            <DialogTrigger>
+              <div className="flex items-center gap-2 text-sm cursor-pointer underline">
+                {" "}
+                <Truck /> Vận chuyển{" "}
+              </div>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Bảng giá vận chuyển?</DialogTitle>
+                <DialogDescription>
+                  <Image
+                    src={"/ship.jpg"}
+                    alt="Shipping"
+                    width={300}
+                    height={200}
+                    className="rounded"
+                  />
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+          <p className="text-gray-500">{painting.description}</p>
         </div>
       </div>
       <Separator className="my-6" />

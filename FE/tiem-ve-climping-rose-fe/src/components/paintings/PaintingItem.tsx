@@ -62,21 +62,21 @@ export function PaitingItem({
           <p className="font-light text-[10px]">{size}</p>
         </div>
 
-        <div className="text-xs text-red-500 font-semibold flex justify-between">
+        <div className="text-md text-red-500 font-bold flex justify-between">
           <div className="flex items-center">
-            <BadgeJapaneseYen
+            {/* <BadgeJapaneseYen
               className="size-4"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
               }}
-            />
-            {price}
+            /> */}
+            ¥{price.toLocaleString("ja-JP")}
           </div>
 
-          <div className="bg-red-200 rounded-full p-1 hover:p-2 transition-all duration-300 shadow-sm ">
+          <div className="bg-red-400 rounded-full p-1 hover:p-2 transition-all duration-300 shadow-sm ">
             <ShoppingCart
-              className="font-light size-4 text-gray-800"
+              className="font-light size-4 text-white cursor-pointer"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
