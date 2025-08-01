@@ -3,7 +3,7 @@ import AddToCartSection from "@/components/paintings/AddToCartSection";
 import PaintingInstruction from "@/components/paintings/PaintingInstruction";
 import { Separator } from "@/components/ui/separator";
 import { ICategory, IPainting } from "@/types/implements/painting";
-import { BadgeJapaneseYen, Truck } from "lucide-react";
+import { BadgeJapaneseYen, Check, Copy, Truck } from "lucide-react";
 import Image from "next/image";
 import {
   Dialog,
@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import CopyIcon from "@/components/paintings/CopyButton";
 
 interface PaintingDetailContentProps {
   id: string;
@@ -75,30 +76,34 @@ export default async function PaintingDetailContent({
             stock={painting.quantity}
           />
           <Separator className="my-4" />
-          <Dialog>
-            <DialogTrigger>
-              <div className="flex items-center gap-2 text-sm cursor-pointer underline">
-                {" "}
-                <Truck /> Vận chuyển{" "}
-              </div>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Bảng giá vận chuyển</DialogTitle>
-                <DialogDescription>
-                  <div className="w-full flex justify-center">
-                    <Image
-                      src={"/ship.jpg"}
-                      alt="Shipping"
-                      width={300}
-                      height={200}
-                      className="rounded"
-                    />
-                  </div>
-                </DialogDescription>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
+          <div className="flex gap-3">
+            <Dialog>
+              <DialogTrigger>
+                <div className="flex items-center gap-2 text-sm cursor-pointer underline">
+                  {" "}
+                  <Truck /> Vận chuyển{" "}
+                </div>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Bảng giá vận chuyển</DialogTitle>
+                  <DialogDescription>
+                    <div className="w-full flex justify-center">
+                      <Image
+                        src={"/ship.jpg"}
+                        alt="Shipping"
+                        width={300}
+                        height={200}
+                        className="rounded"
+                      />
+                    </div>
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+
+            <CopyIcon />
+          </div>
           <p className="text-gray-500">{painting.description}</p>
         </div>
       </div>
