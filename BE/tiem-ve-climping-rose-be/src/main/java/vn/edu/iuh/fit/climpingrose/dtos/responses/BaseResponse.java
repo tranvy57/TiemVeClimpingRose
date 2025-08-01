@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class BaseResponse {
-    protected boolean isActive;
+    boolean isActive;
     Instant createdAt;
     Instant updatedAt;
 }

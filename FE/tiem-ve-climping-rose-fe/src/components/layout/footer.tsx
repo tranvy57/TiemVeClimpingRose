@@ -63,7 +63,7 @@ const Footer = () => {
           <h4 className="font-bold mb-2 text-red-500">Liên hệ</h4>
           <ul className="space-y-1">
             <li>📍Japan</li>
-            <li>📧 hello@climpingrose.vn</li>
+            <li>📧climpingrose.jp@gmail.com</li>
             <li>
               <Link
                 href="https://www.facebook.com/tiemveclimpingrose"

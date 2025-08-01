@@ -45,7 +45,7 @@ export function CategoryList() {
           {t("categories")}
         </p>
         <Link href="/paintings" className="font-normal text-red-400 underline">
-          {t("seemore")}
+          Xem tất cả
         </Link>
       </div>
 

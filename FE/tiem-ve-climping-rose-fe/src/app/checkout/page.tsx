@@ -705,9 +705,7 @@ export default function ChekoutPage() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>
-              <p>
-                Bạn có muốn lưu lại địa chỉ này cho những lần tiếp theo không?
-              </p>
+              Bạn có muốn lưu lại địa chỉ này cho những lần tiếp theo không?
             </DialogTitle>
           </DialogHeader>
           <DialogFooter className="flex justify-end gap-2 pt-4">

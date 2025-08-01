@@ -30,6 +30,7 @@ export function CouponList() {
     <div className="flex my-2  md:justify-center overflow-x-auto scrollbar-hidden">
       <div className="flex md:flex-wrap justify-center gap-4 ">
         {coupons.map((c) => {
+          if (c.active === false) return null;
           return (
             <CouponItem
               key={c.couponId}

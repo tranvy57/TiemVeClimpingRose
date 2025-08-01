@@ -1,4 +1,6 @@
-export interface ICoupon {
+import { BaseEntity } from "../base-entity";
+
+export interface ICoupon extends BaseEntity {
   couponId: string;
   code: string;
   imageUrl: string;
