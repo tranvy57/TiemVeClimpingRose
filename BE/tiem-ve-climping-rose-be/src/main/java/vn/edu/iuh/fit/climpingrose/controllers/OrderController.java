@@ -6,6 +6,7 @@ import vn.edu.iuh.fit.climpingrose.dtos.requests.OrderRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.requests.OrderUpdateRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.ApiResponse;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.OrderResponse;
+import vn.edu.iuh.fit.climpingrose.dtos.responses.PageResponse;
 import vn.edu.iuh.fit.climpingrose.enums.OrderStatus;
 import vn.edu.iuh.fit.climpingrose.services.OrderService;
 
@@ -16,6 +17,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
+
+    @GetMapping
+    public ApiResponse<PageResponse<OrderResponse>> getAllOrders(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "12") int size,
+            @RequestParam(required = false) String sort
+
+    ) {
+        PageResponse<OrderResponse> result = orderService.getAllOrders(page, size, sort) ;
+        return ApiResponse.<PageResponse<OrderResponse>>builder()
+                .message("Lấy danh sách tranh thành công")
+                .data(result)
+                .build();
+    }
 
     @PostMapping("/create")
     public ApiResponse<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest) {

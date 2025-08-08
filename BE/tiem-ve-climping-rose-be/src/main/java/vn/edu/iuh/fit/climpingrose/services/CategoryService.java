@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.climpingrose.dtos.dtos.CategoryDTO;
 import vn.edu.iuh.fit.climpingrose.mappers.CategoryMapper;
@@ -65,4 +66,29 @@ public class CategoryService {
             e.printStackTrace();
         }
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public CategoryDTO updateCategory(String categoryId, CategoryDTO categoryDTO) {
+        var existingCategory = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+
+        if (categoryDTO.getName() != null) {
+            existingCategory.setName(categoryDTO.getName());
+        }
+
+        if (categoryDTO.getDescription() != null) {
+            existingCategory.setDescription(categoryDTO.getDescription());
+        }
+
+        if(categoryDTO.getCategoryCode() != null) {
+            existingCategory.setCategoryCode(categoryDTO.getCategoryCode());
+        }
+
+        var updatedCategory = categoryRepository.save(existingCategory);
+
+        refreshCategoryCache();
+
+        return categoryMapper.toCategoryDTO(updatedCategory);
+    }
+
 }

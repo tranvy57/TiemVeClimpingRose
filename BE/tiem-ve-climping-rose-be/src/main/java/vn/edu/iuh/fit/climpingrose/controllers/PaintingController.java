@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.climpingrose.dtos.dtos.PaintingResponse;
 import vn.edu.iuh.fit.climpingrose.dtos.requests.PaintingCreationRequest;
+import vn.edu.iuh.fit.climpingrose.dtos.requests.PaintingUpdateRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.ApiResponse;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.PageResponse;
 import vn.edu.iuh.fit.climpingrose.services.PaintingService;
@@ -51,5 +52,17 @@ public class PaintingController {
                 .data(painting)
                 .build();
     }
+
+    @PutMapping
+    public ApiResponse<PaintingResponse> updatePainting(@RequestBody PaintingUpdateRequest request,
+                                                        @RequestParam String paintingId) {
+        PaintingResponse painting = paintingService.updatePainting(paintingId, request);
+        return ApiResponse.<PaintingResponse>builder()
+                .message("Cập nhật tranh thành công")
+                .data(painting)
+                .build();
+    }
+
+
 
 }

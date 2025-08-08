@@ -6,9 +6,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.climpingrose.dtos.dtos.PaintingResponse;
 import vn.edu.iuh.fit.climpingrose.dtos.requests.PaintingCreationRequest;
+import vn.edu.iuh.fit.climpingrose.dtos.requests.PaintingUpdateRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.PageResponse;
 import vn.edu.iuh.fit.climpingrose.entities.Category;
 import vn.edu.iuh.fit.climpingrose.entities.CategoryPainting;
@@ -106,6 +108,57 @@ public class PaintingService {
 
         categoryPaintingRepository.saveAll(categoryPaintings);
         savedPainting.setCategoryPaintings(categoryPaintings);
+        return paintingMapper.toPaintingResponse(savedPainting);
+    }
+
+
+    @PreAuthorize("hasRole('ADMIN')")
+    public PaintingResponse updatePainting(String id, PaintingUpdateRequest request) {
+        Painting painting = paintingRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Painting not found with id: " + id));
+
+        if (request.getName() != null) {
+            painting.setName(request.getName());
+        }
+        if (request.getDescription() != null) {
+            painting.setDescription(request.getDescription());
+        }
+        if (request.getImageUrl() != null) {
+            painting.setImageUrl(request.getImageUrl());
+        }
+        if (request.getSize() != null) {
+            painting.setSize(request.getSize());
+        }
+        if (request.getPrice() != null) {
+            painting.setPrice(request.getPrice());
+        }
+        if (request.getQuantity() != null) {
+            painting.setQuantity(request.getQuantity());
+        }
+
+        if (request.getActive() != null) {
+            painting.setActive(request.getActive());
+        }
+
+        if (request.getCategoryIds() != null) {
+            // Xoá hết các CategoryPainting hiện tại của Painting
+            categoryPaintingRepository.deleteByPainting(painting);
+
+            // Thêm lại từ categoryIds mới
+            for (String categoryId : request.getCategoryIds()) {
+                Category category = categoryRepository.findById(categoryId)
+                        .orElseThrow(() -> new RuntimeException("Category not found: " + categoryId));
+
+                CategoryPainting cp = CategoryPainting.builder()
+                        .category(category)
+                        .painting(painting)
+                        .build();
+
+                categoryPaintingRepository.save(cp);
+            }
+        }
+
+        Painting savedPainting = paintingRepository.save(painting);
         return paintingMapper.toPaintingResponse(savedPainting);
     }
 

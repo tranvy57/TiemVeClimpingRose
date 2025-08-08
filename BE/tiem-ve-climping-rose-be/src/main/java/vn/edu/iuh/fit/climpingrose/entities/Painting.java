@@ -28,6 +28,7 @@ public class Painting extends BaseEntity{
     String paintingId;
 
     String name;
+    @Column(length = 1000)
     String description;
     @Column(length = 500)
     String imageUrl;

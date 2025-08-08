@@ -2,10 +2,7 @@ package vn.edu.iuh.fit.climpingrose.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.climpingrose.dtos.dtos.CategoryDTO;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.ApiResponse;
 import vn.edu.iuh.fit.climpingrose.repositories.CategoryRepository;
@@ -31,6 +28,14 @@ public class CategoryController {
         return ApiResponse.<CategoryDTO>builder()
                 .message("Tạo loại tranh thành công")
                 .data(categoryService.createCategory(categoryDTO))
+                .build();
+    }
+
+    @PutMapping
+    public ApiResponse<CategoryDTO> updateCategory(@RequestBody CategoryDTO categoryDTO, @RequestParam String categoryId)  {
+        return ApiResponse.<CategoryDTO>builder()
+                .message("Cập nhật loại tranh thành công")
+                .data(categoryService.updateCategory(categoryId, categoryDTO))
                 .build();
     }
 }
