@@ -145,17 +145,22 @@ public class PaintingService {
             // Xoá hết các CategoryPainting hiện tại của Painting
             categoryPaintingRepository.deleteByPainting(painting);
 
+            painting.getCategoryPaintings().clear();
             // Thêm lại từ categoryIds mới
             for (String categoryId : request.getCategoryIds()) {
                 Category category = categoryRepository.findById(categoryId)
                         .orElseThrow(() -> new RuntimeException("Category not found: " + categoryId));
+
 
                 CategoryPainting cp = CategoryPainting.builder()
                         .category(category)
                         .painting(painting)
                         .build();
 
+
+
                 categoryPaintingRepository.save(cp);
+                painting.getCategoryPaintings().add(cp);
             }
         }
 
