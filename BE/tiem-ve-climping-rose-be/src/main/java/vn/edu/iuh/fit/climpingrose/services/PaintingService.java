@@ -1,5 +1,6 @@
 package vn.edu.iuh.fit.climpingrose.services;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -111,7 +112,7 @@ public class PaintingService {
         return paintingMapper.toPaintingResponse(savedPainting);
     }
 
-
+    @Transactional
     @PreAuthorize("hasRole('ADMIN')")
     public PaintingResponse updatePainting(String id, PaintingUpdateRequest request) {
         Painting painting = paintingRepository.findById(id)

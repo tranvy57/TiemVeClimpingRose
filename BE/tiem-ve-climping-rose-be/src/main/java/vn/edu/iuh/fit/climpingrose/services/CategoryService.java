@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.climpingrose.dtos.dtos.CategoryDTO;
+import vn.edu.iuh.fit.climpingrose.entities.CategoryPainting;
 import vn.edu.iuh.fit.climpingrose.mappers.CategoryMapper;
+import vn.edu.iuh.fit.climpingrose.repositories.CategoryPaintingRepository;
 import vn.edu.iuh.fit.climpingrose.repositories.CategoryRepository;
 import vn.edu.iuh.fit.climpingrose.repositories.PaintingRepository;
 
