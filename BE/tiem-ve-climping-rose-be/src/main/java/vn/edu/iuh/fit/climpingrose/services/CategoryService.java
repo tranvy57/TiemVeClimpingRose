@@ -1,17 +1,15 @@
 package vn.edu.iuh.fit.climpingrose.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.climpingrose.dtos.dtos.CategoryDTO;
-import vn.edu.iuh.fit.climpingrose.entities.CategoryPainting;
+import vn.edu.iuh.fit.climpingrose.entities.Category;
+import vn.edu.iuh.fit.climpingrose.exceptions.NotFoundException;
 import vn.edu.iuh.fit.climpingrose.mappers.CategoryMapper;
-import vn.edu.iuh.fit.climpingrose.repositories.CategoryPaintingRepository;
 import vn.edu.iuh.fit.climpingrose.repositories.CategoryRepository;
-import vn.edu.iuh.fit.climpingrose.repositories.PaintingRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -93,4 +91,9 @@ public class CategoryService {
         return categoryMapper.toCategoryDTO(updatedCategory);
     }
 
+    public void deleteCategory(String categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NotFoundException("Category not found"));
+        categoryRepository.delete(category);
+    }
 }

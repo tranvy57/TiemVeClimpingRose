@@ -3,6 +3,8 @@ package vn.edu.iuh.fit.climpingrose.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "category_painting")
@@ -19,6 +21,7 @@ public class CategoryPainting{
 
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)

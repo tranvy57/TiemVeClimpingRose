@@ -1,11 +1,9 @@
 package vn.edu.iuh.fit.climpingrose.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.climpingrose.dtos.dtos.CategoryDTO;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.ApiResponse;
-import vn.edu.iuh.fit.climpingrose.repositories.CategoryRepository;
 import vn.edu.iuh.fit.climpingrose.services.CategoryService;
 
 import java.util.List;
@@ -36,6 +34,15 @@ public class CategoryController {
         return ApiResponse.<CategoryDTO>builder()
                 .message("Cập nhật loại tranh thành công")
                 .data(categoryService.updateCategory(categoryId, categoryDTO))
+                .build();
+    }
+
+    @DeleteMapping("/delete/{categoryId}")
+    public ApiResponse<Void> deleteCategory(@PathVariable String categoryId) {
+        categoryService.deleteCategory(categoryId);
+        return ApiResponse.<Void>builder()
+                .message("Xoá loại tranh thành công")
+                .statusCode(200)
                 .build();
     }
 }
