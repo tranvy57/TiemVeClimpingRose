@@ -10,8 +10,6 @@ interface PreviewImageProps {
 function PreviewImage({ src, alt }: PreviewImageProps) {
   const [previewSrc, setPreviewSrc] = useState<string | null>(null);
 
-  console.log("PreviewImage src:", previewSrc);
-
   return (
     <>
       {/* Ảnh trong Markdown */}
@@ -56,7 +54,7 @@ function PreviewImage({ src, alt }: PreviewImageProps) {
   );
 }
 
-export default function MarkdownRenderer({ text }: { text: string }) {
+export default function MarkdownRenderer({ text }: { text: string }) { 
   return (
     <ReactMarkdown
       components={{

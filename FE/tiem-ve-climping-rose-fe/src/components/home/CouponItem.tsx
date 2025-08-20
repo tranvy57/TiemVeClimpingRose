@@ -58,7 +58,14 @@ export function CouponItem({
 
   return (
     <div className="flex items-start w-[280px] md:w-[300px] border border-l-0 h-fit">
-      <Image src={imageUrl} height={50} width={100} alt="coupon" />
+      <div className="relative w-[100px] h-[118px]">
+        <Image
+          src={imageUrl}
+          fill
+          alt="Kích thước"
+          sizes="(max-width: 160px) 100vw, (min-width: 160px) 100vw"
+        />
+      </div>
 
       <div className="flex-1 p-2 space-y-[4px] justify-between flex flex-col">
         <p className="text-[13px] font-bold">

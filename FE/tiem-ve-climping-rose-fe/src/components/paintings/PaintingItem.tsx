@@ -50,6 +50,7 @@ export function PaitingItem({
           src={image_url}
           alt={name}
           fill
+          sizes="(max-width: 204px) 100vw, (min-width: 204px) 100vw"
           className="object-cover rounded-sm transition-transform duration-300 group-hover:scale-105"
         />
       </div>

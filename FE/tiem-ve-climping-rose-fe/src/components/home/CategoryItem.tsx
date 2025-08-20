@@ -19,11 +19,12 @@ export function CategoryItem({
   return (
     <Link href={href} className="">
       <div className="border border-gray-200 rounded-md h-full">
-        <div className="relative aspect-square w-full  overflow-hidden group min-w-[100px]">
+        <div className="relative aspect-square w-full overflow-hidden group min-w-[100px]">
           <Image
             src={image_url}
             alt={title}
             fill
+            sizes="(max-width: 200px) 100vw, (min-width: 200px) 100vw"
             className="object-cover rounded-sm transition-transform duration-300 group-hover:scale-105"
           />
         </div>

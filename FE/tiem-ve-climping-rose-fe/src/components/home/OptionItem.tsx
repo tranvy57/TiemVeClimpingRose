@@ -22,6 +22,7 @@ export const OptionItem = React.forwardRef<HTMLDivElement, OptionItemProps>(
           src={image_url}
           fill
           alt="Kích thước"
+          sizes="(max-width: 160px) 100vw, (min-width: 160px) 100vw"
           className="object-cover rounded-full transition-transform duration-300 group-hover:scale-105"
         />
       </div>
