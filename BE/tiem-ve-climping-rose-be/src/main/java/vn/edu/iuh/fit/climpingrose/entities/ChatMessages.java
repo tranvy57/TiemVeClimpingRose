@@ -32,7 +32,7 @@ public class ChatMessages {
     @Enumerated(EnumType.STRING)
     private MessageRole role;
 
-    @Column(length = 1500)
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private LocalDateTime createdAt;
