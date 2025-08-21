@@ -90,6 +90,10 @@ public class CategoryService {
             existingCategory.setCategoryCode(categoryDTO.getCategoryCode());
         }
 
+        if(categoryDTO.getImageUrl() != null){
+            existingCategory.setImageUrl(categoryDTO.getImageUrl());
+        }
+
         var updatedCategory = categoryRepository.save(existingCategory);
 
         refreshCategoryCache();
