@@ -1,18 +1,13 @@
 package vn.edu.iuh.fit.climpingrose.services;
 
-import jakarta.transaction.Status;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.fit.climpingrose.dtos.dtos.PaintingResponse;
-import vn.edu.iuh.fit.climpingrose.dtos.requests.CartItemRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.requests.OrderRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.requests.OrderUpdateRequest;
 import vn.edu.iuh.fit.climpingrose.dtos.responses.OrderResponse;
@@ -27,7 +22,6 @@ import vn.edu.iuh.fit.climpingrose.exceptions.UnauthorizedException;
 import vn.edu.iuh.fit.climpingrose.mappers.OrderItemMapper;
 import vn.edu.iuh.fit.climpingrose.mappers.OrderMapper;
 import vn.edu.iuh.fit.climpingrose.repositories.*;
-import vn.edu.iuh.fit.climpingrose.repositories.specifications.PaintingSpecifications;
 import vn.edu.iuh.fit.climpingrose.utils.UserUtils;
 
 import java.math.BigDecimal;
@@ -522,7 +516,7 @@ public class OrderService {
             throw new NotFoundException("Đơn hàng không tồn tại");
         }
 
-        if (!order.getStatus().equals(OrderStatus.PAYED)) {
+        if (!order.getStatus().equals(OrderStatus.PAYED) && !order.getStatus().equals(OrderStatus.PENDING)) {
             throw new BadRequestException("Chỉ có thể phê duyệt đơn hàng khi đã thanh toán xong.");
         }
 
