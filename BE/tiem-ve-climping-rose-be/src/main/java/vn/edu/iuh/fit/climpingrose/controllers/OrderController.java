@@ -56,6 +56,14 @@ public class OrderController {
                 .build();
     }
 
+    @GetMapping("/admin/{orderId}")
+    public ApiResponse<OrderResponse> getOrderByAdmin(@PathVariable String orderId) {
+        return ApiResponse.<OrderResponse>builder()
+                .message("Tạo đơn hàng thành công")
+                .data(orderService.getOrderByAdminOrderId(orderId))
+                .build();
+    }
+
     @PutMapping("/{orderId}")
     public ApiResponse<OrderResponse> updateOrder(@PathVariable String orderId, @RequestBody OrderUpdateRequest request) {
         return ApiResponse.<OrderResponse>builder()

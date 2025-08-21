@@ -406,6 +406,16 @@ public class OrderService {
         return orderMapper.toListOrderResponse(orders);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    public OrderResponse getOrderByAdminOrderId(String orderId){
+
+        Order order = orderRepository.getByOrderId(orderId);
+        if (order == null) {
+            throw new BadRequestException("Đơn hàng không tồn tại hoặc bạn không có quyền truy cập vo đơn hàng này");
+        }
+        return orderMapper.toResponse(order);
+    }
+
     public OrderResponse getOrderById(String orderId){
         User user = userUtils.getUserLogin();
 
