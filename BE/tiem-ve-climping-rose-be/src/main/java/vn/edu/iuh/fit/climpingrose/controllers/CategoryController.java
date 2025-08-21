@@ -45,4 +45,12 @@ public class CategoryController {
                 .statusCode(200)
                 .build();
     }
+
+    @GetMapping("/{categoryId}")
+    public ApiResponse<CategoryDTO> getCategoryById(@PathVariable String categoryId) {
+        return ApiResponse.<CategoryDTO>builder()
+                .message("Lấy thông tin loại tranh thành công")
+                .data(categoryService.getCategoryById(categoryId))
+                .build();
+    }
 }

@@ -46,6 +46,12 @@ public class CategoryService {
         }
     }
 
+    public CategoryDTO getCategoryById(String categoryId) {
+        return categoryRepository.findById(categoryId)
+                .map(categoryMapper::toCategoryDTO)
+                .orElseThrow(() -> new NotFoundException("Category not found"));
+    }
+
     public CategoryDTO createCategory(CategoryDTO categoryDTO) {
         var category = categoryMapper.toCatgory(categoryDTO);
         var saved = categoryRepository.save(category);
