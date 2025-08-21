@@ -95,5 +95,6 @@ public class CategoryService {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException("Category not found"));
         categoryRepository.delete(category);
+        refreshCategoryCache();
     }
 }
