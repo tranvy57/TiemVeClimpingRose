@@ -9,6 +9,15 @@ import MarkdownRenderer from "./PreviewImage";
 import Image from "next/image";
 import { IUser } from "@/types/implements";
 
+const suffix = `
+  ✨ Nếu bạn cần hỗ trợ tốt hơn có thể nhấn vào trang bên dưới để ghé thăm chúng mình nhé:
+  📘 [**Facebook**: Tiệm vẽ Climping Rose](https://www.facebook.com/tiemveclimpingrose)
+  🎨 [**TikTok**: Tiệm tranh số hóa tại Nhật](https://www.tiktok.com/@tiemtranhsohoatainhat)
+  📍 Japan
+
+  💖 Cảm ơn bạn đã quan tâm đến **🌸 Climping Rose**!
+`;
+
 const ChatAI = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [page, setPage] = useState(0);
@@ -18,6 +27,11 @@ const ChatAI = () => {
       role: "AI",
       content:
         "🌸 **Chào mừng bạn đến với Climping Rose!**\n\nMình là trợ lý ảo, sẵn sàng hỗ trợ bạn về tìm kiếm tranh phù hợp, thông tin cửa hàng hoặc bất kỳ câu hỏi nào.",
+    },
+    {
+      role: "AI",
+      content:
+        "Bạn có thể click vào [**đăng nhập**](https://climpingrose.com/login) nếu muốn lưu lại lịch sử trò chuyện.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -39,8 +53,8 @@ const ChatAI = () => {
         lastMessageRef.current.scrollIntoView({ behavior: "instant" });
       }
     } catch (err) {
-      console.error("Failed to load chat history", err);
-      setMessages([]);
+      // console.error("Failed to load chat history", err);
+      // setMessages([]);
     }
   };
 
@@ -115,7 +129,7 @@ const ChatAI = () => {
       const response = await chat(body);
       const reply = response?.data?.result ?? "❓ Không có phản hồi từ AI.";
 
-      setMessages((prev) => [...prev, { role: "AI", content: reply }]);
+      setMessages((prev) => [...prev, { role: "AI", content: reply }, { role: "AI", content: suffix }]);
     } catch (err) {
       setMessages((prev) => [
         ...prev,
@@ -127,9 +141,9 @@ const ChatAI = () => {
   };
 
   return (
-    <div className="fixed bottom-20 right-4 z-50">
+    <div className="fixed bottom-20 bg-white rounded-full right-4 z-50 ]">
       {isOpen ? (
-        <div className="w-full max-w-[24rem] h-[32rem] bg-white border rounded-xl shadow-lg flex flex-col">
+        <div className="max-w-[24rem] w-[24rem] h-[32rem] bg-white border rounded-xl shadow-lg flex flex-col">
           <div className="p-3 border-b flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Image
@@ -164,37 +178,38 @@ const ChatAI = () => {
                     <Image
                       src="/avt.jpg"
                       alt="logo"
-                    width={32}
-                    height={32}
-                    className="rounded-full object-cover border-1 border-gray-300 inline mr-1"
-                  />
-                ) : user.avatar ? (
-                  <Image
-                    src={user.avatar}
-                    alt="avatar"
-                    width={32}
-                    height={32}
-                    className="rounded-full object-cover border-1 border-gray-300 inline mr-1"
-                  />
-                ) : (
-                  <UserIcon
-                    size={24}
-                    className="inline mr-1 rounded-full border-1 p-1"
-                  />
-                )}
-                <div
-                  className={cn(
-                    "px-3 py-2 rounded-lg max-w-[80%] text-sm whitespace-pre-wrap",
-                    msg.role === "USER"
-                      ? "bg-blue-100 self-end ml-auto"
-                      : "bg-gray-100 self-start mr-auto"
+                      width={32}
+                      height={32}
+                      className="rounded-full object-cover border-1 border-gray-300 inline mr-1"
+                    />
+                  ) : user.avatar ? (
+                    <Image
+                      src={user.avatar}
+                      alt="avatar"
+                      width={32}
+                      height={32}
+                      className="rounded-full object-cover border-1 border-gray-300 inline mr-1"
+                    />
+                  ) : (
+                    <UserIcon
+                      size={24}
+                      className="inline mr-1 rounded-full border-1 p-1"
+                    />
                   )}
-                >
-                  {/* Render Markdown content */}
-                  <MarkdownRenderer text={msg.content} />
+                  <div
+                    className={cn(
+                      "px-3 py-2 rounded-lg max-w-[80%] text-sm whitespace-pre-wrap",
+                      msg.role === "USER"
+                        ? "bg-blue-100 self-end ml-auto"
+                        : "bg-gray-100 self-start mr-auto"
+                    )}
+                  >
+                    {/* Render Markdown content */}
+                    <MarkdownRenderer text={msg.content} />
+                  </div>
                 </div>
-              </div>
-            )})}
+              );
+            })}
 
             {isBotTyping && (
               <div>
